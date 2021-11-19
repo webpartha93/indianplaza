@@ -1,0 +1,1 @@
+export const API_URL = 'http://3.106.74.141/metricsapi/public/api';
