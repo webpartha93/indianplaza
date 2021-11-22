@@ -11,13 +11,15 @@ import {
   } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 
-const ScanPage = ({navigation}) => {
+const ScanPage = ({navigation, route}) => {
     const [barcodeVal, setBarcodeVal] = useState();
     const onSuccess = e => {
         setBarcodeVal(e.data);
         if(e.data){
             navigation.navigate('Scanbarcode', {
-                barcode:e.data
+                barcode:e.data,
+                deliverDate:route.params.deliverDate,
+                deliveryNumber:route.params.deliveryNumber
             });
         }
    };

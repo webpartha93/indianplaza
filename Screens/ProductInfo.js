@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -10,10 +10,44 @@ import {
   } from 'react-native';
   import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
   import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getProductInfo } from '../Redux/Actions/AllActions';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../Redux/Actions/cartAction';
+
 
 const ProductInfo= ({navigation, route}) => {
-    console.log(route.params);
-    const [value, setValue] = useState('');
+    console.log('product-info', route.params);
+    const state = useSelector(state=>state.AllReducers.productDetails);
+    const [qty, setQty] = useState(1);
+    const [productName, setProductName] = useState('');
+    const [productDesc, setProductDesc] = useState('');
+    
+    const handleIncrement = ()=> {
+        setQty(prevVal => prevVal+1);        
+    }
+    const handleDecrement = ()=> {
+        setQty(prevVal => prevVal-1);        
+    }
+
+    const dispatch = useDispatch();
+
+    useEffect(()=> {
+        dispatch(getProductInfo(route.params.productId));
+    }, [])
+
+    useEffect(()=> {
+        if(state.data!==undefined){
+            setProductName(state.data.item_code);
+            setProductDesc(state.data.item_description);
+        }
+    }, [state])
+
+    const handleAddToCart = ()=> {
+        dispatch(addToCart({
+            productName,
+            qty
+        }))
+    }
 
     return (
         <View style={styles.mainWrapper}>
@@ -24,20 +58,20 @@ const ProductInfo= ({navigation, route}) => {
                     <Text style={{color:"#626F7F", fontSize:15, fontWeight:"700"}}>Product Code</Text>
                 </View>
                 <View style={styles.Desc}>
-                    <Text style={{color:"#626F7F", fontSize:13}}>BAC-12345-ajgh</Text>
+                    <Text style={{color:"#626F7F", fontSize:13}}>{productName}</Text>
                 </View>
                 <View style={styles.Label}>
                     <Text style={{color:"#626F7F", fontSize:15, fontWeight:"700"}}>Description</Text>
                 </View>
                 <View style={styles.Desc}>
-                    <Text style={{color:"#626F7F", fontSize:13}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</Text>
+                    <Text style={{color:"#626F7F", fontSize:13}}>{productDesc}</Text>
                 </View>
             </View>
 
             <View style={{alignItems:"center", marginTop:30}}>
                 <Text style={styles.QtyHeading}>Quantity</Text>
                 <View style={{flexDirection:"row", alignItems:"center"}}>
-                    <TouchableOpacity style={{
+                    <TouchableOpacity disabled={qty > 1 ? false : true} onPress={handleDecrement} style={{
                         width:35,
                         height:35,
                         flexDirection:"column",
@@ -53,10 +87,10 @@ const ProductInfo= ({navigation, route}) => {
                         shadowRadius: 4.65,
                         elevation: 6,
                     }}>
-                        <MaterialCommunityIcons size={20} name="minus" />
+                        <MaterialCommunityIcons size={20} color="#000" name="minus" />
                     </TouchableOpacity>
-                    <Text style={{paddingHorizontal:20, fontSize:20}}>0</Text>
-                    <TouchableOpacity style={{
+                    <Text style={{paddingHorizontal:20, fontSize:20, color:"#000"}}>{qty}</Text>
+                    <TouchableOpacity onPress={handleIncrement} style={{
                         width:35,
                         height:35,
                         flexDirection:"column",
@@ -72,7 +106,7 @@ const ProductInfo= ({navigation, route}) => {
                         shadowRadius: 4.65,
                         elevation: 6,
                     }}>
-                        <MaterialCommunityIcons size={20} name="plus" />
+                        <MaterialCommunityIcons size={20} color="#000" name="plus" />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -84,8 +118,8 @@ const ProductInfo= ({navigation, route}) => {
                 <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Scanbarcode')}>
                     <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />                  
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('UnitMeasure')}>
-                    <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>                 
+                <TouchableOpacity style={styles.btnSubmit} onPress={handleAddToCart}>
+                <MaterialCommunityIcons size={30} color="#FFF" name="check" />              
                 </TouchableOpacity>
             </View>
         </View>

@@ -42,9 +42,8 @@ const RootStackScreen = () => {
     setTimeout(()=> {
       setIsloading(false);
     }, 1500);
-  },[]);
+  },[readItemFromStorage]);
 
-  
   const [isloading, setIsloading] = useState(true);
 
   if(isloading){

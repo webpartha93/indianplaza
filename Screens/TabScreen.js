@@ -30,8 +30,8 @@ const HomeStackScreens = ({navigation})=> (
     <HomeStack.Navigator screenOptions={{headerShown:false}}>
         {/* <HomeStack.Screen name="Branch" component={Branch} screenOptions={{headerShown:false}} />
         <HomeStack.Screen name="activity" component={Activity} screenOptions={{headerShown:false}} />
-        <HomeStack.Screen name="Supplier" component={Supplier} screenOptions={{headerShown:false}} />
-        <HomeStack.Screen name="deliveryinfo" component={DeliveryInfo} screenOptions={{headerShown:false}} /> */}
+        <HomeStack.Screen name="Supplier" component={Supplier} screenOptions={{headerShown:false}} /> */}
+        <HomeStack.Screen name="deliveryinfo" component={DeliveryInfo} screenOptions={{headerShown:false}} />
         <HomeStack.Screen name="Scanbarcode" component={ScanBarcode} screenOptions={{headerShown:false}} />
         <HomeStack.Screen name="ProductList" component={ProductList} screenOptions={{headerShown:false}} />
         <HomeStack.Screen name="ProductInfo" component={ProductInfo} screenOptions={{headerShown:false}} />

@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -12,26 +12,38 @@ import {
   import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
 const ProductList = ({navigation, route}) => {
-    console.log(route.params.allProducts);
-    const [value, setValue] = useState('');
-    var radio_props = route.params.allProducts
+    //console.log('productlist',route.params.allProducts);
+    const [value, setValue] = useState([]);
+    const [selectedVal, setSelectedVal] = useState();
+
+    useEffect(()=> {
+        const radio_props = route.params.allProducts.map(item => {
+            return { label: item.item_description, value: item.item_id };
+        });
+        setValue(radio_props);
+        setSelectedVal(radio_props[0].value);
+    },[]);
+
+    // var radio_props = route.params.allProducts
 
     return (
         <View style={styles.mainWrapper}>
             <Text style={styles.Heading}>Select Item</Text>
             <View style={styles.line}></View>
             <RadioForm
-                radio_props={radio_props}
-                initial={0}
+                radio_props={value}
+                initial={selectedVal}
                 buttonColor={'#060395'}
                 labelColor={'#626F7F'}
                 buttonSize={15}
                 labelStyle={{fontSize:16, color: '#626F7F', marginBottom:12}}
-                onPress={(value) => {setValue({value:value})}}
+                onPress={(value) => {setSelectedVal(value)}}
                 style={{marginBottom:30, marginTop:30}}
             />
             <View style={{alignItems:"center"}}>
-                <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('ProductInfo')}>
+                <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('UnitMeasure', {
+                    productId:selectedVal
+                })}>
                     <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>
                 </TouchableOpacity>
             </View>

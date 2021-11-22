@@ -25,7 +25,7 @@ const ScanBarcode = ({navigation, route}) => {
     
 
     useEffect(()=> {
-        if(route.params!==undefined){
+        if(route.params.barcode!==undefined){
             setSingleBarcode(route.params.barcode);
         }
     },[isFocused]);
@@ -60,7 +60,10 @@ const ScanBarcode = ({navigation, route}) => {
                 overflow:"hidden",
                 padding:30
             }}
-            onPress={()=> navigation.navigate('barcodecamera')}
+            onPress={()=> navigation.navigate('barcodecamera', {
+                deliverDate:route.params.deliverDate,
+                deliveryNumber:route.params.deliveryNumber
+            })}
             >
                 <Image source={require('../assets/barcode.png')} /> 
             </TouchableOpacity>            
@@ -68,9 +71,13 @@ const ScanBarcode = ({navigation, route}) => {
                 <TouchableOpacity disabled={singleBarcode!=='' ? false : true} 
                 style={[styles.btnSubmit, {opacity:singleBarcode!=='' ? 1 : 0.7}]} 
                 onPress={()=> totalItems > 1 ? navigation.navigate('ProductList', {
-                    allProducts:allProducts
-                }):navigation.navigate('ProductInfo',{
-                    productId:productId
+                    allProducts:allProducts,
+                    deliverDate:route.params.deliverDate,
+                    deliveryNumber:route.params.deliveryNumber
+                }):navigation.navigate('UnitMeasure',{
+                    productId:productId,
+                    deliverDate:route.params.deliverDate,
+                    deliveryNumber:route.params.deliveryNumber
                 })}
                 >
                     <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>                  

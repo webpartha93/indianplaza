@@ -61,9 +61,9 @@ const Cart = ({ navigation }) => {
                             shadowRadius: 4.65,
                             elevation: 6,
                         }}>
-                            <MaterialCommunityIcons size={16} name="minus" />
+                            <MaterialCommunityIcons size={16} color="#000" name="minus" />
                         </TouchableOpacity>
-                        <Text style={{ paddingHorizontal: 20, fontSize: 16 }}>1</Text>
+                        <Text style={{ paddingHorizontal: 20, fontSize: 16, color:"#000" }}>1</Text>
                         <TouchableOpacity style={{
                             width: 28,
                             height: 28,
@@ -80,144 +80,20 @@ const Cart = ({ navigation }) => {
                             shadowRadius: 4.65,
                             elevation: 6,
                         }}>
-                            <MaterialCommunityIcons size={16} name="plus" />
+                            <MaterialCommunityIcons size={16} color="#000" name="plus" />
                         </TouchableOpacity>
                     </View>
                 </View>
             </View>
 
-            <View style={styles.singleCartProduct}>
-                <TouchableOpacity onPress={() => setToggle(!toggle)} style={{ marginRight: 15, width: 17 }}>
-                    {
-                        toggle ? (
-                            <View style={{ width: 15, height: 15, borderRadius: 3, borderColor: "#CECECE", borderWidth: 1, backgroundColor: "#FFF" }}></View>
-                        ) : (
-                            <View style={{ width: 16, position: "relative", height: 16 }}>
-                                <MaterialIcons size={16} color="#3623B7" name="check-box" style={{ position: "absolute", top: 0, left: 0 }} />
-                            </View>
-
-                        )
-                    }
-                </TouchableOpacity>
-                <Image source={require('../assets/product.png')} />
-                <View style={{ paddingHorizontal: 10 }}>
-                    <Text style={{ color: "#626F7F", fontSize: 18, fontWeight: "700" }}>Product 1</Text>
-                    <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>Piece</Text>
-                </View>
-                <View style={{ alignItems: "center", marginLeft: "auto" }}>
-                    <Text style={styles.QtyHeading}>Quantity</Text>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <TouchableOpacity style={{
-                            width: 28,
-                            height: 28,
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: "#FFF",
-                            borderRadius: 35,
-                            shadowOffset: {
-                                width: 0,
-                                height: 3,
-                            },
-                            shadowOpacity: 0.12,
-                            shadowRadius: 4.65,
-                            elevation: 6,
-                        }}>
-                            <MaterialCommunityIcons size={16} name="minus" />
-                        </TouchableOpacity>
-                        <Text style={{ paddingHorizontal: 20, fontSize: 16 }}>1</Text>
-                        <TouchableOpacity style={{
-                            width: 28,
-                            height: 28,
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: "#FFF",
-                            borderRadius: 35,
-                            shadowOffset: {
-                                width: 0,
-                                height: 3,
-                            },
-                            shadowOpacity: 0.12,
-                            shadowRadius: 4.65,
-                            elevation: 6,
-                        }}>
-                            <MaterialCommunityIcons size={16} name="plus" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-
-            <View style={styles.singleCartProduct}>
-                <TouchableOpacity onPress={() => setToggle(!toggle)} style={{ marginRight: 15, width: 17 }}>
-                    {
-                        toggle ? (
-                            <View style={{ width: 15, height: 15, borderRadius: 3, borderColor: "#CECECE", borderWidth: 1, backgroundColor: "#FFF" }}></View>
-                        ) : (
-                            <View style={{ width: 16, position: "relative", height: 16 }}>
-                                <MaterialIcons size={16} color="#3623B7" name="check-box" style={{ position: "absolute", top: 0, left: 0 }} />
-                            </View>
-
-                        )
-                    }
-                </TouchableOpacity>
-                <Image source={require('../assets/product.png')} />
-                <View style={{ paddingHorizontal: 10 }}>
-                    <Text style={{ color: "#626F7F", fontSize: 18, fontWeight: "700" }}>Product 1</Text>
-                    <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>Piece</Text>
-                </View>
-                <View style={{ alignItems: "center", marginLeft: "auto" }}>
-                    <Text style={styles.QtyHeading}>Quantity</Text>
-                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <TouchableOpacity style={{
-                            width: 28,
-                            height: 28,
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: "#FFF",
-                            borderRadius: 35,
-                            shadowOffset: {
-                                width: 0,
-                                height: 3,
-                            },
-                            shadowOpacity: 0.12,
-                            shadowRadius: 4.65,
-                            elevation: 6,
-                        }}>
-                            <MaterialCommunityIcons size={16} name="minus" />
-                        </TouchableOpacity>
-                        <Text style={{ paddingHorizontal: 20, fontSize: 16 }}>1</Text>
-                        <TouchableOpacity style={{
-                            width: 28,
-                            height: 28,
-                            flexDirection: "column",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundColor: "#FFF",
-                            borderRadius: 35,
-                            shadowOffset: {
-                                width: 0,
-                                height: 3,
-                            },
-                            shadowOpacity: 0.12,
-                            shadowRadius: 4.65,
-                            elevation: 6,
-                        }}>
-                            <MaterialCommunityIcons size={16} name="plus" />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-
-            <View style={{ paddingHorizontal: 15, paddingVertical: 8, marginTop: 25, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+            {/* <View style={{ paddingHorizontal: 15, paddingVertical: 8, marginTop: 25, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 <Text style={{ color: "#626F7F", fontWeight: "600", fontSize: 16 }}>Subtotal</Text>
                 <Text style={{ color: "#98A4B2", fontSize: 14 }}>$0.00</Text>
             </View>
             <View style={{ paddingHorizontal: 15, paddingVertical: 8, flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "#F3F3F3", borderBottomLeftRadius: 10, borderBottomRightRadius: 10 }}>
                 <Text style={{ color: "#626F7F", fontWeight: "600", fontSize: 16 }}>Total</Text>
                 <Text style={{ color: "#98A4B2", fontSize: 14 }}>$0.00</Text>
-            </View>
+            </View> */}
             <View style={{ alignItems: "center", marginBottom: 60 }}>
                 <TouchableOpacity style={styles.btnSubmit}>
                     <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Check out</Text>

@@ -70,7 +70,7 @@ const DeliveryInfo = ({ navigation }) => {
                 <Text style={[styles.formLabel, { marginTop: 15 }]}>Delivery Date</Text>
                 <TouchableOpacity  style={[styles.inputWrapper,{height:45}]} onPress={showDatepicker}>
                     <Icon size={16} color="#626F7F" name="calendar" style={{ position: "absolute", left: 15, top: 16 }} />
-                    <Text>{selectedDate!=="" ? selectedDate : 'Select Date'}</Text>
+                    <Text style={{color:"#000"}}>{selectedDate!=="" ? selectedDate : 'Select Date'}</Text>
                     {show && (
                     <DateTimePicker
                         testID="dateTimePicker"
@@ -80,7 +80,7 @@ const DeliveryInfo = ({ navigation }) => {
                         display="default"
                         onChange={onChange}
                         minimumDate={new Date()}
-                        style={{backgroundColor:"#000"}}
+                        style={{backgroundColor:"#1788F0"}}
                     />
                     )}
 
@@ -105,7 +105,10 @@ const DeliveryInfo = ({ navigation }) => {
                     <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.navigate('Supplier')}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, {opacity:btnDisabled ? 0.7 : 1}]} onPress={() => navigation.navigate('Scanbarcode')}>
+                    <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, {opacity:btnDisabled ? 0.7 : 1}]} onPress={() => navigation.navigate('Scanbarcode', {
+                        deliverDate: selectedDate,
+                        deliveryNumber:formData.deliveryNumber
+                    })}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>NEXT</Text>
                     </TouchableOpacity>
                 </View>
