@@ -22,7 +22,7 @@ const ScanBarcode = ({navigation, route}) => {
     const [productId, setProductId] = useState('');
     const [allProducts, setAllProducts] = useState([]);
     const isFocused = useIsFocused();
-    
+    console.log('scanbarcode', route.params);
 
     useEffect(()=> {
         if(route.params.barcode!==undefined){
@@ -62,7 +62,9 @@ const ScanBarcode = ({navigation, route}) => {
             }}
             onPress={()=> navigation.navigate('barcodecamera', {
                 deliverDate:route.params.deliverDate,
-                deliveryNumber:route.params.deliveryNumber
+                deliveryNumber:route.params.deliveryNumber,
+                org_id:route.params.org_id,
+                vendor_id:route.params.vendor_id
             })}
             >
                 <Image source={require('../assets/barcode.png')} /> 
@@ -73,11 +75,15 @@ const ScanBarcode = ({navigation, route}) => {
                 onPress={()=> totalItems > 1 ? navigation.navigate('ProductList', {
                     allProducts:allProducts,
                     deliverDate:route.params.deliverDate,
-                    deliveryNumber:route.params.deliveryNumber
+                    deliveryNumber:route.params.deliveryNumber,
+                    org_id:route.params.org_id,
+                    vendor_id:route.params.vendor_id
                 }):navigation.navigate('UnitMeasure',{
                     productId:productId,
                     deliverDate:route.params.deliverDate,
-                    deliveryNumber:route.params.deliveryNumber
+                    deliveryNumber:route.params.deliveryNumber,
+                    org_id:route.params.org_id,
+                    vendor_id:route.params.vendor_id
                 })}
                 >
                     <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>                  

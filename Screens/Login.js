@@ -50,7 +50,7 @@ const Login = ({navigation }) => {
                 emp_mobno:mobileNo
             });
             setInputVal('');
-            state.Login.loginData.status="";
+            state.Login.loginData.status="";            
         }
         if(state.Login.errorMessage.status==="Error"){
             setMessage(state.Login.errorMessage.message);
@@ -71,7 +71,7 @@ const Login = ({navigation }) => {
     }
 
     return (
-        <View style={styles.mainWrapper}>
+        <View style={styles.mainWrapper}>            
             <Text style={styles.Heading}>Sign In</Text>
             <View style={styles.line}></View>
             <View style={styles.formWrapper}>

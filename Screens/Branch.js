@@ -100,6 +100,7 @@ const Branch = ({navigation}) => {
                             dropdownIconColor="#000"
                             onValueChange={(itemValue, itemIndex) =>
                                 setSelectedVal(itemValue)
+                                
                             }
                             >
                                 <Picker.Item label="Select Branch" value="0" />
@@ -113,7 +114,9 @@ const Branch = ({navigation}) => {
                 <View style={{alignItems:"center"}}>
                     <TouchableOpacity disabled={selectedVal == 0 ? true : false} 
                         style={[styles.btnSubmit, {opacity:selectedVal == 0 ? 0.7 : 1}]} 
-                        onPress={()=> navigation.navigate('activity')}>
+                        onPress={()=> navigation.navigate('activity', {
+                            org_id:selectedVal
+                        })}>
                         <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>               
                     </TouchableOpacity>
 

@@ -14,6 +14,7 @@ import {
   import {useDispatch, useSelector} from 'react-redux';
   import { doVerify } from '../Redux/Actions/VerifyActions';
   import { useIsFocused } from '@react-navigation/native';
+  import Toast from 'react-native-toast-message';
 
   import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -30,6 +31,11 @@ const Verification = ({navigation, route}) => {
     useEffect(()=> {
         setEmpid(route.params.emp_id);
         setEmpno(route.params.emp_mobno);
+        Toast.show({
+            type: 'success',
+            text1:"OTP Sent Successfully",
+        });
+
     },[]);
 
     const localStorageData = async (value) => {
@@ -61,6 +67,7 @@ const Verification = ({navigation, route}) => {
 
     return (
         <View style={styles.mainWrapper}>
+            <Toast position='bottom' bottomOffset={20} style={{backgroundColor:"#000"}} />
             <Text style={styles.Heading}>Verification</Text>
             <View style={styles.line}></View>
             <View style={styles.formWrapper}>

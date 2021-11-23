@@ -14,11 +14,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { allSupplier } from '../Redux/Actions/AllActions';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const Supplier = ({ navigation }) => {
+const Supplier = ({ navigation, route }) => {
     const state = useSelector(state => state.AllReducers);
     const [selectedVal, setSelectedVal] = useState('');
     const [fetchSupplier, setFetchSupplier] = useState([]);
     const dispatch = useDispatch();
+    //console.log('aupp',route.params)
 
     useEffect(() => {
         dispatch(allSupplier());
@@ -62,10 +63,13 @@ const Supplier = ({ navigation }) => {
                     </Picker>
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.navigate('activity')}>
+                    <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity disabled={selectedVal == 0 ? true : false} style={[styles.btnSubmit, {opacity:selectedVal == 0 ? 0.7 : 1}]} onPress={() => navigation.navigate('deliveryinfo')}>
+                    <TouchableOpacity disabled={selectedVal == 0 ? true : false} style={[styles.btnSubmit, {opacity:selectedVal == 0 ? 0.7 : 1}]} onPress={() => navigation.navigate('deliveryinfo', {
+                         org_id:route.params.org_id,
+                         vendor_id:selectedVal
+                    })}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>NEXT</Text>
                     </TouchableOpacity>
                 </View>

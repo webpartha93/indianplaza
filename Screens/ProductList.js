@@ -11,11 +11,9 @@ import {
   import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
   import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
-const ProductList = ({navigation, route}) => {
-    //console.log('productlist',route.params.allProducts);
+const ProductList = ({navigation, route}) => {    
     const [value, setValue] = useState([]);
-    const [selectedVal, setSelectedVal] = useState();
-
+    const [selectedVal, setSelectedVal] = useState();    
     useEffect(()=> {
         const radio_props = route.params.allProducts.map(item => {
             return { label: item.item_description, value: item.item_id };
@@ -23,7 +21,7 @@ const ProductList = ({navigation, route}) => {
         setValue(radio_props);
         setSelectedVal(radio_props[0].value);
     },[]);
-
+    console.log('productlist',selectedVal);
     // var radio_props = route.params.allProducts
 
     return (
@@ -42,7 +40,12 @@ const ProductList = ({navigation, route}) => {
             />
             <View style={{alignItems:"center"}}>
                 <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('UnitMeasure', {
-                    productId:selectedVal
+                    productId:selectedVal,
+                    deliverDate:route.params.deliverDate,
+                    deliveryNumber:route.params.deliveryNumber,
+                    org_id:route.params.org_id,
+                    vendor_id:route.params.vendor_id
+
                 })}>
                     <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>
                 </TouchableOpacity>

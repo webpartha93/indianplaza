@@ -1,5 +1,6 @@
 import { ADD_TO_CART, REMOVE_FROM_CART, INCREMENT, DECREMENT } from '../constants';
 
+
 export const addToCart = (payload)=> {
     console.log('cartproduct', payload);
     return{
@@ -29,3 +30,4 @@ export const itemDecrement = (payload) => {
         payload
     }
 }
+

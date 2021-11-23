@@ -18,15 +18,17 @@ import { addToCart } from '../Redux/Actions/cartAction';
 const ProductInfo= ({navigation, route}) => {
     console.log('product-info', route.params);
     const state = useSelector(state=>state.AllReducers.productDetails);
-    const [qty, setQty] = useState(1);
+    const [product_qty, setProduct_qty] = useState(1);
     const [productName, setProductName] = useState('');
     const [productDesc, setProductDesc] = useState('');
+    const product_id = route.params.productId;
+    const product_uom = route.params.product_uom;
     
     const handleIncrement = ()=> {
-        setQty(prevVal => prevVal+1);        
+        setProduct_qty(prevVal => prevVal+1);        
     }
     const handleDecrement = ()=> {
-        setQty(prevVal => prevVal-1);        
+        setProduct_qty(prevVal => prevVal-1);        
     }
 
     const dispatch = useDispatch();
@@ -43,9 +45,14 @@ const ProductInfo= ({navigation, route}) => {
     }, [state])
 
     const handleAddToCart = ()=> {
+        navigation.navigate('Cart', {
+            getAllData:route.params
+        })
         dispatch(addToCart({
             productName,
-            qty
+            product_qty,
+            product_id,
+            product_uom
         }))
     }
 
@@ -71,7 +78,7 @@ const ProductInfo= ({navigation, route}) => {
             <View style={{alignItems:"center", marginTop:30}}>
                 <Text style={styles.QtyHeading}>Quantity</Text>
                 <View style={{flexDirection:"row", alignItems:"center"}}>
-                    <TouchableOpacity disabled={qty > 1 ? false : true} onPress={handleDecrement} style={{
+                    <TouchableOpacity disabled={product_qty > 1 ? false : true} onPress={handleDecrement} style={{
                         width:35,
                         height:35,
                         flexDirection:"column",
@@ -89,7 +96,7 @@ const ProductInfo= ({navigation, route}) => {
                     }}>
                         <MaterialCommunityIcons size={20} color="#000" name="minus" />
                     </TouchableOpacity>
-                    <Text style={{paddingHorizontal:20, fontSize:20, color:"#000"}}>{qty}</Text>
+                    <Text style={{paddingHorizontal:20, fontSize:20, color:"#000"}}>{product_qty}</Text>
                     <TouchableOpacity onPress={handleIncrement} style={{
                         width:35,
                         height:35,
@@ -112,7 +119,7 @@ const ProductInfo= ({navigation, route}) => {
             </View>
 
             <View style={{flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
-            <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('ProductList')}>
+            <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.goBack()}>
                     <Text style={{color:"#FFF", fontSize:18}}>PREV</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Scanbarcode')}>

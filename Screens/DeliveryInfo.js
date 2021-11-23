@@ -15,7 +15,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-const DeliveryInfo = ({ navigation }) => {
+const DeliveryInfo = ({ navigation, route }) => {
     const [formData, setFormData] = useState({
         deliveryNumber: '',
         remarks: ''
@@ -102,12 +102,14 @@ const DeliveryInfo = ({ navigation }) => {
                     />
                 </View>
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.navigate('Supplier')}>
+                    <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
                     </TouchableOpacity>
                     <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, {opacity:btnDisabled ? 0.7 : 1}]} onPress={() => navigation.navigate('Scanbarcode', {
                         deliverDate: selectedDate,
-                        deliveryNumber:formData.deliveryNumber
+                        deliveryNumber:formData.deliveryNumber,
+                        org_id:route.params.org_id,
+                        vendor_id:route.params.vendor_id
                     })}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>NEXT</Text>
                     </TouchableOpacity>

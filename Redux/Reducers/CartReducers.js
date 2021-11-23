@@ -9,18 +9,16 @@ const initialState = {
 export const CartReducer = (state=initialState, action)=> {
     switch(action.type) {
         case ADD_TO_CART:           
-          //check if the action id exists in the addedItems          
-         let existed_item= state.cartItems.find(item=> action.payload.item_id === item.item_id);
+          //check if the action id exists in the addedItems 
+          
+         let existed_item= state.cartItems.find(item=> action.payload.product_id === item.product_id);
         
         if(existed_item){
-            existed_item.order_qty = action.payload.order_qty
-            existed_item.line_subtotal = action.payload.line_subtotal
-            existed_item.checkboxvalue = action.payload.checkboxvalue
+            existed_item.product_qty = action.payload.product_qty
             return{
               ...state,
              }
         }else{
-          action.payload.order_qty;
           return {
             ...state,
             cartItems: [...state.cartItems, action.payload]

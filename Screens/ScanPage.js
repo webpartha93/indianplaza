@@ -19,7 +19,9 @@ const ScanPage = ({navigation, route}) => {
             navigation.navigate('Scanbarcode', {
                 barcode:e.data,
                 deliverDate:route.params.deliverDate,
-                deliveryNumber:route.params.deliveryNumber
+                deliveryNumber:route.params.deliveryNumber,
+                org_id:route.params.org_id,
+                vendor_id:route.params.vendor_id
             });
         }
    };

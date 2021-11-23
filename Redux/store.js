@@ -3,12 +3,16 @@ import ThunkMiddleware from "redux-thunk";
 import {LoginReducer} from './Reducers/AuthReducers'
 import { VerificationReducer } from "./Reducers/VerificationReducers";
 import { AllReducers } from "./Reducers/AllReducers";
+import { CartReducer } from "./Reducers/CartReducers";
+import { CheckOutReducers } from "./Reducers/CheckOutReducers";
 
 
 const reducers = combineReducers({
     Login : LoginReducer,
     Verify: VerificationReducer,
-    AllReducers: AllReducers
+    AllReducers: AllReducers,
+    CartReducer:CartReducer,
+    CheckOutReducers:CheckOutReducers
 });
 
 const store = createStore(reducers, applyMiddleware(ThunkMiddleware));

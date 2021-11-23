@@ -13,7 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const Activity = ({ navigation }) => {
+const Activity = ({ navigation, route }) => {
     const allActivityCategory = [
         {
             "catName": "Receive",
@@ -32,7 +32,9 @@ const Activity = ({ navigation }) => {
 
     const handleClick = (e) => {
         setId(e);
-        navigation.navigate('Supplier');
+        navigation.navigate('Supplier', {
+            org_id:route.params.org_id
+        });
     }
 
 

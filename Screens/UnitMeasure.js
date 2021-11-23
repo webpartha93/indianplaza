@@ -12,15 +12,15 @@ import {
 
 
 const UnitMeasure = ({ navigation, route }) => {
-
+    console.log("unitmeasure",route.params)
     const unitsCategory = [
         {
             "catName": "Piece",
-            "id": "0"
+            "id": "1"
         },
         {
             "catName": "Carton",
-            "id": "1"
+            "id": "2"
         }
     ]
 
@@ -31,7 +31,10 @@ const UnitMeasure = ({ navigation, route }) => {
         navigation.navigate('ProductInfo', {
             productId: route.params.productId,
             deliverDate: route.params.deliverDate,
-            deliveryNumber: route.params.deliveryNumber
+            deliveryNumber: route.params.deliveryNumber,
+            org_id:route.params.org_id,
+            vendor_id:route.params.vendor_id,
+            product_uom:e
         });
     }
 
@@ -45,7 +48,7 @@ const UnitMeasure = ({ navigation, route }) => {
                         unitsCategory.map((item, index) => {
                             return (
                                 <View style={styles.btnBox} key={index}>
-                                    <TouchableOpacity onPress={() => handleClick(index)} style={{
+                                    <TouchableOpacity onPress={() => handleClick(index+1)} style={{
                                         borderRadius: 10,
                                         backgroundColor: item.id == id ? "#3623B7" : "#FFF",
                                         flexDirection: "column",
@@ -85,11 +88,11 @@ const UnitMeasure = ({ navigation, route }) => {
 
                 </View>
             </View>
-            {/* <View style={{ alignItems: "center", marginTop: 20 }}>
-                <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.navigate('ProductInfo')}>
-                    <Text style={{ color: "#FFF", fontSize: 18 }}>NEXT</Text>
+            <View style={{ alignItems: "center", marginTop: 20 }}>
+                <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
+                    <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
                 </TouchableOpacity>
-            </View> */}
+            </View>
         </View>
     )
 }
