@@ -66,8 +66,7 @@ const Verification = ({navigation, route}) => {
     }
 
     return (
-        <View style={styles.mainWrapper}>
-            <Toast position='bottom' bottomOffset={20} style={{backgroundColor:"#000"}} />
+        <View style={styles.mainWrapper}>            
             <Text style={styles.Heading}>Verification</Text>
             <View style={styles.line}></View>
             <View style={styles.formWrapper}>
@@ -107,6 +106,7 @@ const Verification = ({navigation, route}) => {
                     <Text style={{color:'#060395', fontSize:15, marginRight:6}}>Code expires in 04:59 minutes</Text>
                 </View>
             </View>
+            <Toast position='top' style={{backgroundColor:"#000"}} />
         </View>
     )
 }

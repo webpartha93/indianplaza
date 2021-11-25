@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
     Text,
     View,
+    BackHandler,
+    Alert 
 } from 'react-native';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -21,7 +23,7 @@ import ProductList from './ProductList';
 import ProductInfo from './ProductInfo';
 import UnitMeasure from './UnitMeasure';
 import Cart from './Cart';
-
+import OrderHistory from './OrderHistory';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
@@ -41,6 +43,28 @@ const HomeStackScreens = ({navigation})=> (
 
 
 const TabScreen = () => {
+
+    useEffect(() => {
+        const backAction = () => {
+        //   Alert.alert("Hold on!", "Are you sure you want to go back?", [
+        //     {
+        //       text: "Cancel",
+        //       onPress: () => null,
+        //       style: "cancel"
+        //     },
+        //     { text: "YES", onPress: () => BackHandler.exitApp() }
+        //   ]);
+          return true;
+        };
+    
+        const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          backAction
+        );
+    
+        return () => backHandler.remove();
+      }, []);
+
     return (
     <Tab.Navigator
         screenOptions={{
@@ -83,7 +107,7 @@ const TabScreen = () => {
         })} />
         <Tab.Screen 
         name="History" 
-        component={Branch} 
+        component={OrderHistory} 
         options= {({ route }) => ({
             tabBarLabel: 'History',
             tabBarColor:"#FFFFFF",

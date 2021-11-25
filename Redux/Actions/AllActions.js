@@ -10,7 +10,7 @@ export const allBranch = (payload)=> async (dispatch, getState)=> {
     
     let data = {
         "apiKey": "866250ac55306374e9499faa21ce5956",
-        "emp_id" : "1"
+        "emp_id" : payload.emp_id
     }
     try{
         const response = await axios.post(API_URL+'/branches', data,{

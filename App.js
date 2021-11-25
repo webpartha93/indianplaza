@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   ActivityIndicator,
   View,
-  Image
+  Image,
+  BackHandler,
+  Alert 
 } from 'react-native';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
@@ -46,11 +48,35 @@ const RootStackScreen = () => {
 
   const [isloading, setIsloading] = useState(true);
 
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert("Hold on!", "Are you sure you want to go back?", [
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        },
+        { text: "YES", onPress: () => BackHandler.exitApp() }
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
   if(isloading){
     return(
       <View style={{flex:1, justifyContent:'center', alignItems:"center", backgroundColor:"#FFF"}}>
         <Image
           source={require('./assets/logo.png')}
+          width="100"
+          height="100"
+          resizeMode="cover"
         />
       </View>
     )

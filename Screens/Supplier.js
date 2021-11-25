@@ -19,7 +19,7 @@ const Supplier = ({ navigation, route }) => {
     const [selectedVal, setSelectedVal] = useState('');
     const [fetchSupplier, setFetchSupplier] = useState([]);
     const dispatch = useDispatch();
-    //console.log('aupp',route.params)
+    console.log('supplier',route.params)
 
     useEffect(() => {
         dispatch(allSupplier());
@@ -68,6 +68,7 @@ const Supplier = ({ navigation, route }) => {
                     </TouchableOpacity>
                     <TouchableOpacity disabled={selectedVal == 0 ? true : false} style={[styles.btnSubmit, {opacity:selectedVal == 0 ? 0.7 : 1}]} onPress={() => navigation.navigate('deliveryinfo', {
                          org_id:route.params.org_id,
+                         activity:route.params.activity,
                          vendor_id:selectedVal
                     })}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>NEXT</Text>

@@ -5,6 +5,7 @@ import { VerificationReducer } from "./Reducers/VerificationReducers";
 import { AllReducers } from "./Reducers/AllReducers";
 import { CartReducer } from "./Reducers/CartReducers";
 import { CheckOutReducers } from "./Reducers/CheckOutReducers";
+import { HistoryReducers } from "./Reducers/HistoryReducers";
 
 
 const reducers = combineReducers({
@@ -12,7 +13,8 @@ const reducers = combineReducers({
     Verify: VerificationReducer,
     AllReducers: AllReducers,
     CartReducer:CartReducer,
-    CheckOutReducers:CheckOutReducers
+    CheckOutReducers:CheckOutReducers,
+    HistoryReducers:HistoryReducers
 });
 
 const store = createStore(reducers, applyMiddleware(ThunkMiddleware));

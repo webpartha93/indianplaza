@@ -14,18 +14,19 @@ import Icon from 'react-native-vector-icons/SimpleLineIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Activity = ({ navigation, route }) => {
+    console.log('activitypage', route.params);
     const allActivityCategory = [
         {
             "catName": "Receive",
-            "id": "0"
-        },
-        {
-            "catName": "Return",
             "id": "1"
         },
         {
-            "catName": "Shelve",
+            "catName": "Return",
             "id": "2"
+        },
+        {
+            "catName": "Shelve",
+            "id": "3"
         }
     ]
     const [id, setId] = useState();
@@ -33,7 +34,8 @@ const Activity = ({ navigation, route }) => {
     const handleClick = (e) => {
         setId(e);
         navigation.navigate('Supplier', {
-            org_id:route.params.org_id
+            org_id:route.params.org_id,
+            activity:e
         });
     }
 
@@ -51,7 +53,7 @@ const Activity = ({ navigation, route }) => {
                             if (index > 1) {
                                 return (
                                     <View key={index} style={{ width: "100%", paddingHorizontal: 10 }}>
-                                        <TouchableOpacity onPress={() => handleClick(index)} style={{
+                                        <TouchableOpacity onPress={() => handleClick(index+1)} style={{
                                             borderRadius: 10,
                                             backgroundColor: item.id == id ? "#3623B7" : "#FFF",
                                             flexDirection: "row",

@@ -17,6 +17,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import { allBranch } from '../Redux/Actions/AllActions';
 import { doLogout } from '../Redux/Actions/VerifyActions';
+import { useIsFocused } from '@react-navigation/native';
 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -26,6 +27,7 @@ const Branch = ({navigation}) => {
     const [empId, setEmpId] = useState('');
     const state = useSelector(state=> state.AllReducers);
     const dispatch = useDispatch();
+    const isFocused = useIsFocused();
 
     const [selectedVal, setSelectedVal] = useState('');
 
@@ -45,6 +47,9 @@ const Branch = ({navigation}) => {
         }
       }
 
+    useEffect(()=> {
+        setSelectedVal('');
+    },[isFocused]);
 
     useEffect(() => {
         readItemFromStorage();        
@@ -52,7 +57,7 @@ const Branch = ({navigation}) => {
 
     useEffect(() => {
         if(empId!==''){
-            dispatch(allBranch(empId.emp_id));
+            dispatch(allBranch(empId));
         }        
     }, [empId]);
 

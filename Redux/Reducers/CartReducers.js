@@ -2,16 +2,18 @@ import { ADD_TO_CART, REMOVE_FROM_CART, INCREMENT, DECREMENT } from '../constant
 
 const initialState = {
     cartItems:[],
+    getAllData:"",
     totalAmout:0,
     totalItems:0
 }
 
 export const CartReducer = (state=initialState, action)=> {
+  //console.log('cartreducer', action.payload);
     switch(action.type) {
         case ADD_TO_CART:           
           //check if the action id exists in the addedItems 
           
-         let existed_item= state.cartItems.find(item=> action.payload.product_id === item.product_id);
+         let existed_item= state.cartItems?.find(item=> action.payload.product_id === item.product_id);
         
         if(existed_item){
             existed_item.product_qty = action.payload.product_qty
@@ -21,7 +23,8 @@ export const CartReducer = (state=initialState, action)=> {
         }else{
           return {
             ...state,
-            cartItems: [...state.cartItems, action.payload]
+            cartItems: [...state.cartItems, action.payload.productData],
+            getAllData:action.payload.getAllData
           };          
         }
 
@@ -37,14 +40,11 @@ export const CartReducer = (state=initialState, action)=> {
 
         case INCREMENT:
           let updatedCart = state.cartItems.map((item)=> {            
-            if(item.item_id == action.payload){
-              let qty = item.order_qty + 1;
-              let price = (qty * item.initialPrice).toFixed(2);
-              console.log(price);
+            if(item.product_id == action.payload){
+              let qty = item.product_qty + 1;
               return{
                 ...item,
-                order_qty:qty,
-                line_subtotal:price
+                product_qty:qty
               }
              
             }
@@ -57,17 +57,15 @@ export const CartReducer = (state=initialState, action)=> {
           case DECREMENT:
           //console.log(state.cartItems);
           let afterDecrementCart = state.cartItems.map((item)=> {
-            if(item.item_id == action.payload){
-              let qty = item.order_qty - 1;
-              let price = (qty * item.initialPrice).toFixed(2);
+            if(item.product_id == action.payload){
+              let qty = item.product_qty - 1;
               return{
                 ...item,
-                order_qty:qty,
-                line_subtotal:price
+                product_qty:qty
               }
             }
             return item; 
-          }).filter(elem=> elem.order_qty!=0);
+          }).filter(elem=> elem.product_qty!=0);
           return{
             ...state,
             cartItems:afterDecrementCart

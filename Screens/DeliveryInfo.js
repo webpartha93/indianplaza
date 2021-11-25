@@ -109,7 +109,8 @@ const DeliveryInfo = ({ navigation, route }) => {
                         deliverDate: selectedDate,
                         deliveryNumber:formData.deliveryNumber,
                         org_id:route.params.org_id,
-                        vendor_id:route.params.vendor_id
+                        vendor_id:route.params.vendor_id,
+                        activity:route.params.activity
                     })}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>NEXT</Text>
                     </TouchableOpacity>

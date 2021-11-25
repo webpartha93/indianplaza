@@ -8,9 +8,9 @@ export const doCheckout = (payload)=> async (dispatch, getState)=> {
     
     let data = {
         "apiKey": "866250ac55306374e9499faa21ce5956",
-        "emp_id": "2",
-        "shipment_number" : "54584848",
-        "delivary_note_number" : payload.getAllData.deliveryNumber,
+        "emp_id": payload.empId,
+        "activity": payload.getAllData.activity,
+        "delivery_note_number" : payload.getAllData.deliveryNumber,
         "delivery_date" : payload.getAllData.deliverDate,
         "org_id": payload.getAllData.org_id,
         "vendor_id" : payload.getAllData.vendor_id,
@@ -24,7 +24,7 @@ export const doCheckout = (payload)=> async (dispatch, getState)=> {
             }
         })
 
-        console.log('afterCheckout', response.data.status)
+        console.log('checkoutActionresponse', response.data.status);
 
         dispatch({
             type:CHECKOUT_SUCCESS,

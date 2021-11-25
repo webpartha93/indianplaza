@@ -42,6 +42,7 @@ const Login = ({navigation }) => {
    
 
     useEffect(()=> {
+        setIsloading(true);
         if(state.Login.loginData.status==="Success"){
             let dataId = state.Login.loginData.data.emp_id;
             let mobileNo = state.Login.loginData.data.emp_mobno;
@@ -50,13 +51,13 @@ const Login = ({navigation }) => {
                 emp_mobno:mobileNo
             });
             setInputVal('');
-            state.Login.loginData.status="";            
+            state.Login.loginData.status=""; 
+            setIsloading(false);           
         }
         if(state.Login.errorMessage.status==="Error"){
             setMessage(state.Login.errorMessage.message);
         }
-        console.log(state.Login);
-        setIsloading(state.Login.isLoggedIn);
+        
     }, [state]);
     
 

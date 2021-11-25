@@ -14,42 +14,97 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { doCheckout } from '../Redux/Actions/CheckoutAction';
+import { itemIncrement, itemDecrement } from '../Redux/Actions/cartAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 const Cart = ({ navigation, route }) => {
     const state = useSelector(state => state.CartReducer);
     const checkoutState = useSelector(state => state.CheckOutReducers);
     const dispatch = useDispatch();
+    const [empId, setEmpId] = useState('');
     const [toggle, setToggle] = useState(false);
-    const getAllData = route.params.getAllData;
-    //console.log('cartpage', checkoutState);
+    const [getAllData, setGetAllData] = useState('');
+    const [getCartItems, setGetCartItems] = useState([]);
+    //console.log('cartpage', getAllData);
+
+    // useEffect(()=>{
+    //     if( route.params!==undefined){
+    //         setGetAllData(route.params.getAllData);
+    //     }
+    // }, []);
+
+    const readItemFromStorage = async () => {
+        try {
+          const loggedInUser = await AsyncStorage.getItem("uuid");
+          const parseVal = JSON.parse(loggedInUser);
+          if (loggedInUser !== null) {        
+            return parseVal.emp_id;
+          }
+        } catch (e) {
+          alert('Failed to fetch the data from storage')
+        }
+      }
+
+    useEffect(()=> {
+        readItemFromStorage().then((value) => setEmpId(value));
+    },[]);
+
+
+    useEffect(()=>{        
+        setGetCartItems(state.cartItems);
+        setGetAllData(state.getAllData);
+    }, [state]);
 
     const doCheckOut = ()=> {
         const updatedCartItem = state.cartItems.map(({productName,...rest}) => ({...rest}));
-        //console.log('result', updatedCartItem);
+        console.log('result', getAllData);
         dispatch(doCheckout({
             getAllData,
-            updatedCartItem
+            updatedCartItem,
+            empId
         }));
     }
     useEffect(()=>{
         if(checkoutState.checkoutSuccessMessage.status==="Success"){
             //navigation.navigate('navigation');
-            state.cartItems="";
-            console.log("asdasdasdasdasdasd")
+            console.log('cart-remove');
+            checkoutState.checkoutSuccessMessage.status="";
+            state.cartItems=[];
+            setGetCartItems([]);
+            Toast.show({
+                type: 'success',
+                text1:"Your order has been received",
+            });
+            
         }
     }, [checkoutState]);
 
+
+    const handleIncrement = (id)=> {
+        dispatch(itemIncrement(id));
+    }
+    const handleDecrement = (id)=> {
+        dispatch(itemDecrement(id));
+    }
+
     return (
+        <>
         <ScrollView style={styles.mainWrapper}>
             <View style={{ marginBottom: 20 }}>
                 <Text style={styles.Heading}>Cart</Text>
-                <TouchableOpacity style={{ position: "absolute", right: 0 }}>
-                    <MaterialIcons size={32} color="#1788F0" name="delete-outline" />
-                </TouchableOpacity>
-            </View>
+                {
+                    getCartItems.length > 0 && (
+                    <TouchableOpacity style={{ position: "absolute", right: 0 }}>
+                        <MaterialIcons size={32} color="#1788F0" name="delete-outline" />
+                    </TouchableOpacity>
+                    )
+                }
+                
+            </View>             
             {
-                state.cartItems.length > 0 ? (
-                    state.cartItems.map((item,index) => {
+                getCartItems.length > 0 ? (
+                    getCartItems.map((item,index) => {
                         return (
                             <View style={styles.singleCartProduct} key={index}>
                                 <TouchableOpacity onPress={() => setToggle(!toggle)} style={{ marginRight: 15, width: 17 }}>
@@ -71,7 +126,7 @@ const Cart = ({ navigation, route }) => {
                                 <View style={{ alignItems: "center", marginLeft: "auto"}}>
                                     <Text style={styles.QtyHeading}>Quantity</Text>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                        <TouchableOpacity style={{
+                                        <TouchableOpacity onPress={()=>handleDecrement(item.product_id)} style={{
                                             width: 28,
                                             height: 28,
                                             flexDirection: "column",
@@ -90,7 +145,7 @@ const Cart = ({ navigation, route }) => {
                                             <MaterialCommunityIcons size={16} color="#000" name="minus" />
                                         </TouchableOpacity>
                                         <Text style={{ paddingHorizontal:10, fontSize: 16, color: "#000" }}>{item.product_qty}</Text>
-                                        <TouchableOpacity style={{
+                                        <TouchableOpacity onPress={()=>handleIncrement(item.product_id)} style={{
                                             width: 28,
                                             height: 28,
                                             flexDirection: "column",
@@ -114,7 +169,13 @@ const Cart = ({ navigation, route }) => {
                         )
                     })                    
                 ):(
-                    <View style={{alignItems:"center"}}><Text style={{color:"#000", fontSize:22}}>Your Cart is empty!</Text></View>
+                    <View style={{alignItems:"center", marginTop:60}}>
+                        <Text style={{color:"#000", fontSize:22, marginBottom:10}}>Your Cart is empty!</Text>
+                        <Text style={{fontSize:16, color:"#7a7d81"}}>Add items to it now.</Text>
+                        <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Branch')}>
+                            <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Shop Now</Text>
+                        </TouchableOpacity>
+                    </View>
                 )
                 
             }
@@ -130,15 +191,17 @@ const Cart = ({ navigation, route }) => {
                 <Text style={{ color: "#98A4B2", fontSize: 14 }}>$0.00</Text>
             </View> */}
             {
-                state.cartItems.length > 0 && (  
+                getCartItems.length > 0 && (  
                 <View style={{ alignItems: "center", marginBottom: 60 }}>
                 <TouchableOpacity style={styles.btnSubmit} onPress={doCheckOut}>
-                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Check out</Text>
+                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>SUBMIT</Text>
                 </TouchableOpacity>
                 </View> 
                 )
             }   
         </ScrollView>
+        <Toast position='top' style={{backgroundColor:"#000"}} />
+        </>
     )
 }
 

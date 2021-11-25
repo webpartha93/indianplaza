@@ -34,6 +34,7 @@ const UnitMeasure = ({ navigation, route }) => {
             deliveryNumber: route.params.deliveryNumber,
             org_id:route.params.org_id,
             vendor_id:route.params.vendor_id,
+            activity:route.params.activity,
             product_uom:e
         });
     }
