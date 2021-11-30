@@ -7,7 +7,8 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    Image
+    Image,
+    ActivityIndicator
 } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -26,7 +27,7 @@ const Cart = ({ navigation, route }) => {
     const [toggle, setToggle] = useState(false);
     const [getAllData, setGetAllData] = useState('');
     const [getCartItems, setGetCartItems] = useState([]);
-    //console.log('cartpage', getAllData);
+    console.log('cartItems', state.cartItems);
 
     // useEffect(()=>{
     //     if( route.params!==undefined){
@@ -107,12 +108,12 @@ const Cart = ({ navigation, route }) => {
                     getCartItems.map((item,index) => {
                         return (
                             <View style={styles.singleCartProduct} key={index}>
-                                <TouchableOpacity onPress={() => setToggle(!toggle)} style={{ marginRight: 15, width: 17 }}>
+                                <TouchableOpacity onPress={() =>  setToggle(!toggle)} style={{ marginRight: 15, width: 17 }}>
                                     {
                                         toggle ? (
                                             <View style={{ width: 16, position: "relative", height: 16 }}>
                                                 <MaterialIcons size={16} color="#3623B7" name="check-box" style={{ position: "absolute", top: 0, left: 0 }} />
-                                            </View>                                            
+                                            </View>
                                         ) : (
                                             <View style={{ width: 15, height: 15, borderRadius: 3, borderColor: "#CECECE", borderWidth: 1, backgroundColor: "#FFF" }}></View>    
                                         )
@@ -120,7 +121,7 @@ const Cart = ({ navigation, route }) => {
                                 </TouchableOpacity>
                                 <Image source={require('../assets/product.png')} />
                                 <View style={{ paddingHorizontal: 10, width:"45%" }}>
-                                    <Text style={{ color: "#626F7F", fontSize: 12, fontWeight: "700" }}>{item.productName}</Text>
+                                    <Text style={{ color: "#626F7F", fontSize: 12, fontWeight: "700" }}>{item.productName}{item.index}</Text>
                                     <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>{item.product_uom == 1 ? "Piece" : "Carton"}</Text>
                                 </View>
                                 <View style={{ alignItems: "center", marginLeft: "auto"}}>
@@ -201,6 +202,23 @@ const Cart = ({ navigation, route }) => {
             }   
         </ScrollView>
         <Toast position='top' style={{backgroundColor:"#000"}} />
+            {
+                checkoutState.isLoading && (
+                    <View style={{ flex: 1, position: "absolute", zIndex:3, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "rgba(255,255,255,0.4)" }}>
+                        <View style={{
+                            backgroundColor: "#FFF", paddingHorizontal: 15, paddingVertical: 15, borderRadius: 5, shadowOffset: {
+                                width: 0,
+                                height: 3,
+                            },
+                            shadowOpacity: 0.12,
+                            shadowRadius: 4.65,
+                            elevation: 6,
+                        }}>
+                            <ActivityIndicator size="large" color="#7b0b0d" />
+                        </View>
+                    </View>
+                )
+            }
         </>
     )
 }

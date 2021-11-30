@@ -36,7 +36,7 @@ const ScanBarcode = ({ navigation, route }) => {
                     marginTop: 30,
                     position: "relative",
                     overflow: "hidden",
-                    padding: 30
+                    padding:10
                 }}
                     onPress={() => navigation.navigate('barcodecamera', {
                         deliverDate: route.params.deliverDate,

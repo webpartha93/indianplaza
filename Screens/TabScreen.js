@@ -25,6 +25,8 @@ import UnitMeasure from './UnitMeasure';
 import Cart from './Cart';
 import OrderHistory from './OrderHistory';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
 
@@ -44,6 +46,7 @@ const HomeStackScreens = ({navigation})=> (
 
 const TabScreen = () => {
 
+    const dispatch = useDispatch();
     useEffect(() => {
         const backAction = () => {
         //   Alert.alert("Hold on!", "Are you sure you want to go back?", [
@@ -91,6 +94,7 @@ const TabScreen = () => {
         listeners={({ navigation, route }) => ({
             tabPress: (e) => {
               e.preventDefault();
+              dispatch({ type:"RESET_SCAN_DATA"})
               navigation.navigate('Branch');
             },
           })}

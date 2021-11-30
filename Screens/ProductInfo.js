@@ -16,8 +16,9 @@ import { addToCart } from '../Redux/Actions/cartAction';
 
 
 const ProductInfo = ({ navigation, route }) => {
-    //console.log('product-info', route.params);
+    
     const state = useSelector(state => state.AllReducers.productDetails);
+    const statecart = useSelector(state => state.CartReducer);
     const [product_qty, setProduct_qty] = useState(1);
     const [productName, setProductName] = useState('');
     const [productDesc, setProductDesc] = useState('');
@@ -25,6 +26,8 @@ const ProductInfo = ({ navigation, route }) => {
     const product_uom = route.params.product_uom;
     const activity = route.params.activity;
     const getAllData = route.params;
+
+    console.log('cartitems', statecart.cartItems);
 
     const handleIncrement = () => {
         setProduct_qty(prevVal => prevVal + 1);
@@ -128,13 +131,26 @@ const ProductInfo = ({ navigation, route }) => {
                 <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
                     <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.navigate('Scanbarcode', {
-                    deliverDate: route.params.deliverDate,
-                    deliveryNumber: route.params.deliveryNumber,
-                    org_id: route.params.org_id,
-                    vendor_id: route.params.vendor_id,
-                    barcode: ''
-                })}>
+                <TouchableOpacity style={styles.btnSubmit} onPress={() => 
+                    {
+                        navigation.navigate('Scanbarcode', {
+                        deliverDate: route.params.deliverDate,
+                        deliveryNumber: route.params.deliveryNumber,
+                        org_id: route.params.org_id,
+                        vendor_id: route.params.vendor_id,
+                        barcode: ''
+                    })
+                    dispatch(addToCart({
+                        productData: {
+                            productName,
+                            product_qty,
+                            product_id,
+                            product_uom,
+                            activity
+                        },
+                        getAllData
+                    }))
+                }}>
                     <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.btnSubmit} onPress={handleAddToCart}>

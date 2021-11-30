@@ -2,7 +2,7 @@ import { CHECKOUT_REQUEST, CHECKOUT_SUCCESS, CHECKOUT_FAILURE } from '../constan
 
 
 const initialState = {
-    isLoggedIn:false,
+    isLoading:false,
     checkoutSuccessMessage:"",
     errorMessage:''
 }
@@ -12,18 +12,18 @@ export const CheckOutReducers = (state=initialState, action)=> {
         case CHECKOUT_REQUEST:
           return {
               ...state,
-              isLoggedIn: true,
+              isLoading: true,
           };
           case CHECKOUT_SUCCESS:
             return {
               ...state,
-              isLoggedIn:true,
+              isLoading:false,
               checkoutSuccessMessage:action.payload
             };
             case CHECKOUT_FAILURE:
             return {
               ...state,
-              isLoggedIn:false,
+              isLoading:false,
               errorMessage:action.payload
             }            
         default:
