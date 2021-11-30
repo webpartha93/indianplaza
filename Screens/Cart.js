@@ -109,7 +109,7 @@ const Cart = ({ navigation, route }) => {
                         return (
                             <View style={styles.singleCartProduct} key={index}>
                                 <TouchableOpacity onPress={() =>  setToggle(!toggle)} style={{ marginRight: 15, width: 17 }}>
-                                    {
+                                    {                                        
                                         toggle ? (
                                             <View style={{ width: 16, position: "relative", height: 16 }}>
                                                 <MaterialIcons size={16} color="#3623B7" name="check-box" style={{ position: "absolute", top: 0, left: 0 }} />

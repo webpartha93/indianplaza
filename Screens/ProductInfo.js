@@ -138,6 +138,7 @@ const ProductInfo = ({ navigation, route }) => {
                         deliveryNumber: route.params.deliveryNumber,
                         org_id: route.params.org_id,
                         vendor_id: route.params.vendor_id,
+                        activity:activity,
                         barcode: ''
                     })
                     dispatch(addToCart({
