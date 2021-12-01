@@ -43,8 +43,14 @@ const Supplier = ({ navigation, route }) => {
 
     return (
         <View style={styles.mainWrapper}>
+            <View style={{position:"relative"}}>
             <Text style={styles.Heading}>Supplier</Text>
             <View style={styles.line}></View>
+            <TouchableOpacity onPress={()=> navigation.navigate('Branch')} style={{ position: "absolute", top:4, right: 0 }}>
+                <MaterialIcons size={32} color="#1788F0" name="home" />
+            </TouchableOpacity>
+            </View>
+
             <View style={styles.formWrapper}>
                 <Text style={styles.formLabel}>Select Supplier</Text>
                 <View style={styles.inputWrapper}>

@@ -13,6 +13,7 @@ import {
 
 import { getProductInfo } from '../Redux/Actions/AllActions';
 import { useDispatch, useSelector } from 'react-redux';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const UnitMeasure = ({ navigation, route }) => {
     console.log("unitmeasure", route.params.dataLength);
@@ -68,7 +69,12 @@ const UnitMeasure = ({ navigation, route }) => {
         <>
         <View style={styles.mainWrapper}>                    
             <View style={{ paddingHorizontal: 30, paddingTop: 40 }}>
-                <Text style={styles.Heading}>Unit of Measure</Text>
+                <View style={{position:"relative"}}>
+                    <Text style={styles.Heading}>Unit of Measure</Text>
+                    <TouchableOpacity onPress={()=> navigation.navigate('Branch')} style={{ position: "absolute", top:4, right: 0 }}>
+                        <MaterialIcons size={32} color="#1788F0" name="home" />
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.line}></View>
                 <View style={{ borderRadius: 10, overflow: "hidden", marginTop: 30, backgroundColor: "#F9F9F9" }}>
                     <View style={styles.Label}>
