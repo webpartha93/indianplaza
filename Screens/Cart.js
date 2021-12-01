@@ -172,9 +172,9 @@ const Cart = ({ navigation, route }) => {
                 ):(
                     <View style={{alignItems:"center", marginTop:60}}>
                         <Text style={{color:"#000", fontSize:22, marginBottom:10}}>Your Cart is empty!</Text>
-                        <Text style={{fontSize:16, color:"#7a7d81"}}>Add items to it now.</Text>
+                        {/* <Text style={{fontSize:16, color:"#7a7d81"}}>Add items to it now.</Text> */}
                         <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Branch')}>
-                            <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Shop Now</Text>
+                            <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Home</Text>
                         </TouchableOpacity>
                     </View>
                 )
@@ -195,7 +195,7 @@ const Cart = ({ navigation, route }) => {
                 getCartItems.length > 0 && (  
                 <View style={{ alignItems: "center", marginBottom: 60 }}>
                 <TouchableOpacity style={styles.btnSubmit} onPress={doCheckOut}>
-                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>SUBMIT</Text>
+                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Continue</Text>
                 </TouchableOpacity>
                 </View> 
                 )

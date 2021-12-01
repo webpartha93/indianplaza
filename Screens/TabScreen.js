@@ -27,6 +27,10 @@ import OrderHistory from './OrderHistory';
 
 import { useDispatch, useSelector } from 'react-redux';
 
+import { doLogout } from '../Redux/Actions/VerifyActions';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Tab = createBottomTabNavigator();
 const HomeStack = createNativeStackNavigator();
 
@@ -68,6 +72,14 @@ const TabScreen = () => {
         return () => backHandler.remove();
       }, []);
 
+      const removeLocalStore = async () => {
+        try {
+            await AsyncStorage.removeItem('uuid')
+          } catch(e) {
+            // remove error
+          }
+    }
+
     return (
     <Tab.Navigator
         screenOptions={{
@@ -85,10 +97,10 @@ const TabScreen = () => {
         name="Cancel" 
         component={HomeStackScreens} 
         options= {({ route }) => ({
-            tabBarLabel: 'Cancel',
+            tabBarLabel: 'Cart',
             tabBarColor:"#FFFFFF",
             tabBarIcon: ({ color,size }) => (
-                <Icon name="minuscircleo" color={color} size={size} />
+                <Icon name="shoppingcart" color={color} size={size} />
             )        
         })} 
         listeners={({ navigation, route }) => ({
@@ -103,10 +115,10 @@ const TabScreen = () => {
         name="Cart" 
         component={Cart} 
         options= {({ route }) => ({
-            tabBarLabel: 'Cart',
+            tabBarLabel: 'Empty Cart',
             tabBarColor:"#FFFFFF",
-            tabBarIcon: ({ color,size }) => (
-                <Icon name="shoppingcart" color={color} size={size} />
+            tabBarIcon: ({ color,size }) => (                
+                <Icon name="delete" color={color} size={size} />
             )        
         })} />
         <Tab.Screen 
@@ -120,15 +132,23 @@ const TabScreen = () => {
             )        
         })} />
         <Tab.Screen 
-        name="User" 
+        name="signout" 
         component={Branch} 
         options= {({ route }) => ({
-            tabBarLabel: 'User',
+            tabBarLabel: 'Sign Out',
             tabBarColor:"#FFFFFF",
             tabBarIcon: ({ color,size }) => (
-                <Icon name="user" color={color} size={size} />
+                <Icon name="logout" color={color} size={size} />
             )        
-        })} />
+        })} 
+        listeners={({ navigation, route }) => ({
+            tabPress: (e) => {
+              e.preventDefault();
+              removeLocalStore();
+              dispatch(doLogout());
+            },
+          })}
+        />
     </Tab.Navigator>
     )
 }

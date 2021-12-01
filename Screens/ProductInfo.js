@@ -67,8 +67,13 @@ const ProductInfo = ({ navigation, route }) => {
 
     return (
         <View style={styles.mainWrapper}>
+            <View style={{position:"relative"}}>
             <Text style={styles.Heading}>Product Info</Text>
             <View style={styles.line}></View>
+            <TouchableOpacity onPress={()=> navigation.navigate('Branch')} style={{ position: "absolute", top:4, right: 0 }}>
+                <MaterialIcons size={32} color="#1788F0" name="home" />
+            </TouchableOpacity>
+            </View>
             <View style={{ borderRadius: 10, overflow: "hidden", marginTop: 30, backgroundColor: "#F9F9F9" }}>
                 <View style={styles.Label}>
                     <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Product Code</Text>
@@ -81,6 +86,12 @@ const ProductInfo = ({ navigation, route }) => {
                 </View>
                 <View style={styles.Desc}>
                     <Text style={{ color: "#626F7F", fontSize: 13 }}>{productDesc}</Text>
+                </View>
+                <View style={styles.Label}>
+                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Unit of Measure</Text>
+                </View>
+                <View style={styles.Desc}>
+                    <Text style={{ color: "#626F7F", fontSize: 13 }}>{product_uom > 1 ? "Carton" : "Piece" }</Text>
                 </View>
             </View>
 
@@ -155,7 +166,7 @@ const ProductInfo = ({ navigation, route }) => {
                     <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.btnSubmit} onPress={handleAddToCart}>
-                    <MaterialCommunityIcons size={30} color="#FFF" name="check" />
+                    <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
                 </TouchableOpacity>
             </View>
         </View>
