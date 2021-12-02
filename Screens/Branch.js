@@ -7,6 +7,7 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Alert
   } from 'react-native';
 
 import {Picker} from '@react-native-picker/picker';
@@ -26,6 +27,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Branch = ({navigation}) => {
     const [empId, setEmpId] = useState('');
     const state = useSelector(state=> state.AllReducers);
+    const cartState = useSelector(state => state.CartReducer);
     const dispatch = useDispatch();
     const isFocused = useIsFocused();
 
@@ -67,6 +69,7 @@ const Branch = ({navigation}) => {
         }        
     }, [state]);
 
+
     const branchItems = ()=> {
         return (
             fetchBranch.map( (item, index) => {               
@@ -88,6 +91,24 @@ const Branch = ({navigation}) => {
     const signout = ()=> {
         removeLocalStore();
         dispatch(doLogout());
+    }
+
+    const handleNext = () => {
+        console.log(cartState.cartItems.length);
+        if(cartState.cartItems.length > 0) {
+            Alert.alert(
+                "Please complete processing the active cart.",
+                "",
+                [
+                    { text: "OK", onPress: () => console.log('ok') }
+                ]
+            );
+        }else{
+            navigation.navigate('activity', {
+                org_id:selectedVal
+            })
+        }
+        
     }
 
 
@@ -115,13 +136,11 @@ const Branch = ({navigation}) => {
                         </Picker>
                 </View>
 
-
                 <View style={{alignItems:"center"}}>
+
                     <TouchableOpacity disabled={selectedVal == 0 ? true : false} 
                         style={[styles.btnSubmit, {backgroundColor:selectedVal == 0 ? "#9d9d9d" : "#1788F0"}]} 
-                        onPress={()=> navigation.navigate('activity', {
-                            org_id:selectedVal
-                        })}>
+                        onPress={handleNext}>
                         <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>               
                     </TouchableOpacity>
 

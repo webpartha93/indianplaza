@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     View,
     Image,
-    ActivityIndicator
+    ActivityIndicator,
+    Alert
 } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -19,6 +20,8 @@ import { itemIncrement, itemDecrement } from '../Redux/Actions/cartAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
+
+
 const Cart = ({ navigation, route }) => {
     const state = useSelector(state => state.CartReducer);
     const checkoutState = useSelector(state => state.CheckOutReducers);
@@ -27,7 +30,7 @@ const Cart = ({ navigation, route }) => {
     const [toggle, setToggle] = useState(false);
     const [getAllData, setGetAllData] = useState('');
     const [getCartItems, setGetCartItems] = useState([]);
-    console.log('cartItems', state.cartItems);
+    console.log('cartItems', state.getAllData);
 
     // useEffect(()=>{
     //     if( route.params!==undefined){
@@ -88,6 +91,20 @@ const Cart = ({ navigation, route }) => {
     const handleDecrement = (id)=> {
         dispatch(itemDecrement(id));
     }
+
+    const showAlert = () =>
+        Alert.alert(
+            "Do you really want to submit?",
+            "",
+            [
+                {
+                text: "Cancel",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+                },
+                { text: "Confirm", onPress: () => doCheckOut() }
+            ]
+        );
 
     return (
         <>
@@ -193,8 +210,18 @@ const Cart = ({ navigation, route }) => {
             </View> */}
             {
                 getCartItems.length > 0 && (  
-                <View style={{ alignItems: "center", marginBottom: 60 }}>
-                <TouchableOpacity style={styles.btnSubmit} onPress={doCheckOut}>
+                <View style={{flexDirection:"row", alignItems: "center", marginBottom: 60 }}>
+                <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
+                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Submit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Scanbarcode', {
+                        deliverDate: getAllData.deliverDate,
+                        deliveryNumber: getAllData.deliveryNumber,
+                        org_id: getAllData.org_id,
+                        vendor_id:getAllData.vendor_id,
+                        activity:getAllData.activity
+                    })
+                    }>
                     <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Continue</Text>
                 </TouchableOpacity>
                 </View> 
@@ -253,7 +280,7 @@ var styles = StyleSheet.create({
         marginBottom: 8
     },
     btnSubmit: {
-        width: "100%",
+        width: "46%",
         height: 42,
         alignItems: "center",
         backgroundColor: "#1788F0",
@@ -261,7 +288,8 @@ var styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         marginTop: 30,
-        padding: 5
+        padding: 5,
+        marginHorizontal:"2%"
     },
     btnSubmitText: {
         color: '#FFF',

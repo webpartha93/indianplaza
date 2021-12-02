@@ -13,21 +13,37 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { getProductInfo } from '../Redux/Actions/AllActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../Redux/Actions/cartAction';
+import { doCheckout } from '../Redux/Actions/CheckoutAction';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductInfo = ({ navigation, route }) => {
     
     const state = useSelector(state => state.AllReducers.productDetails);
     const statecart = useSelector(state => state.CartReducer);
+
     const [product_qty, setProduct_qty] = useState(1);
     const [productName, setProductName] = useState('');
     const [productDesc, setProductDesc] = useState('');
+    const [empId, setEmpId] = useState('');
     const product_id = route.params.productId;
     const product_uom = route.params.product_uom;
     const activity = route.params.activity;
     const getAllData = route.params;
 
     console.log('cartitems', statecart.cartItems);
+
+    const readItemFromStorage = async () => {
+        try {
+          const loggedInUser = await AsyncStorage.getItem("uuid");
+          const parseVal = JSON.parse(loggedInUser);
+          if (loggedInUser !== null) {        
+            return parseVal.emp_id;
+          }
+        } catch (e) {
+          alert('Failed to fetch the data from storage')
+        }
+      }
 
     const handleIncrement = () => {
         setProduct_qty(prevVal => prevVal + 1);
@@ -40,6 +56,7 @@ const ProductInfo = ({ navigation, route }) => {
 
     useEffect(() => {
         dispatch(getProductInfo(route.params.productId));
+        readItemFromStorage().then((value) => setEmpId(value));
     }, [])
 
     useEffect(() => {
@@ -49,10 +66,10 @@ const ProductInfo = ({ navigation, route }) => {
         }
     }, [state])
 
-    const handleAddToCart = () => {
-        navigation.navigate('activity', {
-            org_id:route.params.org_id,
-        })
+
+
+    
+    const handleAddToCart = () => {        
         dispatch(addToCart({
             productData: {
                 productName,
@@ -62,8 +79,29 @@ const ProductInfo = ({ navigation, route }) => {
                 activity
             },
             getAllData
-        }))
+        }))        
     }
+
+    const doCheckOut = ()=> {
+        const updatedCartItem = statecart.cartItems.map(({productName,...rest}) => ({...rest}));
+        console.log('result', getAllData);
+        dispatch(doCheckout({
+            getAllData,
+            updatedCartItem,
+            empId
+        }));
+    }
+
+    useEffect(()=>{
+        console.log('catddd', statecart.isAddedCartItem);
+        if(statecart.isAddedCartItem==true){
+            doCheckOut();
+            // navigation.navigate('activity', {
+            //     org_id:route.params.org_id,
+            // })
+        }
+        //
+    },[statecart])
 
     return (
         <View style={styles.mainWrapper}>

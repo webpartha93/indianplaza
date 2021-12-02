@@ -19,7 +19,7 @@ const Supplier = ({ navigation, route }) => {
     const [selectedVal, setSelectedVal] = useState('');
     const [fetchSupplier, setFetchSupplier] = useState([]);
     const dispatch = useDispatch();
-    console.log('supplier',route.params)
+    console.log('supplier', route.params)
 
     useEffect(() => {
         dispatch(allSupplier());
@@ -43,12 +43,12 @@ const Supplier = ({ navigation, route }) => {
 
     return (
         <View style={styles.mainWrapper}>
-            <View style={{position:"relative"}}>
-            <Text style={styles.Heading}>Supplier</Text>
-            <View style={styles.line}></View>
-            <TouchableOpacity onPress={()=> navigation.navigate('Branch')} style={{ position: "absolute", top:4, right: 0 }}>
-                <MaterialIcons size={32} color="#1788F0" name="home" />
-            </TouchableOpacity>
+            <View style={{ position: "relative" }}>
+                <Text style={styles.Heading}>Supplier</Text>
+                <View style={styles.line}></View>
+                <TouchableOpacity onPress={() => navigation.navigate('Branch')} style={{ position: "absolute", top: 4, right: 0 }}>
+                    <MaterialIcons size={32} color="#1788F0" name="home" />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.formWrapper}>
@@ -67,15 +67,42 @@ const Supplier = ({ navigation, route }) => {
                             supplierItems()
                         }
                     </Picker>
+                    {/* <TextInput placeholder="Type Supplier" placeholderTextColor="#000" style={{paddingLeft:35}} />
+                    <View style={{ width: "100%", height:400, position:"absolute", top:"100%", left:0, right:0, backgroundColor: "#ededed", overflow: "hidden", borderRadius: 30, paddingHorizontal: 10, paddingTop: 5, paddingBottom: 8 }}>
+                        <ScrollView keyboardDismissMode="on-drag" showsVerticalScrollIndicator={false}>
+                            <View style={{ paddingHorizontal: 10, paddingVertical: 5, borderBottomColor: "#ccc", borderBottomWidth: 1 }}>
+                                <Text style={{ color: "#000", fontSize: 15 }}>Test</Text>
+                            </View>
+                            <View style={{ paddingHorizontal: 10, paddingVertical: 5, borderBottomColor: "#ccc", borderBottomWidth: 1 }}>
+                                <Text style={{ color: "#000", fontSize: 15 }}>Test</Text>
+                            </View>
+                            <View style={{ paddingHorizontal: 10, paddingVertical: 5, borderBottomColor: "#ccc", borderBottomWidth: 1 }}>
+                                <Text style={{ color: "#000", fontSize: 15 }}>Test</Text>
+                            </View>
+                            <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+                                <Text style={{ color: "#000", fontSize: 15 }}>Test</Text>
+                            </View>
+                            <View style={{ paddingHorizontal: 10, paddingVertical: 5, borderBottomColor: "#ccc", borderBottomWidth: 1 }}>
+                                <Text style={{ color: "#000", fontSize: 15 }}>Test</Text>
+                            </View>
+                            <View style={{ paddingHorizontal: 10, paddingVertical: 5, borderBottomColor: "#ccc", borderBottomWidth: 1 }}>
+                                <Text style={{ color: "#000", fontSize: 15 }}>Test</Text>
+                            </View>
+                            <View style={{ paddingHorizontal: 10, paddingVertical: 5 }}>
+                                <Text style={{ color: "#000", fontSize: 15 }}>Test</Text>
+                            </View>
+                        </ScrollView>
+                    </View> */}
                 </View>
+
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity disabled={selectedVal == 0 ? true : false} style={[styles.btnSubmit, {backgroundColor:selectedVal == 0 ? "#9d9d9d" : "#1788F0"}]} onPress={() => navigation.navigate('deliveryinfo', {
-                         org_id:route.params.org_id,
-                         activity:route.params.activity,
-                         vendor_id:selectedVal
+                    <TouchableOpacity disabled={selectedVal == 0 ? true : false} style={[styles.btnSubmit, { backgroundColor: selectedVal == 0 ? "#9d9d9d" : "#1788F0" }]} onPress={() => navigation.navigate('deliveryinfo', {
+                        org_id: route.params.org_id,
+                        activity: route.params.activity,
+                        vendor_id: selectedVal
                     })}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>NEXT</Text>
                     </TouchableOpacity>
@@ -119,8 +146,8 @@ var styles = StyleSheet.create({
         width: "100%",
         backgroundColor: "#F2F1F8",
         borderRadius: 30,
-        paddingRight: 15,
-        paddingLeft: 35
+        position:"relative",
+        zIndex:99
     },
     btnSubmit: {
         backgroundColor: "#1788F0",

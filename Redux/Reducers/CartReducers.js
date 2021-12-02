@@ -3,6 +3,7 @@ import { ADD_TO_CART, REMOVE_FROM_CART, INCREMENT, DECREMENT } from '../constant
 const initialState = {
     cartItems:[],
     getAllData:"",
+    isAddedCartItem:false,
     totalAmout:0,
     totalItems:0
 }
@@ -16,13 +17,14 @@ export const CartReducer = (state=initialState, action)=> {
           //console.log('addItemsExist',action.payload)
             existed_item.product_qty = action.payload.productData.product_qty
             return{
-              ...state,
+              ...state,              
              }
         }else{
           action.payload.product_qty;
           console.log('addItems',action.payload)
           return {
             ...state,
+            isAddedCartItem:true,
             cartItems: [...state.cartItems, action.payload.productData],
             getAllData:action.payload.getAllData
           };          

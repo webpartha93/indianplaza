@@ -48,8 +48,9 @@ const HomeStackScreens = ({navigation})=> (
 )
 
 
-const TabScreen = () => {
-
+const TabScreen = ({navigation}) => {
+  const cartState = useSelector(state => state.CartReducer);
+  const checkoutState = useSelector(state => state.CheckOutReducers);
     const dispatch = useDispatch();
     useEffect(() => {
         const backAction = () => {
@@ -115,11 +116,12 @@ const TabScreen = () => {
         name="Cart" 
         component={Cart} 
         options= {({ route }) => ({
-            tabBarLabel: 'Empty Cart',
+            tabBarLabel: 'Empty',
             tabBarColor:"#FFFFFF",
             tabBarIcon: ({ color,size }) => (                
                 <Icon name="delete" color={color} size={size} />
-            )        
+            ),
+            tabBarBadge:cartState.cartItems.length         
         })} />
         <Tab.Screen 
         name="History" 

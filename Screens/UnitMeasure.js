@@ -32,7 +32,7 @@ const UnitMeasure = ({ navigation, route }) => {
         },
         {
             "catName": "Carton",
-            "id": "2"
+            "id": "7"
         }
     ]
 
@@ -53,6 +53,7 @@ const UnitMeasure = ({ navigation, route }) => {
 
     const handleClick = (e) => {
         setId(e);
+        console.log(e);
         navigation.navigate('ProductInfo', {
             productId: route.params.productId,
             deliverDate: route.params.deliverDate,
@@ -96,7 +97,7 @@ const UnitMeasure = ({ navigation, route }) => {
                             unitsCategory.map((item, index) => {
                                 return (
                                     <View style={styles.btnBox} key={index}>
-                                        <TouchableOpacity onPress={() => handleClick(index + 1)} style={{
+                                        <TouchableOpacity onPress={() => handleClick(item.id)} style={{
                                             borderRadius: 10,
                                             backgroundColor: item.id == id ? "#3623B7" : "#FFF",
                                             flexDirection: "column",
