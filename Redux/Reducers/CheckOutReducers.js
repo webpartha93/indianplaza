@@ -25,7 +25,7 @@ export const CheckOutReducers = (state=initialState, action)=> {
               ...state,
               isLoading:false,
               errorMessage:action.payload
-            }            
+            }                    
         default:
           return state;
       }

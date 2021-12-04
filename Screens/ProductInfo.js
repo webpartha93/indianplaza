@@ -7,6 +7,7 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Alert
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -31,7 +32,7 @@ const ProductInfo = ({ navigation, route }) => {
     const activity = route.params.activity;
     const getAllData = route.params;
 
-    console.log('cartitems', statecart.cartItems);
+    //console.log('cartitems', statecart.cartItems);
 
     const readItemFromStorage = async () => {
         try {
@@ -84,7 +85,7 @@ const ProductInfo = ({ navigation, route }) => {
 
     const doCheckOut = ()=> {
         const updatedCartItem = statecart.cartItems.map(({productName,...rest}) => ({...rest}));
-        console.log('result', getAllData);
+        //console.log('result', getAllData);
         dispatch(doCheckout({
             getAllData,
             updatedCartItem,
@@ -94,14 +95,28 @@ const ProductInfo = ({ navigation, route }) => {
 
     useEffect(()=>{
         console.log('catddd', statecart.isAddedCartItem);
-        if(statecart.isAddedCartItem==true){
-            doCheckOut();
-            // navigation.navigate('activity', {
-            //     org_id:route.params.org_id,
-            // })
+        if(statecart.isAddedCartItem){
+            doCheckOut();            
+            navigation.navigate('activity', {
+                org_id:route.params.org_id,
+            })
         }
         //
     },[statecart])
+
+    const showAlert = () =>
+        Alert.alert(
+            "Do you really want to submit?",
+            "",
+            [
+                {
+                text: "No",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
+                },
+                { text: "Yes", onPress: () => handleAddToCart() }
+            ]
+        );
 
     return (
         <View style={styles.mainWrapper}>
@@ -200,10 +215,11 @@ const ProductInfo = ({ navigation, route }) => {
                         },
                         getAllData
                     }))
+                    dispatch({type:"RESET_ADDED_CART"})
                 }}>
                     <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btnSubmit} onPress={handleAddToCart}>
+                <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
                     <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
                 </TouchableOpacity>
             </View>

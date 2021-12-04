@@ -30,7 +30,6 @@ const Cart = ({ navigation, route }) => {
     const [toggle, setToggle] = useState(false);
     const [getAllData, setGetAllData] = useState('');
     const [getCartItems, setGetCartItems] = useState([]);
-    console.log('cartItems', state.getAllData);
 
     // useEffect(()=>{
     //     if( route.params!==undefined){
@@ -55,11 +54,11 @@ const Cart = ({ navigation, route }) => {
     },[]);
 
 
-    useEffect(()=>{        
-        setGetCartItems(state.cartItems);
-        setGetAllData(state.getAllData);
+    useEffect(()=>{
+        setGetAllData(state.getAllData);        
     }, [state]);
 
+    
     const doCheckOut = ()=> {
         const updatedCartItem = state.cartItems.map(({productName,...rest}) => ({...rest}));
         console.log('result', getAllData);
@@ -74,8 +73,7 @@ const Cart = ({ navigation, route }) => {
             //navigation.navigate('navigation');
             console.log('cart-remove');
             checkoutState.checkoutSuccessMessage.status="";
-            state.cartItems=[];
-            setGetCartItems([]);
+            dispatch({type:"RESET_CART_DATA"});
             Toast.show({
                 type: 'success',
                 text1:"Your order has been received",
@@ -92,17 +90,30 @@ const Cart = ({ navigation, route }) => {
         dispatch(itemDecrement(id));
     }
 
+    const checkItemZero = (id)=> Alert.alert(
+        "Do you really want to delete?",
+        "",
+        [
+            {
+            text: "No",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+            },
+            { text: "Yes", onPress: () => handleDecrement(id) }
+        ]
+    )
+
     const showAlert = () =>
         Alert.alert(
             "Do you really want to submit?",
             "",
             [
                 {
-                text: "Cancel",
+                text: "No",
                 onPress: () => console.log("Cancel Pressed"),
                 style: "cancel"
                 },
-                { text: "Confirm", onPress: () => doCheckOut() }
+                { text: "Yes", onPress: () => doCheckOut() }
             ]
         );
 
@@ -112,7 +123,7 @@ const Cart = ({ navigation, route }) => {
             <View style={{ marginBottom: 20 }}>
                 <Text style={styles.Heading}>Cart</Text>
                 {
-                    getCartItems.length > 0 && (
+                    state.cartItems.length > 0 && (
                     <TouchableOpacity style={{ position: "absolute", right: 0 }}>
                         <MaterialIcons size={32} color="#1788F0" name="delete-outline" />
                     </TouchableOpacity>
@@ -121,8 +132,8 @@ const Cart = ({ navigation, route }) => {
                 
             </View>             
             {
-                getCartItems.length > 0 ? (
-                    getCartItems.map((item,index) => {
+                state.cartItems.length > 0 ? (
+                    state.cartItems.map((item,index) => {
                         return (
                             <View style={styles.singleCartProduct} key={index}>
                                 <TouchableOpacity onPress={() =>  setToggle(!toggle)} style={{ marginRight: 15, width: 17 }}>
@@ -144,24 +155,48 @@ const Cart = ({ navigation, route }) => {
                                 <View style={{ alignItems: "center", marginLeft: "auto"}}>
                                     <Text style={styles.QtyHeading}>Quantity</Text>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                        <TouchableOpacity onPress={()=>handleDecrement(item.product_id)} style={{
-                                            width: 28,
-                                            height: 28,
-                                            flexDirection: "column",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            backgroundColor: "#FFF",
-                                            borderRadius: 35,
-                                            shadowOffset: {
-                                                width: 0,
-                                                height: 3,
-                                            },
-                                            shadowOpacity: 0.12,
-                                            shadowRadius: 4.65,
-                                            elevation: 6,
-                                        }}>
-                                            <MaterialCommunityIcons size={16} color="#000" name="minus" />
-                                        </TouchableOpacity>
+                                        {
+                                            item.product_qty > 1 ? (
+                                                <TouchableOpacity onPress={()=>handleDecrement(item.product_id)} style={{
+                                                    width: 28,
+                                                    height: 28,
+                                                    flexDirection: "column",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    backgroundColor: "#FFF",
+                                                    borderRadius: 35,
+                                                    shadowOffset: {
+                                                        width: 0,
+                                                        height: 3,
+                                                    },
+                                                    shadowOpacity: 0.12,
+                                                    shadowRadius: 4.65,
+                                                    elevation: 6,
+                                                }}>
+                                                    <MaterialCommunityIcons size={16} color="#000" name="minus" />
+                                                </TouchableOpacity>
+                                            ) : (
+                                                <TouchableOpacity onPress={()=> checkItemZero(item.product_id)} style={{
+                                                    width: 28,
+                                                    height: 28,
+                                                    flexDirection: "column",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    backgroundColor: "#FFF",
+                                                    borderRadius: 35,
+                                                    shadowOffset: {
+                                                        width: 0,
+                                                        height: 3,
+                                                    },
+                                                    shadowOpacity: 0.12,
+                                                    shadowRadius: 4.65,
+                                                    elevation: 6,
+                                                }}>
+                                                    <MaterialCommunityIcons size={16} color="#000" name="minus" />
+                                                </TouchableOpacity>
+                                            )
+                                        }
+                                        
                                         <Text style={{ paddingHorizontal:10, fontSize: 16, color: "#000" }}>{item.product_qty}</Text>
                                         <TouchableOpacity onPress={()=>handleIncrement(item.product_id)} style={{
                                             width: 28,
@@ -209,12 +244,9 @@ const Cart = ({ navigation, route }) => {
                 <Text style={{ color: "#98A4B2", fontSize: 14 }}>$0.00</Text>
             </View> */}
             {
-                getCartItems.length > 0 && (  
-                <View style={{flexDirection:"row", alignItems: "center", marginBottom: 60 }}>
-                <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
-                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Submit</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Scanbarcode', {
+                state.cartItems.length > 0 && (  
+                <View style={{flexDirection:"row", alignItems: "center", marginBottom: 60 }}>                
+                <TouchableOpacity style={[styles.btnSubmit, {backgroundColor:"#4fabff"}]} onPress={()=> navigation.navigate('Scanbarcode', {
                         deliverDate: getAllData.deliverDate,
                         deliveryNumber: getAllData.deliveryNumber,
                         org_id: getAllData.org_id,
@@ -223,6 +255,9 @@ const Cart = ({ navigation, route }) => {
                     })
                     }>
                     <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Continue</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
+                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Submit</Text>
                 </TouchableOpacity>
                 </View> 
                 )

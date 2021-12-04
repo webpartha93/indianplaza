@@ -20,7 +20,7 @@ const DeliveryInfo = ({ navigation, route }) => {
         deliveryNumber: '',
         remarks: ''
     });
-
+    //console.log(route.params)
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [date, setDate] = useState(new Date());
@@ -85,7 +85,7 @@ const DeliveryInfo = ({ navigation, route }) => {
                         is24Hour={false}
                         display="default"
                         onChange={onChange}
-                        minimumDate={new Date()}
+                        maximumDate={new Date()}
                         style={{backgroundColor:"#1788F0"}}
                     />
                     )}

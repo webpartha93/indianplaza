@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {
     SafeAreaView,
     ScrollView,
@@ -51,7 +51,17 @@ const HomeStackScreens = ({navigation})=> (
 const TabScreen = ({navigation}) => {
   const cartState = useSelector(state => state.CartReducer);
   const checkoutState = useSelector(state => state.CheckOutReducers);
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+
+
+  useEffect(()=> {
+    if(checkoutState.checkoutSuccessMessage.status==="Success"){
+      cartState.cartItems.length=0;
+      dispatch({type:"RESET_CART_DATA"})
+    }
+  }, [checkoutState]);
+
+    
     useEffect(() => {
         const backAction = () => {
         //   Alert.alert("Hold on!", "Are you sure you want to go back?", [
@@ -93,7 +103,8 @@ const TabScreen = ({navigation}) => {
                 paddingBottom:5
             },
             headerShown:false
-      }}>
+      }}
+      >
         <Tab.Screen 
         name="Cancel" 
         component={HomeStackScreens} 
@@ -102,7 +113,7 @@ const TabScreen = ({navigation}) => {
             tabBarColor:"#FFFFFF",
             tabBarIcon: ({ color,size }) => (
                 <Icon name="shoppingcart" color={color} size={size} />
-            )        
+            ),
         })} 
         listeners={({ navigation, route }) => ({
             tabPress: (e) => {
@@ -121,7 +132,7 @@ const TabScreen = ({navigation}) => {
             tabBarIcon: ({ color,size }) => (                
                 <Icon name="delete" color={color} size={size} />
             ),
-            tabBarBadge:cartState.cartItems.length         
+            tabBarBadge:cartState.cartItems.length        
         })} />
         <Tab.Screen 
         name="History" 

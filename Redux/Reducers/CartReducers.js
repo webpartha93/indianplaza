@@ -49,7 +49,8 @@ export const CartReducer = (state=initialState, action)=> {
               let qty = item.product_qty + 1;
               return{
                 ...item,
-                product_qty:qty
+                product_qty:qty,
+                isDeleteItem:false
               }
              
             }
@@ -64,6 +65,7 @@ export const CartReducer = (state=initialState, action)=> {
           let afterDecrementCart = state.cartItems.map((item)=> {
             if(item.product_id == action.payload){
               let qty = item.product_qty - 1;
+              console.log('itemval', qty);
               return{
                 ...item,
                 product_qty:qty
@@ -75,6 +77,17 @@ export const CartReducer = (state=initialState, action)=> {
             ...state,
             cartItems:afterDecrementCart
           }          
+          case "RESET_CART_DATA":
+              return{
+                ...state,
+                isLoading:false,
+                cartItems:[]
+              }
+              case "RESET_ADDED_CART":
+              return{
+                ...state,
+                isAddedCartItem:false
+              }
         default:
           return state;
       }
