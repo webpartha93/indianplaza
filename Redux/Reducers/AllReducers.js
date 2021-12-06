@@ -1,4 +1,4 @@
-import { ALL_BRANCHES_REQUEST, ALL_BRANCHES_SUCCESS, ALL_BRANCHES_FAILURE, ALL_SUPPLIER_REQUEST, ALL_SUPPLIER_SUCCESS, ALL_SUPPLIER_FAILURE, SCAN_PRODUCT_REQUEST, SCAN_PRODUCT_SUCCESS, SCAN_PRODUCT_FAILURE, PRODUCT_INFO_REQUEST, PRODUCT_INFO_SUCCESS, PRODUCT_INFO_FAILURE } from '../constants';
+import { ALL_BRANCHES_REQUEST, ALL_BRANCHES_SUCCESS, ALL_BRANCHES_FAILURE, ALL_SUPPLIER_REQUEST, ALL_SUPPLIER_SUCCESS, ALL_SUPPLIER_FAILURE, SCAN_PRODUCT_REQUEST, SCAN_PRODUCT_SUCCESS, SCAN_PRODUCT_FAILURE, PRODUCT_INFO_REQUEST, PRODUCT_INFO_SUCCESS, PRODUCT_INFO_FAILURE, SEARCH_SUPPLIER_REQUEST, SEARCH_SUPPLIER_SUCCESS, SEARCH_SUPPLIER_FAILURE } from '../constants';
 
 const initialState = {
     isLoggedIn:false,
@@ -7,7 +7,8 @@ const initialState = {
     errorMessage:'',
     allSupplier:"",
     allScanProducts:"",
-    productDetails:""
+    productDetails:"",
+    fetchSupplier:[]
 }
 
 export const AllReducers = (state=initialState, action)=> {
@@ -46,6 +47,27 @@ export const AllReducers = (state=initialState, action)=> {
               isLoggedIn:false,
               errorMessage:action.payload
           }
+
+          case SEARCH_SUPPLIER_REQUEST:
+            return {
+                ...state,
+                isLoading: true,
+            };
+            case SEARCH_SUPPLIER_SUCCESS:
+              return {
+                ...state,
+                isLoading:false,
+                fetchSupplier:action.payload
+              };
+              case SEARCH_SUPPLIER_FAILURE:
+              return {
+                ...state,
+                isLoading:false,
+                errorMessage:action.payload,
+                fetchSupplier:[]
+            }
+
+
           case SCAN_PRODUCT_REQUEST:
           return {
               ...state,

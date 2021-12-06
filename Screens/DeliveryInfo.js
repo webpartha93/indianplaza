@@ -20,7 +20,7 @@ const DeliveryInfo = ({ navigation, route }) => {
         deliveryNumber: '',
         remarks: ''
     });
-
+    //console.log(route.params)
     const [mode, setMode] = useState('date');
     const [show, setShow] = useState(false);
     const [date, setDate] = useState(new Date());
@@ -69,7 +69,6 @@ const DeliveryInfo = ({ navigation, route }) => {
                         placeholderTextColor="#a1a1a1"
                         placeholder="123 456 789 963"
                         style={{ width: "100%", color: "#000" }}
-                        keyboardType="number-pad"
                         onChangeText={(val) => setFormData(values => ({ ...values, deliveryNumber: val }))}
                     />
                 </View>
@@ -86,7 +85,7 @@ const DeliveryInfo = ({ navigation, route }) => {
                         is24Hour={false}
                         display="default"
                         onChange={onChange}
-                        minimumDate={new Date()}
+                        maximumDate={new Date()}
                         style={{backgroundColor:"#1788F0"}}
                     />
                     )}
@@ -97,7 +96,6 @@ const DeliveryInfo = ({ navigation, route }) => {
                 <View style={styles.inputWrapper}>
                     <AntDesign size={16} color="#626F7F" name="edit" style={{ position: "absolute", left: 15, top: 16 }} />
                     <TextInput
-                        placeholder="Lorem ipsum dolor sit amet."
                         editable
                         multiline
                         numberOfLines={5}
