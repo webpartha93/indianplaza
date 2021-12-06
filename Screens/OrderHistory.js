@@ -51,7 +51,7 @@ const OrderHistory = ({ navigation }) => {
         }
     }, [empId, isFocused]);
 
-    console.log('length',state.allHistory.data?.length);
+    //console.log('length',state.allHistory.data?.length);
     
     if(isloading){
         return(
@@ -67,26 +67,33 @@ const OrderHistory = ({ navigation }) => {
             <View style={styles.line}></View>
             <ScrollView style={{ flex: 1, paddingTop:25 }}>
                 {
-                   state.allHistory.data?.length > 0 ? (
-                    state.allHistory.data?.map((item, index) => {
+                    state.allHistory.data?.map((item, index, arr) => {
                         return (
-                            <View style={styles.Row} key={index}>
-                                <View style={{ width: "100%" }}>
-                                    <Text style={{ color: "#1f1f1f", fontWeight: "700", fontSize: 15, marginBottom: 5 }}>Shipment Number: {item.shipment_number}</Text>
-                                    <Text style={{ color: "#6c6c6c", fontSize: 14, marginBottom: 7 }}>Delivery Date: {item.delivery_date}</Text>
-                                    <Text style={{ color: "#000", fontSize: 14 }}><Text style={{ fontWeight: "700" }}>Remarks:</Text> {item.remarks}</Text>
+                            arr.length > 0 ? (
+                                <View style={styles.Row} key={index}>
+                                    <View style={{ width: "100%" }}>
+                                        <Text style={{ color: "#1f1f1f", fontWeight: "700", fontSize: 15, marginBottom: 5 }}>Shipment Number: {item.shipment_number}</Text>
+                                        <Text style={{ color: "#6c6c6c", fontSize: 14, marginBottom: 7 }}>Delivery Date: {item.delivery_date}</Text>
+                                        <Text style={{ color: "#000", fontSize: 14 }}><Text style={{ fontWeight: "700" }}>Remarks:</Text> {item.remarks}</Text>
+                                    </View>
+                                    {/* <View style={{ width: "35%", alignItems: "flex-end" }}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('editaddress')}>
+                                            <Icon name="angle-right" color="#000" size={30}/>
+                                        </TouchableOpacity>
+                                    </View> */}
                                 </View>
-                                {/* <View style={{ width: "35%", alignItems: "flex-end" }}>
-                                    <TouchableOpacity onPress={() => navigation.navigate('editaddress')}>
-                                        <Icon name="angle-right" color="#000" size={30}/>
+                            ):(
+                                <View style={{marginTop:30, alignItems:'center'}}>
+                                    <Text style={{color:"#000", fontSize:20}}>No Orders available</Text>
+                                    <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Branch')}>
+                                        <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Home</Text>
                                     </TouchableOpacity>
-                                </View> */}
-                            </View>
+                                </View>
+                            )
                         )
+
                     })
-                   ):(
-                     <View style={{marginTop:30, alignItems:'center'}}><Text style={{color:"#000", fontSize:20}}>No Orders available</Text></View>
-                   )
+                   
                 }
 
 
@@ -124,5 +131,22 @@ var styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderStyle: "solid",
         marginBottom:15
+    },
+    btnSubmit: {
+        width: "100%",
+        height: 42,
+        alignItems: "center",
+        backgroundColor: "#1788F0",
+        borderRadius: 30,
+        flexDirection: "row",
+        justifyContent: "center",
+        marginTop: 30,
+        padding: 5
+    },
+    btnSubmitText: {
+        color: '#FFF',
+        fontSize: 16,
+        fontWeight: "500",
+        textTransform: "uppercase"
     }
 });
