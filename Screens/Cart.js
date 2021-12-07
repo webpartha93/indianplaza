@@ -16,7 +16,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useDispatch, useSelector } from 'react-redux';
 import { doCheckout } from '../Redux/Actions/CheckoutAction';
-import { itemIncrement, itemDecrement } from '../Redux/Actions/cartAction';
+import { itemIncrement, itemDecrement, removeToCart } from '../Redux/Actions/cartAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 
@@ -60,13 +60,14 @@ const Cart = ({ navigation, route }) => {
 
     
     const doCheckOut = ()=> {
-        const updatedCartItem = state.cartItems.map(({productName,...rest}) => ({...rest}));
+        const updatedCartItem = state.cartItems.map(({productName,activity,...rest}) => ({...rest}));
         console.log('result', getAllData);
         dispatch(doCheckout({
             getAllData,
             updatedCartItem,
             empId
         }));
+        dispatch({type:"RESET_ADDED_CART"});
     }
     useEffect(()=>{
         if(checkoutState.checkoutSuccessMessage.status==="Success"){
@@ -88,6 +89,10 @@ const Cart = ({ navigation, route }) => {
     }
     const handleDecrement = (id)=> {
         dispatch(itemDecrement(id));
+    }
+
+    const handleClearCart = ()=> {
+        return dispatch({type:"RESET_CART_DATA"});
     }
 
     const checkItemZero = (id)=> Alert.alert(
@@ -124,7 +129,7 @@ const Cart = ({ navigation, route }) => {
                 <Text style={styles.Heading}>Cart</Text>
                 {
                     state.cartItems.length > 0 && (
-                    <TouchableOpacity style={{ position: "absolute", right: 0 }}>
+                    <TouchableOpacity onPress={handleClearCart} style={{ position: "absolute", right: 0 }}>
                         <MaterialIcons size={32} color="#1788F0" name="delete-outline" />
                     </TouchableOpacity>
                     )
@@ -136,16 +141,8 @@ const Cart = ({ navigation, route }) => {
                     state.cartItems.map((item,index) => {
                         return (
                             <View style={styles.singleCartProduct} key={index}>
-                                <TouchableOpacity onPress={() =>  setToggle(!toggle)} style={{ marginRight: 15, width: 17 }}>
-                                    {                                        
-                                        toggle ? (
-                                            <View style={{ width: 16, position: "relative", height: 16 }}>
-                                                <MaterialIcons size={16} color="#3623B7" name="check-box" style={{ position: "absolute", top: 0, left: 0 }} />
-                                            </View>
-                                        ) : (
-                                            <View style={{ width: 15, height: 15, borderRadius: 3, borderColor: "#CECECE", borderWidth: 1, backgroundColor: "#FFF" }}></View>    
-                                        )
-                                    }
+                                <TouchableOpacity onPress={() => dispatch(removeToCart(item.product_id)) } style={{ marginRight: 15, width: 17 }}>
+                                    <MaterialIcons size={20} color="#626F7F" name="delete-outline" />
                                 </TouchableOpacity>
                                 <Image source={require('../assets/product.png')} />
                                 <View style={{ paddingHorizontal: 10, width:"45%" }}>
@@ -197,7 +194,7 @@ const Cart = ({ navigation, route }) => {
                                             )
                                         }
                                         
-                                        <Text style={{ paddingHorizontal:10, fontSize: 16, color: "#000" }}>{item.product_qty}</Text>
+                                        <Text style={{ paddingHorizontal:10, fontSize: 16, color: "#000" }}>{Number(item.product_qty)}</Text>
                                         <TouchableOpacity onPress={()=>handleIncrement(item.product_id)} style={{
                                             width: 28,
                                             height: 28,
@@ -246,13 +243,17 @@ const Cart = ({ navigation, route }) => {
             {
                 state.cartItems.length > 0 && (  
                 <View style={{flexDirection:"row", alignItems: "center", marginBottom: 60 }}>                
-                <TouchableOpacity style={[styles.btnSubmit, {backgroundColor:"#4fabff"}]} onPress={()=> navigation.navigate('Scanbarcode', {
+                <TouchableOpacity style={[styles.btnSubmit, {backgroundColor:"#4fabff"}]} onPress={()=> {navigation.navigate('Scanbarcode', {
                         deliverDate: getAllData.deliverDate,
                         deliveryNumber: getAllData.deliveryNumber,
                         org_id: getAllData.org_id,
                         vendor_id:getAllData.vendor_id,
-                        activity:getAllData.activity
+                        activity:getAllData.activity,
+                        barcode:""
                     })
+                    dispatch({type:"RESET_ADDED_CART"})
+                    dispatch({type:"RESET_SCAN_DATA"})
+                }
                     }>
                     <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Continue</Text>
                 </TouchableOpacity>

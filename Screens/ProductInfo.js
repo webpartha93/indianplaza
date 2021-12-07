@@ -47,10 +47,21 @@ const ProductInfo = ({ navigation, route }) => {
       }
 
     const handleIncrement = () => {
+
         setProduct_qty(prevVal => prevVal + 1);
     }
     const handleDecrement = () => {
         setProduct_qty(prevVal => prevVal - 1);
+    }
+
+    const handleNumberChange = (e)=> {
+        var numberVal = Number(e);
+        console.log(numberVal);
+        if(e <= 1){
+            setProduct_qty(1);
+        }else{
+            setProduct_qty(numberVal);
+        }        
     }
 
     const dispatch = useDispatch();
@@ -91,6 +102,7 @@ const ProductInfo = ({ navigation, route }) => {
             updatedCartItem,
             empId
         }));
+        dispatch({type:"RESET_ADDED_CART"});
     }
 
     useEffect(()=>{
@@ -119,7 +131,7 @@ const ProductInfo = ({ navigation, route }) => {
         );
 
     return (
-        <View style={styles.mainWrapper}>
+        <ScrollView style={styles.mainWrapper}>
             <View style={{position:"relative"}}>
             <Text style={styles.Heading}>Product Info</Text>
             <View style={styles.line}></View>
@@ -169,7 +181,8 @@ const ProductInfo = ({ navigation, route }) => {
                     }}>
                         <MaterialCommunityIcons size={20} color="#000" name="minus" />
                     </TouchableOpacity>
-                    <Text style={{ paddingHorizontal: 20, fontSize: 20, color: "#000" }}>{product_qty}</Text>
+                    {/* <Text style={{ paddingHorizontal: 20, fontSize: 20, color: "#000" }}>{product_qty}</Text> */}
+                    <TextInput keyboardType = 'numeric' defaultValue={product_qty.toString()} value={product_qty.toString()} onChangeText={(e)=> handleNumberChange(e)} style={{ paddingHorizontal: 20, fontSize: 20, color: "#000" }} />
                     <TouchableOpacity onPress={handleIncrement} style={{
                         width: 35,
                         height: 35,
@@ -223,7 +236,7 @@ const ProductInfo = ({ navigation, route }) => {
                     <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 

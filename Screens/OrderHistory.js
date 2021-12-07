@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getHistory } from '../Redux/Actions/HistoryAction';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const OrderHistory = ({ navigation }) => {
     const state = useSelector(state => state.HistoryReducers);
@@ -63,25 +64,26 @@ const OrderHistory = ({ navigation }) => {
 
     return (
         <View style={styles.mainWrapper}>
-            <Text style={styles.Heading}>History</Text>
-            <View style={styles.line}></View>
+            <View style={{position:"relative"}}>
+                <Text style={styles.Heading}>History</Text>
+                <View style={styles.line}></View>
+                <TouchableOpacity onPress={()=> navigation.navigate('Branch')} style={{ position: "absolute", top:4, right: 0 }}>
+                    <MaterialIcons size={32} color="#1788F0" name="home" />
+                </TouchableOpacity>
+            </View>            
             <ScrollView style={{ flex: 1, paddingTop:25 }}>
                 {
                     state.allHistory.data?.map((item, index, arr) => {
                         return (
                             arr.length > 0 ? (
-                                <View style={styles.Row} key={index}>
+                                <TouchableOpacity style={styles.Row} key={index} onPress={() => navigation.navigate('SingleHistory', {
+                                    shipment_line_id:item.shipment_line_id
+                                })}>
                                     <View style={{ width: "100%" }}>
                                         <Text style={{ color: "#1f1f1f", fontWeight: "700", fontSize: 15, marginBottom: 5 }}>Shipment Number: {item.shipment_number}</Text>
                                         <Text style={{ color: "#6c6c6c", fontSize: 14, marginBottom: 7 }}>Delivery Date: {item.delivery_date}</Text>
-                                        <Text style={{ color: "#000", fontSize: 14 }}><Text style={{ fontWeight: "700" }}>Remarks:</Text> {item.remarks}</Text>
                                     </View>
-                                    {/* <View style={{ width: "35%", alignItems: "flex-end" }}>
-                                        <TouchableOpacity onPress={() => navigation.navigate('editaddress')}>
-                                            <Icon name="angle-right" color="#000" size={30}/>
-                                        </TouchableOpacity>
-                                    </View> */}
-                                </View>
+                                </TouchableOpacity>
                             ):(
                                 <View style={{marginTop:30, alignItems:'center'}}>
                                     <Text style={{color:"#000", fontSize:20}}>No Orders available</Text>

@@ -31,12 +31,12 @@ export const CartReducer = (state=initialState, action)=> {
         }
 
         case REMOVE_FROM_CART:
-        // let removeItem = state.cartItems.filter((item)=> {
-        //   return item.item_id !== action.payload
-        // });
+        let removeItem = state.cartItems.filter((item)=> {
+          return item.product_id !== action.payload
+        });
 
-        let removeItem = state.cartItems.filter(item => !values.includes(item));
-          console.log(arr);
+        // let removeItem = state.cartItems.filter(item => !values.includes(item));
+        //   console.log(arr);
 
         return{
           ...state,
@@ -78,16 +78,16 @@ export const CartReducer = (state=initialState, action)=> {
             cartItems:afterDecrementCart
           }          
           case "RESET_CART_DATA":
-              return{
-                ...state,
-                isLoading:false,
-                cartItems:[]
-              }
-              case "RESET_ADDED_CART":
-              return{
-                ...state,
-                isAddedCartItem:false
-              }
+            return{
+              ...state,
+              isLoading:false,
+              cartItems:[]
+            }
+            case "RESET_ADDED_CART":
+            return{
+              ...state,
+              isAddedCartItem:false
+            }
         default:
           return state;
       }

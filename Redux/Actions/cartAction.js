@@ -10,7 +10,7 @@ export const addToCart = (payload)=> {
 }
 
 export const removeToCart = (payload)=> {
-    //console.log(payload);
+    console.log('dsfdsfdsf',payload);
     return{
         type:REMOVE_FROM_CART,
         payload

@@ -75,7 +75,7 @@ const Supplier = ({ navigation, route }) => {
                             supplierItems()
                         }
                     </Picker> */}
-                    <TextInput value={inputVal} onChangeText={(e) => {setInputVal(e), setIsvisible(true)}} placeholder="Type Supplier" placeholderTextColor="#000" style={{ paddingLeft: 35, color: "#000" }} />
+                    <TextInput value={inputVal} onChangeText={(e) => {setInputVal(e), setIsvisible(true)}} placeholder="Type Supplier" placeholderTextColor="#626F7F" style={{ paddingLeft: 35, color: "#000" }} />
 
                 </View>
 
