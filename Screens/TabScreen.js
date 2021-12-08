@@ -54,7 +54,7 @@ const HomeStackScreens = ({ navigation }) => (
 const HistoryStackScreens = ({ navigation }) => (
   <History.Navigator screenOptions={{ headerShown: false }}>
     <History.Screen name="History" component={OrderHistory} screenOptions={{ headerShown: false }} />
-    <HomeStack.Screen name="SingleHistory" component={OrderHistoryDetails} screenOptions={{ headerShown: false }} />
+    <HomeStack.Screen name="SingleHistory" component={OrderHistoryDetails} />
   </History.Navigator>
 )
 
@@ -128,7 +128,7 @@ const TabScreen = ({ navigation, route }) => {
         options={({ route }) => ({
           tabBarActiveTintColor: route.name == "Home" ? "#1788F0" : "#515151",
           tabBarInactiveTintColor: "#515151",
-          tabBarLabel: 'Cart',
+          tabBarLabel: 'Home',
           tabBarColor: "#FFFFFF",
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" color={color} size={size} />
@@ -138,7 +138,7 @@ const TabScreen = ({ navigation, route }) => {
           tabPress: (e) => {
             //e.preventDefault();
             dispatch({ type: "RESET_SCAN_DATA" })
-            //navigation.navigate('Cart');
+            navigation.navigate('Branch');
           },
         })}
       />
@@ -152,6 +152,7 @@ const TabScreen = ({ navigation, route }) => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="shoppingcart" color={color} size={size} />
           ),
+          tabBarBadgeStyle:{opacity: cartState.cartItems.length > 0 ? 1 : 0},
           tabBarBadge: cartState.cartItems.length
         })}
         listeners={({ navigation, route }) => ({
@@ -177,7 +178,7 @@ const TabScreen = ({ navigation, route }) => {
             // navigation.navigate('Cart');
             cartState.cartItems.length > 0 && (
               Alert.alert(
-                "Do you really want to delete?",
+                "Do you really want to delete all items from the cart?",
                 "",
                 [{ text: "No", onPress: () => console.log('hi') },
                 { text: "Yes", onPress: () => dispatch({ type: "RESET_CART_DATA" }) }
@@ -219,8 +220,13 @@ const TabScreen = ({ navigation, route }) => {
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
             e.preventDefault();
-            removeLocalStore();
-            dispatch(doLogout());
+            Alert.alert(
+              "Do you really want to sign out?",
+              "",
+              [{ text: "No", onPress: () => console.log('hi') },
+              { text: "Yes", onPress: () => {removeLocalStore(), dispatch(doLogout())} }
+              ]
+            )
           },
         })}
       />

@@ -18,35 +18,89 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const OrderHistoryDetails = ({ navigation, route }) => {
     const state = useSelector(state => state.HistoryReducers);
+    const [isLoading, setIsloading] = useState(true);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getHistoryDetails(route.params.shipment_line_id));
+        dispatch(getHistoryDetails(route.params.shipment_header_id));
     }, []);
 
-    //console.log('historydata', state);
-    return (
-        <View style={styles.mainWrapper}>
-            <View style={{ position: "relative" }}>
-                <Text style={styles.Heading}>History</Text>
-                <View style={styles.line}></View>
-                <TouchableOpacity onPress={() => navigation.navigate('Branch')} style={{ position: "absolute", top: 4, right: 0 }}>
-                    <MaterialIcons size={32} color="#1788F0" name="home" />
-                </TouchableOpacity>
+    useEffect(() => {
+        setIsloading(state.isLoading);
+    }, [state]);
+
+    if (isLoading) {
+        return (
+            <View style={{ flex: 1, position: "absolute", zIndex: 2, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "#FFF" }}>
+                <View style={{
+                    backgroundColor: "#FFF", paddingHorizontal: 15, paddingVertical: 15, borderRadius: 5, shadowOffset: {
+                        width: 0,
+                        height: 3,
+                    },
+                    shadowOpacity: 0.12,
+                    shadowRadius: 4.65,
+                    elevation: 6,
+                }}>
+                    <ActivityIndicator size="large" color="#7b0b0d" />
+                </View>
             </View>
-            <ScrollView style={{ flex: 1, paddingTop: 25 }}>
-                {
-                    state.historyDetails.data !== undefined && (
-                        <View style={styles.Row}>
-                            <View style={{ width: "100%" }}>
-                                <Text style={{ color: "#1f1f1f", fontWeight: "700", fontSize: 15, marginBottom: 5 }}>Quantity: {state.historyDetails.data.quantity}</Text>
-                                <Text style={{ color: "#6c6c6c", fontSize: 14, marginBottom: 7 }}>Date &amp; Time: {state.historyDetails.data.add_datetime}</Text>
+        )
+    };
+
+    //console.log('historydata', state.historyDetails.data.lines);
+    return (
+        <>
+            <View style={styles.mainWrapper}>
+                <View style={{ paddingTop: 25, paddingBottom: 20 }}>
+                    <TouchableOpacity onPress={() => { navigation.goBack(), dispatch({ type: "RESET_HISTORY_DETAILS" }) }} style={{ flexDirection: "row", alignItems: "center" }}><Icon size={26} color="#000" name="angle-left" /><Text style={{ color: "#000", fontSize: 18, marginLeft: 8 }}> Back</Text></TouchableOpacity>
+                </View>
+                <ScrollView style={{ flex: 1, paddingTop: 15 }}>
+                    {
+                        state.historyDetails.data !== undefined && (
+                            <View style={styles.Row}>
+                                <View style={{ width: "100%", position: "relative" }}>
+                                    <Text style={{ color: "#626F7F", fontSize: 17, marginBottom: 5, fontWeight: "700" }}>#{state.historyDetails.data.shipment_number}</Text>
+                                    <Text style={{ color: "green", fontSize: 15, position: "absolute", top: 5, right: 10 }}>{state.historyDetails.data.status}</Text>
+                                    <Text style={{ color: "#626F7F", fontSize: 14, marginBottom: 5 }}>{state.historyDetails.data.delivery_date}</Text>
+                                    <Text style={{ color: "#626F7F", fontSize: 14, marginBottom: 5 }}>{state.historyDetails.data.org_name}</Text>
+                                    <Text style={{ color: "#626F7F", fontSize: 14, marginBottom: 5 }}>{state.historyDetails.data.vendor_name}</Text>
+                                    <View style={{marginTop:20}}>
+                                    <View style={{
+                                        borderTopWidth:3, borderTopColor:"#1788F0",
+                                        backgroundColor: "#FFF", paddingVertical: 15}}>
+                                        {
+                                            state.historyDetails.data.lines.map((item, index, arr) => {
+                                                if (arr.length - 1 === index) {
+                                                    return (
+                                                        <View key={index} style={{ position: "relative", paddingVertical: 10 }}>
+                                                            <Text style={{ color: "#626F7F", fontSize: 15, marginBottom: 5, fontWeight: "700" }}>{item.item_description}</Text>
+                                                            <Text style={{ color: "#626F7F", fontSize: 17, fontWeight: "700", position: "absolute", top: 10, right: 0 }}>
+                                                                Qty: {Math.floor(item.quantity)}</Text>
+                                                            <Text style={{ color: "#626F7F", fontSize: 14, marginBottom: 7 }}>{item.measure_name}</Text>
+                                                        </View>
+                                                    )
+                                                } else {
+                                                    return (
+                                                        <View key={index} style={{ position: "relative", paddingVertical: 10, borderBottomColor: "#ccc", borderBottomWidth: 1 }}>
+                                                            <Text style={{ color: "#626F7F", fontSize: 15, marginBottom: 5, fontWeight: "700" }}>{item.item_description}</Text>
+                                                            <Text style={{ color: "#626F7F", fontSize: 17, fontWeight: "700", position: "absolute", top: 10, right: 0 }}>
+                                                                Qty: {Math.floor(item.quantity)}</Text>
+                                                            <Text style={{ color: "#626F7F", fontSize: 14, marginBottom: 7 }}>{item.measure_name}</Text>
+                                                        </View>
+                                                    )
+                                                }
+
+                                            })
+                                        }
+                                    </View>
+                                    </View>
+                                </View>
                             </View>
-                        </View>
-                    )
-                }
-            </ScrollView>
-        </View>
+                        )
+                    }
+                </ScrollView>
+            </View>
+        </>
     )
 }
 
@@ -56,7 +110,7 @@ var styles = StyleSheet.create({
     mainWrapper: {
         flex: 1,
         paddingHorizontal: 30,
-        paddingTop: 40,
+        paddingTop: 0,
         backgroundColor: '#FFF'
     },
     Heading: {

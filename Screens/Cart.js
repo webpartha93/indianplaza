@@ -127,13 +127,13 @@ const Cart = ({ navigation, route }) => {
         <ScrollView style={styles.mainWrapper}>
             <View style={{ marginBottom: 20 }}>
                 <Text style={styles.Heading}>Cart</Text>
-                {
+                {/* {
                     state.cartItems.length > 0 && (
                     <TouchableOpacity onPress={handleClearCart} style={{ position: "absolute", right: 0 }}>
                         <MaterialIcons size={32} color="#1788F0" name="delete-outline" />
                     </TouchableOpacity>
                     )
-                }
+                } */}
                 
             </View>             
             {

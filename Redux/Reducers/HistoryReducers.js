@@ -44,7 +44,13 @@ export const HistoryReducers = (state=initialState, action)=> {
               ...state,
               isLoading:false,
               historyDetails:""
-            }           
+            } 
+            case "RESET_HISTORY_DETAILS":
+            return {
+              ...state,
+              isLoading:false,
+              historyDetails:""
+            }          
         default:
           return state;
       }

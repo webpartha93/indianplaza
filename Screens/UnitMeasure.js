@@ -72,9 +72,6 @@ const UnitMeasure = ({ navigation, route }) => {
             <View style={{ paddingHorizontal: 30, paddingTop: 40 }}>
                 <View style={{position:"relative"}}>
                     <Text style={styles.Heading}>Unit of Measure</Text>
-                    <TouchableOpacity onPress={()=> navigation.navigate('Branch')} style={{ position: "absolute", top:4, right: 0 }}>
-                        <MaterialIcons size={32} color="#1788F0" name="home" />
-                    </TouchableOpacity>
                 </View>
                 <View style={styles.line}></View>
                 <View style={{ borderRadius: 10, overflow: "hidden", marginTop: 30, backgroundColor: "#F9F9F9" }}>

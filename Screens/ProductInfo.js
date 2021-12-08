@@ -22,6 +22,7 @@ const ProductInfo = ({ navigation, route }) => {
     
     const state = useSelector(state => state.AllReducers.productDetails);
     const statecart = useSelector(state => state.CartReducer);
+    const statecheckout = useSelector(state => state.CheckOutReducers);
 
     const [product_qty, setProduct_qty] = useState(1);
     const [productName, setProductName] = useState('');
@@ -78,8 +79,6 @@ const ProductInfo = ({ navigation, route }) => {
         }
     }, [state])
 
-
-
     
     const handleAddToCart = () => {        
         dispatch(addToCart({
@@ -109,12 +108,21 @@ const ProductInfo = ({ navigation, route }) => {
         console.log('catddd', statecart.isAddedCartItem);
         if(statecart.isAddedCartItem){
             doCheckOut();            
-            navigation.navigate('activity', {
-                org_id:route.params.org_id,
-            })
         }
         //
     },[statecart])
+
+    
+    useEffect(()=>{
+            console.log('checkoutreducer',statecheckout.checkoutSuccessMessage.data);
+            if(statecheckout.checkoutSuccessMessage.data!==undefined){
+                shipmentNumberAlert(statecheckout.checkoutSuccessMessage.data);
+            }
+            //
+        },[statecheckout])
+    // navigation.navigate('activity', {
+    //     org_id:route.params.org_id,
+    // })
 
     const showAlert = () =>
         Alert.alert(
@@ -130,14 +138,25 @@ const ProductInfo = ({ navigation, route }) => {
             ]
         );
 
+        const shipmentNumberAlert = (number) =>
+        Alert.alert(
+            `Your Shipment Number is ${number}`,
+            "",
+            [
+                { text: "Ok", onPress: () =>  {navigation.navigate('activity', {
+                     org_id:route.params.org_id,
+                })
+                dispatch({type:"REMOVE_CHECKOUT_DATA"})
+                }
+                }
+            ]
+        );
+
     return (
         <ScrollView style={styles.mainWrapper}>
             <View style={{position:"relative"}}>
             <Text style={styles.Heading}>Product Info</Text>
             <View style={styles.line}></View>
-            <TouchableOpacity onPress={()=> navigation.navigate('Branch')} style={{ position: "absolute", top:4, right: 0 }}>
-                <MaterialIcons size={32} color="#1788F0" name="home" />
-            </TouchableOpacity>
             </View>
             <View style={{ borderRadius: 10, overflow: "hidden", marginTop: 30, backgroundColor: "#F9F9F9" }}>
                 <View style={styles.Label}>

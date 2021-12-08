@@ -46,61 +46,91 @@ const OrderHistory = ({ navigation }) => {
     useEffect(() => {
         if (empId !== undefined) {
             dispatch(getHistory(empId));
-            setTimeout(()=> {
-                setIsloading(false);
-            }, 1000);
         }
     }, [empId, isFocused]);
 
-    //console.log('length',state.allHistory.data?.length);
+    useEffect(() => {
+        setIsloading(state.isLoading);
+    }, [state]);
+
+    //console.log('length',state.allHistory);
     
     if(isloading){
         return(
-          <View style={{flex:1, justifyContent:'center', alignItems:"center", backgroundColor:"#FFF"}}>
-            <ActivityIndicator size="large" color="#7b0b0d" />
-          </View>
+            <View style={{ flex: 1, position: "absolute", zIndex: 2, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "#FFF" }}>
+            <View style={{
+                backgroundColor: "#FFF", paddingHorizontal: 15, paddingVertical: 15, borderRadius: 5, shadowOffset: {
+                    width: 0,
+                    height: 3,
+                },
+                shadowOpacity: 0.12,
+                shadowRadius: 4.65,
+                elevation: 6,
+            }}>
+                <ActivityIndicator size="large" color="#7b0b0d" />
+            </View>
+        </View>
         )
       };
 
     return (
-        <View style={styles.mainWrapper}>
+        <>
+        <View style={styles.mainWrapper}>            
             <View style={{position:"relative"}}>
                 <Text style={styles.Heading}>History</Text>
                 <View style={styles.line}></View>
-                <TouchableOpacity onPress={()=> navigation.navigate('Branch')} style={{ position: "absolute", top:4, right: 0 }}>
-                    <MaterialIcons size={32} color="#1788F0" name="home" />
-                </TouchableOpacity>
             </View>            
             <ScrollView style={{ flex: 1, paddingTop:25 }}>
                 {
-                    state.allHistory.data?.map((item, index, arr) => {
-                        return (
-                            arr.length > 0 ? (
-                                <TouchableOpacity style={styles.Row} key={index} onPress={() => navigation.navigate('SingleHistory', {
-                                    shipment_line_id:item.shipment_line_id
-                                })}>
-                                    <View style={{ width: "100%" }}>
-                                        <Text style={{ color: "#1f1f1f", fontWeight: "700", fontSize: 15, marginBottom: 5 }}>Shipment Number: {item.shipment_number}</Text>
-                                        <Text style={{ color: "#6c6c6c", fontSize: 14, marginBottom: 7 }}>Delivery Date: {item.delivery_date}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            ):(
-                                <View style={{marginTop:30, alignItems:'center'}}>
-                                    <Text style={{color:"#000", fontSize:20}}>No Orders available</Text>
-                                    <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Branch')}>
-                                        <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Home</Text>
+                        state.allHistory.data?.map((item, index, arr) => {
+                            return (
+                                arr.length > 0 ? (
+                                    <TouchableOpacity style={styles.Row} key={index} onPress={() => navigation.navigate('SingleHistory', {
+                                        shipment_header_id:item.shipment_header_id
+                                    })}>
+                                        <View style={{ width: "100%" }}>
+                                            <Text style={{ color: "#1f1f1f", fontWeight: "700", fontSize: 16, marginBottom: 5 }}>#{item.shipment_number}</Text>
+                                            <Text style={{ color: "#626F7F", fontSize: 13, marginBottom: 4 }}>{item.org_name}</Text>
+                                            <Text style={{ color: "#626F7F", fontSize: 13, marginBottom: 4}}>{item.vendor_name}</Text>
+                                            <Text style={{ color: "#626F7F", fontSize: 13, marginBottom: 4 }}>{item.delivery_date}</Text>
+                                        </View>
+                                        <Icon size={26} color="#626F7F" name="angle-right" style={{position:"absolute", top:"38%", right:0}} />
                                     </TouchableOpacity>
-                                </View>
+                                ):(
+                                    <View style={{marginTop:30, alignItems:'center'}}>
+                                        <Text style={{color:"#000", fontSize:20}}>No Orders available</Text>
+                                        <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Branch')}>
+                                            <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Home</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )
                             )
-                        )
-
-                    })
+    
+                        })                 
                    
                 }
 
 
             </ScrollView>
         </View>
+        {/* {
+                state.isLoading && (
+                    <View style={{ flex: 1, position: "absolute", zIndex: 2, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "rgba(255,255,255,0.4)" }}>
+                        <View style={{
+                            backgroundColor: "#FFF", paddingHorizontal: 15, paddingVertical: 15, borderRadius: 5, shadowOffset: {
+                                width: 0,
+                                height: 3,
+                            },
+                            shadowOpacity: 0.12,
+                            shadowRadius: 4.65,
+                            elevation: 6,
+                        }}>
+                            <ActivityIndicator size="large" color="#7b0b0d" />
+                        </View>
+                    </View>
+                )
+            } */}
+        </>
     )
 }
 

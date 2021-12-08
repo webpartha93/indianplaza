@@ -24,8 +24,16 @@ export const CheckOutReducers = (state=initialState, action)=> {
             return {
               ...state,
               isLoading:false,
-              errorMessage:action.payload
-            }                    
+              errorMessage:action.payload,
+              checkoutSuccessMessage:""
+            } 
+            case "REMOVE_CHECKOUT_DATA":
+            return {
+              ...state,
+              isLoading:false,
+              errorMessage:"",
+              checkoutSuccessMessage:""
+            }                   
         default:
           return state;
       }
