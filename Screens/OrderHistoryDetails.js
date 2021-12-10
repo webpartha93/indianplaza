@@ -62,6 +62,7 @@ const OrderHistoryDetails = ({ navigation, route }) => {
                                     <Text style={{ color: "#626F7F", fontSize: 17, marginBottom: 5, fontWeight: "700" }}>#{state.historyDetails.data.shipment_number}</Text>
                                     <Text style={{ color: "green", fontSize: 15, position: "absolute", top: 5, right: 10 }}>{state.historyDetails.data.status}</Text>
                                     <Text style={{ color: "#626F7F", fontSize: 14, marginBottom: 5 }}>{state.historyDetails.data.delivery_date}</Text>
+                                    <Text style={{ color: "#626F7F", fontSize: 14, marginBottom: 5 }}>{state.historyDetails.data.delivery_note_num}</Text>
                                     <Text style={{ color: "#626F7F", fontSize: 14, marginBottom: 5 }}>{state.historyDetails.data.org_name}</Text>
                                     <Text style={{ color: "#626F7F", fontSize: 14, marginBottom: 5 }}>{state.historyDetails.data.vendor_name}</Text>
                                     <View style={{marginTop:20}}>
