@@ -68,6 +68,7 @@ const Cart = ({ navigation, route }) => {
             empId
         }));
         dispatch({type:"RESET_ADDED_CART"});
+        
     }
     useEffect(()=>{
         if(checkoutState.checkoutSuccessMessage.status==="Success"){
@@ -75,6 +76,7 @@ const Cart = ({ navigation, route }) => {
             console.log('cart-remove');
             checkoutState.checkoutSuccessMessage.status="";
             dispatch({type:"RESET_CART_DATA"});
+            dispatch({type:"REMOVE_CHECKOUT_DATA"})
             Toast.show({
                 type: 'success',
                 text1:"Your order has been received",
