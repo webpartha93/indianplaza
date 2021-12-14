@@ -132,4 +132,3 @@ export const getProductInfo = (payload)=> async (dispatch, getState)=> {
         dispatch({type:PRODUCT_INFO_FAILURE, payload:error.response.data})
     }   
 }
-

@@ -9,7 +9,8 @@ import {
     Image,
     View,
     ActivityIndicator,
-    PermissionsAndroid
+    PermissionsAndroid,
+    Alert
   } from 'react-native';
   import { useIsFocused } from '@react-navigation/native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -19,6 +20,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { afterScanProduct } from '../Redux/Actions/AllActions';
 import Toast from 'react-native-toast-message';
 import BarcodeScanner from 'react-native-scan-barcode';
+
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { unknownItems } from '../Redux/Actions/UnknownItemAction';
 
 
 const requestCameraPermission = async () => {
@@ -48,8 +52,10 @@ const requestCameraPermission = async () => {
 
 const ScanPage = ({navigation, route}) => {
     const state = useSelector(state=> state.AllReducers);
+    const unknownItemState = useSelector(state=> state.UnknownItemReducers);
     const dispatch = useDispatch();
     const [barcode, setBarcode] = useState();
+    const [unknownItemId, setUnknownItemId] = useState('');
     const isFocused = useIsFocused();
     const onSuccess = e => {
         dispatch(afterScanProduct(e.data));
@@ -66,7 +72,7 @@ const ScanPage = ({navigation, route}) => {
     
    useEffect(() => {       
     if (state.allScanProducts.data !== undefined) { 
-        console.log('dddd',state.allScanProducts.data);
+        //console.log('dddd',state.allScanProducts.data);
         if(state.allScanProducts.data.length > 1 ){            
             navigation.navigate('ProductList',{
                 barcode:barcode,
@@ -79,11 +85,21 @@ const ScanPage = ({navigation, route}) => {
                 activity:route.params.activity
             });
         }else{
-            Toast.show({
-                type: 'error',
-                text1: "No Products Found. Scan again please",
-                autoHide:true,
-                onHide: () => {state.allScanProducts=""}
+            // Toast.show({
+            //     type: 'error',
+            //     text1: "No Products Found. Scan again please",
+            //     autoHide:true,
+            //     onHide: () => {state.allScanProducts=""}
+            // });
+
+            navigation.navigate('UnknownItem', {
+                barcode:barcode,
+                dataLength:1,
+                deliverDate:route.params.deliverDate,
+                deliveryNumber:route.params.deliveryNumber,
+                org_id:route.params.org_id,
+                vendor_id:route.params.vendor_id,
+                activity:route.params.activity
             });
             
         }
@@ -107,6 +123,7 @@ const ScanPage = ({navigation, route}) => {
         requestCameraPermission();
     },[]);
 
+
     return (
         <>
         {/* <QRCodeScanner
@@ -115,6 +132,10 @@ const ScanPage = ({navigation, route}) => {
             showMarker={true}
             reactivate={true}
         /> */}
+        <TouchableOpacity onPress={()=> {navigation.goBack(), dispatch({type:"RESET_SCAN_DATA"})}} style={{position:"absolute", top:15, left:15, zIndex:3, backgroundColor:"rgba(255,255,255,0.8)", padding:14, borderRadius:30}}>
+          <MaterialIcons name='arrow-back' color="#000" size={20} />
+        </TouchableOpacity>
+          
         {
             state.isLoading && (
                 <View style={{ flex: 1, position: "absolute", zIndex:3, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "rgba(255,255,255,0.4)" }}>
@@ -144,7 +165,7 @@ const ScanPage = ({navigation, route}) => {
             viewFinderBorderLength={80}
             // viewFinderShowLoadingIndicator={state.isLoading}
         />
-        <Toast position='top' style={{ backgroundColor: "#000" }} />
+        {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
         </>
     )
 }

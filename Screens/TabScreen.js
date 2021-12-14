@@ -26,6 +26,7 @@ import UnitMeasure from './UnitMeasure';
 import Cart from './Cart';
 import OrderHistory from './OrderHistory';
 import OrderHistoryDetails from './OrderHistoryDetails';
+import UnknownItemPage from './UnknownItemsPage';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -48,6 +49,7 @@ const HomeStackScreens = ({ navigation }) => (
     <HomeStack.Screen name="ProductList" component={ProductList} screenOptions={{ headerShown: false }} />
     <HomeStack.Screen name="ProductInfo" component={ProductInfo} screenOptions={{ headerShown: false }} />
     <HomeStack.Screen name="UnitMeasure" component={UnitMeasure} screenOptions={{ headerShown: false }} />
+    <HomeStack.Screen name="UnknownItem" component={UnknownItemPage} screenOptions={{ headerShown: false }} />
   </HomeStack.Navigator>
 )
 

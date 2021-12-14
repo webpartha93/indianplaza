@@ -39,6 +39,7 @@ const UnitMeasure = ({ navigation, route }) => {
     const [id, setId] = useState();
 
     useEffect(() => {
+        console.log('dasasaasdasdas', route.params.productId);
         dispatch(getProductInfo(route.params.productId));
     }, []);
 
