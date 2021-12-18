@@ -50,7 +50,8 @@ const Login = ({ navigation }) => {
                 emp_mobno: mobileNo
             });
             setInputVal('');
-            state.Login.loginData.status = "";
+            // state.Login.loginData.status = "";
+            dispatch({type:"RESET_LOGIN_DATA"});
             setMessage('');
         }
 

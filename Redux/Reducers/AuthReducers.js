@@ -27,7 +27,14 @@ export const LoginReducer = (state=initialState, action)=> {
               isLoggedIn:false,
               loginData:"",
               errorMessage:action.payload
-            }            
+            }
+            case "RESET_LOGIN_DATA":
+            return {
+              ...state,
+              isLoggedIn:false,
+              loginData:"",
+              errorMessage:""
+            }          
         default:
           return state;
       }

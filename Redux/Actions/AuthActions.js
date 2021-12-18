@@ -4,7 +4,7 @@ import { API_URL } from '../../config/constant';
 
 
 export const doLogin = (payload)=> async (dispatch, getState)=> {
-
+    console.log(payload);
     dispatch({type:LOGIN_REQUEST});
     
     let data = {
