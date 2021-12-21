@@ -143,7 +143,7 @@ const Cart = ({ navigation, route }) => {
                     state.cartItems.map((item,index) => {
                         return (
                             <View style={styles.singleCartProduct} key={index}>
-                                <TouchableOpacity onPress={() => dispatch(removeToCart(item.product_id)) } style={{ marginRight: 15, width: 17 }}>
+                                <TouchableOpacity onPress={() => dispatch(removeToCart(index)) } style={{ marginRight: 15, width: 17 }}>
                                     <MaterialIcons size={20} color="#626F7F" name="delete-outline" />
                                 </TouchableOpacity>
                                 <Image source={require('../assets/product.png')} />

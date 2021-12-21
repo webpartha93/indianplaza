@@ -18,25 +18,60 @@ import { useDispatch, useSelector } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { unknownItems } from '../Redux/Actions/UnknownItemAction';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+const localStorageData = async (value) => {
+  try {
+    await AsyncStorage.setItem('unknownbarcode', value)
+  } catch (e) {
+    // saving error
+  }
+}
 
 
 const UnknownItemPage = ({ navigation, route }) => {
   const unknownItemState = useSelector(state => state.UnknownItemReducers);
   const dispatch = useDispatch();
   const [unknownItemId, setUnknownItemId] = useState('');
+  const [firstBarcode, setFirstBarcode] = useState();
+  const [isShow, setIsShow] = useState(true);
   const isFocused = useIsFocused();
+  console.log("barcodeNew", route.params.barcode);
+  console.log('firstBarcode', firstBarcode);
 
+  const readItemFromStorage = async () => {
+    try {
+      const unkwnBarcode = await AsyncStorage.getItem("unknownbarcode");
+      if (unkwnBarcode !== null) {        
+        return unkwnBarcode;
+      }
+    } catch (e) {
+    }
+  }
+
+  removeValue = async () => {
+    try {
+      await AsyncStorage.removeItem('unknownbarcode');
+    } catch(e) {
+      // clear error
+    }
+  
+  }
 
   useEffect(() => {
     dispatch(unknownItems());
+    readItemFromStorage().then((value) => setFirstBarcode(value));
   }, []);
 
   useEffect(() => {
     console.log('unknwn', unknownItemState.productId);
-    setUnknownItemId(unknownItemState.productId);
+    setUnknownItemId(unknownItemState.productId);    
   }, [unknownItemState]);
 
   const handleUnknownItems = () => {
+    removeValue();
+    setIsShow(true);
     navigation.navigate('UnitMeasure', {
       barcode: route.params.barcode,
       dataLength: route.params.dataLength,
@@ -47,6 +82,20 @@ const UnknownItemPage = ({ navigation, route }) => {
       vendor_id: route.params.vendor_id,
       activity: route.params.activity
     });
+    dispatch({ type: "RESET_SCAN_DATA" })
+  }
+
+  const handleUnpack = ()=> {
+    localStorageData(route.params.barcode);
+    setIsShow(false);
+    navigation.navigate('barcodecamera', {
+      deliverDate: route.params.deliverDate,
+      deliveryNumber: route.params.deliveryNumber,
+      org_id: route.params.org_id,
+      vendor_id: route.params.vendor_id,
+      activity: route.params.activity
+    });
+    dispatch({ type: "RESET_SCAN_DATA" });
   }
 
 
@@ -58,7 +107,7 @@ const UnknownItemPage = ({ navigation, route }) => {
       </View>
       <View style={{flex:6, flexDirection: "column", justifyContent:"center", alignItems: "center", flexWrap:"wrap" }}>
         <View style={{width:"100%", alignItems:"center"}}>
-          <TouchableOpacity style={styles.btnSubmit} onPress={() => { navigation.goBack(); dispatch({ type: "RESET_SCAN_DATA" }) }}>
+          <TouchableOpacity style={styles.btnSubmit} onPress={() => { navigation.goBack(); removeValue(); dispatch({ type: "RESET_SCAN_DATA" }) }}>
             <Text style={{ color: "#FFF", fontSize: 16 }}>BACK</Text>
           </TouchableOpacity>
         </View>
@@ -68,8 +117,10 @@ const UnknownItemPage = ({ navigation, route }) => {
           </TouchableOpacity>
         </View>
         <View style={{width:"100%", alignItems:"center"}}>
-          <TouchableOpacity style={styles.btnSubmit} onPress={() => 
-          {navigation.navigate('barcodecamera', {
+          <TouchableOpacity style={styles.btnSubmit} onPress={() =>
+          {
+            removeValue();
+            navigation.navigate('barcodecamera', {
             deliverDate: route.params.deliverDate,
             deliveryNumber: route.params.deliveryNumber,
             org_id: route.params.org_id,
@@ -80,6 +131,14 @@ const UnknownItemPage = ({ navigation, route }) => {
           }}>
             <Text style={{ color: "#FFF", fontSize: 16 }}>SCAN AGAIN</Text>
           </TouchableOpacity>
+          {
+            isShow && (
+              <TouchableOpacity style={styles.btnSubmit} onPress={handleUnpack}>
+                <Text style={{ color: "#FFF", fontSize: 16 }}>UNPACK &amp; SCAN</Text>
+              </TouchableOpacity>
+            )
+          }
+          
         </View>
         
       </View>

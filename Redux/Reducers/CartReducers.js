@@ -14,11 +14,20 @@ export const CartReducer = (state=initialState, action)=> {
         case ADD_TO_CART: 
         let existed_item = state.cartItems.find(item=> action.payload.productData.product_id === item.product_id);
         if(existed_item){
-          //console.log('addItemsExist',action.payload)
-            existed_item.product_qty = action.payload.productData.product_qty
-            return{
-              ...state,              
-             }
+            if(existed_item.product_uom == action.payload.productData.product_uom){
+              existed_item.product_qty = action.payload.productData.product_qty
+                return{
+                  ...state,              
+                }
+            }else{
+              return {
+                ...state,
+                isAddedCartItem:true,
+                cartItems: [...state.cartItems, action.payload.productData],
+                getAllData:action.payload.getAllData
+              }
+            }
+            
         }else{
           action.payload.product_qty;
           console.log('addItems',action.payload)
@@ -31,12 +40,12 @@ export const CartReducer = (state=initialState, action)=> {
         }
 
         case REMOVE_FROM_CART:
-        let removeItem = state.cartItems.filter((item)=> {
-          return item.product_id !== action.payload
+        let removeItem = state.cartItems.filter((item, index)=> {
+          return index !== action.payload
         });
 
         // let removeItem = state.cartItems.filter(item => !values.includes(item));
-        //   console.log(arr);
+        console.log(action.payload);
 
         return{
           ...state,
