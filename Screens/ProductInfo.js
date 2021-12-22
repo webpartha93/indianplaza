@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import { getProductInfo } from '../Redux/Actions/AllActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../Redux/Actions/cartAction';
@@ -19,7 +20,7 @@ import { doCheckout } from '../Redux/Actions/CheckoutAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductInfo = ({ navigation, route }) => {
-    
+
     const state = useSelector(state => state.AllReducers.productDetails);
     const statecart = useSelector(state => state.CartReducer);
     const statecheckout = useSelector(state => state.CheckOutReducers);
@@ -27,25 +28,30 @@ const ProductInfo = ({ navigation, route }) => {
     const [product_qty, setProduct_qty] = useState(1);
     const [productName, setProductName] = useState('');
     const [productDesc, setProductDesc] = useState('');
+    const [isUnknownItem, setIsUnknownItem] = useState('');
+    const [remarks, setRemarks] = useState('');
+    const [btnDisabled, setBtnDisabled] = useState(true);
+
     const [empId, setEmpId] = useState('');
     const product_id = route.params.productId;
     const product_uom = route.params.product_uom;
     const activity = route.params.activity;
+    const additional_barcode = route.params.additional_barcode;
     const getAllData = route.params;
 
-    //console.log('cartitems', statecart.cartItems);
+    console.log('param', route.params.additional_barcode);
 
     const readItemFromStorage = async () => {
         try {
-          const loggedInUser = await AsyncStorage.getItem("uuid");
-          const parseVal = JSON.parse(loggedInUser);
-          if (loggedInUser !== null) {        
-            return parseVal.emp_id;
-          }
+            const loggedInUser = await AsyncStorage.getItem("uuid");
+            const parseVal = JSON.parse(loggedInUser);
+            if (loggedInUser !== null) {
+                return parseVal.emp_id;
+            }
         } catch (e) {
-          alert('Failed to fetch the data from storage')
+            alert('Failed to fetch the data from storage')
         }
-      }
+    }
 
     const handleIncrement = () => {
 
@@ -55,14 +61,25 @@ const ProductInfo = ({ navigation, route }) => {
         setProduct_qty(prevVal => prevVal - 1);
     }
 
-    const handleNumberChange = (e)=> {
+    const handleNumberChange = (e) => {
         var numberVal = Number(e);
         console.log(numberVal);
-        if(e <= 1){
+        if (e <= 1) {
             setProduct_qty(1);
-        }else{
+        } else {
             setProduct_qty(numberVal);
-        }        
+        }
+    }
+
+    const handleRemarks = (val)=> {
+        setRemarks(val);
+        if(val.length >= 1){            
+            setBtnDisabled(false);
+        }else{
+            setBtnDisabled(true);
+        }
+        // console.log(val.length);
+        
     }
 
     const dispatch = useDispatch();
@@ -70,6 +87,7 @@ const ProductInfo = ({ navigation, route }) => {
     useEffect(() => {
         dispatch(getProductInfo(route.params.productId));
         readItemFromStorage().then((value) => setEmpId(value));
+        setIsUnknownItem(route.params.isUnknownItem);
     }, [])
 
     useEffect(() => {
@@ -79,47 +97,50 @@ const ProductInfo = ({ navigation, route }) => {
         }
     }, [state])
 
-    
-    const handleAddToCart = () => {        
+
+    const handleAddToCart = () => {
         dispatch(addToCart({
             productData: {
                 productName,
                 product_qty,
                 product_id,
                 product_uom,
-                activity
+                activity,
+                additional_barcode
             },
-            getAllData
-        }))        
+            getAllData,
+            remarks
+        }))
     }
 
-    const doCheckOut = ()=> {
-        const updatedCartItem = statecart.cartItems.map(({productName,...rest}) => ({...rest}));
+    const doCheckOut = () => {
+        const updatedCartItem = statecart.cartItems.map(({ productName, activity, ...rest }) => ({ ...rest }));
         //console.log('result', getAllData);
         dispatch(doCheckout({
             getAllData,
             updatedCartItem,
-            empId
+            empId,
+            remarks
         }));
-        dispatch({type:"RESET_ADDED_CART"});
+        dispatch({ type: "RESET_ADDED_CART" });
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log('catddd', statecart.isAddedCartItem);
-        if(statecart.isAddedCartItem){
-            doCheckOut();            
+        if (statecart.isAddedCartItem) {
+            doCheckOut();
         }
         //
-    },[statecart])
+    }, [statecart])
 
-    
-    useEffect(()=>{
-            console.log('checkoutreducer',statecheckout.checkoutSuccessMessage.data);
-            if(statecheckout.checkoutSuccessMessage.data!==undefined){
-                shipmentNumberAlert(statecheckout.checkoutSuccessMessage.data);
-            }
-            //
-        },[statecheckout])
+
+    useEffect(() => {
+        console.log('checkoutreducer', statecheckout.checkoutSuccessMessage.data);
+        if (statecheckout.checkoutSuccessMessage.data !== undefined) {
+            shipmentNumberAlert(statecheckout.checkoutSuccessMessage.data);
+        }
+        //
+    }, [statecheckout])
     // navigation.navigate('activity', {
     //     org_id:route.params.org_id,
     // })
@@ -130,132 +151,206 @@ const ProductInfo = ({ navigation, route }) => {
             "",
             [
                 {
-                text: "No",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel"
+                    text: "No",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
                 },
                 { text: "Yes", onPress: () => handleAddToCart() }
             ]
         );
 
-        const shipmentNumberAlert = (number) =>
+    const shipmentNumberAlert = (number) =>
         Alert.alert(
             `Your Shipment Number is ${number}`,
             "",
             [
-                { text: "Ok", onPress: () =>  {navigation.navigate('activity', {
-                     org_id:route.params.org_id,
-                })
-                dispatch({type:"REMOVE_CHECKOUT_DATA"})
-                }
+                {
+                    text: "Ok", onPress: () => {
+                        navigation.navigate('activity', {
+                            org_id: route.params.org_id,
+                        })
+                        dispatch({ type: "REMOVE_CHECKOUT_DATA" })
+                    }
                 }
             ]
         );
 
     return (
-        <ScrollView style={styles.mainWrapper}>
-            <View style={{position:"relative"}}>
-            <Text style={styles.Heading}>Product Info</Text>
-            <View style={styles.line}></View>
+        <View style={styles.mainWrapper}>
+            <View style={{ position: "relative" }}>
+                <Text style={styles.Heading}>Product Info</Text>
+                <View style={styles.line}></View>
             </View>
-            <View style={{ borderRadius: 10, overflow: "hidden", marginTop: 30, backgroundColor: "#F9F9F9" }}>
-                <View style={styles.Label}>
-                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Product Code</Text>
-                </View>
-                <View style={styles.Desc}>
-                    <Text style={{ color: "#626F7F", fontSize: 13 }}>{productName}</Text>
-                </View>
-                <View style={styles.Label}>
-                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Description</Text>
-                </View>
-                <View style={styles.Desc}>
-                    <Text style={{ color: "#626F7F", fontSize: 13 }}>{productDesc}</Text>
-                </View>
-                <View style={styles.Label}>
-                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Unit of Measure</Text>
-                </View>
-                <View style={styles.Desc}>
-                    <Text style={{ color: "#626F7F", fontSize: 13 }}>{product_uom > 1 ? "Carton" : "Piece" }</Text>
-                </View>
-            </View>
+            <ScrollView>
+                <View style={{ borderRadius: 10, overflow: "hidden", marginTop: 30, backgroundColor: "#F9F9F9" }}>
+                    <View style={styles.Label}>
+                        <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Product Code</Text>
+                    </View>
+                    <View style={styles.Desc}>
+                        <Text style={{ color: "#626F7F", fontSize: 13 }}>{productName}</Text>
+                    </View>
+                    <View style={styles.Label}>
+                        <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Description</Text>
+                    </View>
+                    <View style={styles.Desc}>
+                        <Text style={{ color: "#626F7F", fontSize: 13 }}>{productDesc}</Text>
+                    </View>
+                    <View style={styles.Label}>
+                        <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Unit of Measure</Text>
+                    </View>
+                    <View style={styles.Desc}>
+                        <Text style={{ color: "#626F7F", fontSize: 13 }}>{product_uom > 1 ? "Carton" : "Piece"}</Text>
+                    </View>
 
-            <View style={{ alignItems: "center", marginTop: 30 }}>
-                <Text style={styles.QtyHeading}>Quantity</Text>
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <TouchableOpacity disabled={product_qty > 1 ? false : true} onPress={handleDecrement} style={{
-                        width: 35,
-                        height: 35,
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: "#FFF",
-                        borderRadius: 35,
-                        shadowOffset: {
-                            width: 0,
-                            height: 3,
-                        },
-                        shadowOpacity: 0.12,
-                        shadowRadius: 4.65,
-                        elevation: 6,
-                    }}>
-                        <MaterialCommunityIcons size={20} color="#000" name="minus" />
-                    </TouchableOpacity>
-                    {/* <Text style={{ paddingHorizontal: 20, fontSize: 20, color: "#000" }}>{product_qty}</Text> */}
-                    <TextInput keyboardType = 'numeric' defaultValue={product_qty.toString()} value={product_qty.toString()} onChangeText={(e)=> handleNumberChange(e)} style={{ paddingHorizontal: 20, fontSize: 20, color: "#000" }} />
-                    <TouchableOpacity onPress={handleIncrement} style={{
-                        width: 35,
-                        height: 35,
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        backgroundColor: "#FFF",
-                        borderRadius: 35,
-                        shadowOffset: {
-                            width: 0,
-                            height: 3,
-                        },
-                        shadowOpacity: 0.12,
-                        shadowRadius: 4.65,
-                        elevation: 6,
-                    }}>
-                        <MaterialCommunityIcons size={20} color="#000" name="plus" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
-                    <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnSubmit} onPress={() => 
                     {
-                        navigation.navigate('Scanbarcode', {
-                        deliverDate: route.params.deliverDate,
-                        deliveryNumber: route.params.deliveryNumber,
-                        org_id: route.params.org_id,
-                        vendor_id: route.params.vendor_id,
-                        activity:activity,
-                        barcode: ''
-                    })
-                    dispatch(addToCart({
-                        productData: {
-                            productName,
-                            product_qty,
-                            product_id,
-                            product_uom,
-                            activity
-                        },
-                        getAllData
-                    }))
-                    dispatch({type:"RESET_ADDED_CART"})
-                }}>
-                    <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
-                    <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
+                        route.params.isUnknownItem === "true" && (
+                            <>
+                            <View style={styles.Label}>
+                            <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Remarks</Text>
+                            </View>
+                            <View style={styles.Desc}>
+                                <View style={styles.inputWrapper}>
+                                    <AntDesign size={16} color="#626F7F" name="edit" style={{ position: "absolute", left: 15, top: 16 }} />
+                                    <TextInput
+                                        editable
+                                        multiline
+                                        numberOfLines={5}
+                                        textAlignVertical='top'
+                                        style={{ paddingTop: 10, color: "#000", width:"100%"}}
+                                        placeholderTextColor="#a1a1a1"
+                                        value={remarks}
+                                        onChangeText={handleRemarks}
+                                    />
+                                </View>
+                            </View>
+                            </>
+                        )
+                    }
+
+
+                </View>
+
+                <View style={{ alignItems: "center", marginTop: 30 }}>
+                    <Text style={styles.QtyHeading}>Quantity</Text>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                        <TouchableOpacity disabled={product_qty > 1 ? false : true} onPress={handleDecrement} style={{
+                            width: 35,
+                            height: 35,
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "#FFF",
+                            borderRadius: 35,
+                            shadowOffset: {
+                                width: 0,
+                                height: 3,
+                            },
+                            shadowOpacity: 0.12,
+                            shadowRadius: 4.65,
+                            elevation: 6,
+                        }}>
+                            <MaterialCommunityIcons size={20} color="#000" name="minus" />
+                        </TouchableOpacity>
+                        {/* <Text style={{ paddingHorizontal: 20, fontSize: 20, color: "#000" }}>{product_qty}</Text> */}
+                        <TextInput keyboardType='numeric' defaultValue={product_qty.toString()} value={product_qty.toString()} onChangeText={(e) => handleNumberChange(e)} style={{ paddingHorizontal: 20, fontSize: 20, color: "#000" }} />
+                        <TouchableOpacity onPress={handleIncrement} style={{
+                            width: 35,
+                            height: 35,
+                            flexDirection: "column",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            backgroundColor: "#FFF",
+                            borderRadius: 35,
+                            shadowOffset: {
+                                width: 0,
+                                height: 3,
+                            },
+                            shadowOpacity: 0.12,
+                            shadowRadius: 4.65,
+                            elevation: 6,
+                        }}>
+                            <MaterialCommunityIcons size={20} color="#000" name="plus" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
+                        <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
+                    </TouchableOpacity>
+
+                    {
+                        route.params.isUnknownItem === "true" ? (
+                            <>
+                                <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, {backgroundColor:btnDisabled ? "#9d9d9d" : "#1788F0"}]} onPress={() => {
+                                    navigation.navigate('Scanbarcode', {
+                                        deliverDate: route.params.deliverDate,
+                                        deliveryNumber: route.params.deliveryNumber,
+                                        org_id: route.params.org_id,
+                                        vendor_id: route.params.vendor_id,
+                                        activity: activity,
+                                        barcode: '',
+                                        additional_barcode: ''
+                                    })
+                                    dispatch(addToCart({
+                                        productData: {
+                                            productName,
+                                            product_qty,
+                                            product_id,
+                                            product_uom,
+                                            activity,
+                                            additional_barcode
+                                        },
+                                        getAllData,
+                                        remarks
+                                    }))
+                                    dispatch({ type: "RESET_ADDED_CART" })
+                                }}>
+                                    <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
+                                </TouchableOpacity>
+                                <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, {backgroundColor:btnDisabled ? "#9d9d9d" : "#1788F0"}]} onPress={showAlert}>
+                                    <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
+                                </TouchableOpacity>
+                            </>
+
+                        ) : (
+                            <>
+                                <TouchableOpacity style={styles.btnSubmit} onPress={() => {
+                                    navigation.navigate('Scanbarcode', {
+                                        deliverDate: route.params.deliverDate,
+                                        deliveryNumber: route.params.deliveryNumber,
+                                        org_id: route.params.org_id,
+                                        vendor_id: route.params.vendor_id,
+                                        activity: activity,
+                                        barcode: '',
+                                        additional_barcode: ''
+                                    })
+                                    dispatch(addToCart({
+                                        productData: {
+                                            productName,
+                                            product_qty,
+                                            product_id,
+                                            product_uom,
+                                            activity,
+                                            additional_barcode
+                                        },
+                                        getAllData
+                                    }))
+                                    dispatch({ type: "RESET_ADDED_CART" })
+                                }}>
+                                    <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
+                                    <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
+                                </TouchableOpacity>
+                            </>
+                        )
+
+                    }
+
+                </View>
+            </ScrollView>
+        </View>
     )
 }
 
@@ -265,7 +360,8 @@ var styles = StyleSheet.create({
     mainWrapper: {
         flex: 1,
         paddingHorizontal: 30,
-        paddingVertical: 40,
+        paddingTop: 40,
+        paddingBottom:10,
         backgroundColor: '#FFF'
     },
     Heading: {
@@ -294,6 +390,15 @@ var styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "600",
         marginBottom: 15
+    },
+    inputWrapper: {
+        width: "100%",
+        backgroundColor: "#F2F1F8",
+        borderRadius: 30,
+        paddingRight: 15,
+        paddingLeft: 35,
+        flexDirection: "row",
+        alignItems: "center"
     },
     btnSubmit: {
         backgroundColor: "#1788F0",

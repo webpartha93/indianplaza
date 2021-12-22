@@ -29,6 +29,7 @@ const Cart = ({ navigation, route }) => {
     const [empId, setEmpId] = useState('');
     const [toggle, setToggle] = useState(false);
     const [getAllData, setGetAllData] = useState('');
+    const [remarks, setRemarks] = useState('');
     const [getCartItems, setGetCartItems] = useState([]);
 
     // useEffect(()=>{
@@ -55,21 +56,25 @@ const Cart = ({ navigation, route }) => {
 
 
     useEffect(()=>{
-        setGetAllData(state.getAllData);        
+        setGetAllData(state.getAllData);
+        setRemarks(state.remarks);
     }, [state]);
 
     
     const doCheckOut = ()=> {
         const updatedCartItem = state.cartItems.map(({productName,activity,...rest}) => ({...rest}));
-        console.log('result', getAllData);
+        console.log('result', updatedCartItem);
         dispatch(doCheckout({
             getAllData,
             updatedCartItem,
-            empId
+            empId,
+            remarks
         }));
         dispatch({type:"RESET_ADDED_CART"});
         
     }
+
+
     useEffect(()=>{
         if(checkoutState.checkoutSuccessMessage.status==="Success"){
             //navigation.navigate('navigation');

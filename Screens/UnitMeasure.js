@@ -15,6 +15,7 @@ import { getProductInfo } from '../Redux/Actions/AllActions';
 import { useDispatch, useSelector } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+
 const UnitMeasure = ({ navigation, route }) => {
     console.log("unitmeasure", route.params.dataLength);
 
@@ -22,7 +23,7 @@ const UnitMeasure = ({ navigation, route }) => {
     const dispatch = useDispatch();
     const [productName, setProductName] = useState('');
     const [productDesc, setProductDesc] = useState('');
-
+  
     const [loading, setIsloading] = useState(false);
 
     const unitsCategory = [
@@ -36,10 +37,11 @@ const UnitMeasure = ({ navigation, route }) => {
         }
     ]
 
+
     const [id, setId] = useState();
 
     useEffect(() => {
-        console.log('dasasaasdasdas', route.params.productId);
+        console.log('isUnknwon', route.params.isUnknownItem);
         dispatch(getProductInfo(route.params.productId));
     }, []);
 
@@ -62,9 +64,11 @@ const UnitMeasure = ({ navigation, route }) => {
             org_id: route.params.org_id,
             vendor_id: route.params.vendor_id,
             activity: route.params.activity,
-            product_uom: e
+            additional_barcode:route.params.additional_barcode,
+            product_uom: e,
+            isUnknownItem:route.params.isUnknownItem
         });
-        dispatch({ type:"RESET_SCAN_DATA"})
+        dispatch({ type:"RESET_SCAN_DATA"});
     }
 
     return (

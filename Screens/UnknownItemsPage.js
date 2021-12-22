@@ -21,15 +21,6 @@ import { unknownItems } from '../Redux/Actions/UnknownItemAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const localStorageData = async (value) => {
-  try {
-    await AsyncStorage.setItem('unknownbarcode', value)
-  } catch (e) {
-    // saving error
-  }
-}
-
-
 const UnknownItemPage = ({ navigation, route }) => {
   const unknownItemState = useSelector(state => state.UnknownItemReducers);
   const dispatch = useDispatch();
@@ -40,28 +31,19 @@ const UnknownItemPage = ({ navigation, route }) => {
   console.log("barcodeNew", route.params.barcode);
   console.log('firstBarcode', firstBarcode);
 
-  const readItemFromStorage = async () => {
-    try {
-      const unkwnBarcode = await AsyncStorage.getItem("unknownbarcode");
-      if (unkwnBarcode !== null) {        
-        return unkwnBarcode;
-      }
-    } catch (e) {
-    }
-  }
 
-  removeValue = async () => {
+  const setAdditionalBarcode = async (value) => {
     try {
-      await AsyncStorage.removeItem('unknownbarcode');
+      await AsyncStorage.setItem('additional_barcode', value)
     } catch(e) {
-      // clear error
+      // save error
     }
   
+    console.log('Done.')
   }
-
+ 
   useEffect(() => {
     dispatch(unknownItems());
-    readItemFromStorage().then((value) => setFirstBarcode(value));
   }, []);
 
   useEffect(() => {
@@ -70,10 +52,11 @@ const UnknownItemPage = ({ navigation, route }) => {
   }, [unknownItemState]);
 
   const handleUnknownItems = () => {
-    removeValue();
     setIsShow(true);
     navigation.navigate('UnitMeasure', {
       barcode: route.params.barcode,
+      additional_barcode:"",
+      isUnknownItem:"true",  
       dataLength: route.params.dataLength,
       productId: unknownItemId,
       deliverDate: route.params.deliverDate,
@@ -86,14 +69,14 @@ const UnknownItemPage = ({ navigation, route }) => {
   }
 
   const handleUnpack = ()=> {
-    localStorageData(route.params.barcode);
     setIsShow(false);
     navigation.navigate('barcodecamera', {
       deliverDate: route.params.deliverDate,
       deliveryNumber: route.params.deliveryNumber,
       org_id: route.params.org_id,
       vendor_id: route.params.vendor_id,
-      activity: route.params.activity
+      activity: route.params.activity,
+      additional_barcode:route.params.barcode,
     });
     dispatch({ type: "RESET_SCAN_DATA" });
   }
@@ -107,7 +90,7 @@ const UnknownItemPage = ({ navigation, route }) => {
       </View>
       <View style={{flex:6, flexDirection: "column", justifyContent:"center", alignItems: "center", flexWrap:"wrap" }}>
         <View style={{width:"100%", alignItems:"center"}}>
-          <TouchableOpacity style={styles.btnSubmit} onPress={() => { navigation.goBack(); removeValue(); dispatch({ type: "RESET_SCAN_DATA" }) }}>
+          <TouchableOpacity style={styles.btnSubmit} onPress={() => { navigation.goBack(); setFirstBarcode(); dispatch({ type: "RESET_SCAN_DATA" }) }}>
             <Text style={{ color: "#FFF", fontSize: 16 }}>BACK</Text>
           </TouchableOpacity>
         </View>
@@ -119,7 +102,7 @@ const UnknownItemPage = ({ navigation, route }) => {
         <View style={{width:"100%", alignItems:"center"}}>
           <TouchableOpacity style={styles.btnSubmit} onPress={() =>
           {
-            removeValue();
+            setFirstBarcode();
             navigation.navigate('barcodecamera', {
             deliverDate: route.params.deliverDate,
             deliveryNumber: route.params.deliveryNumber,

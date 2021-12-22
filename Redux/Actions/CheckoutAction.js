@@ -4,6 +4,7 @@ import { API_URL } from '../../config/constant';
 
 export const doCheckout = (payload)=> async (dispatch, getState)=> {
     console.log('checkoutAction', payload);
+
     dispatch({type:CHECKOUT_REQUEST});
     
     let data = {
@@ -14,6 +15,7 @@ export const doCheckout = (payload)=> async (dispatch, getState)=> {
         "delivery_date" : payload.getAllData.deliverDate,
         "org_id": payload.getAllData.org_id,
         "vendor_id" : payload.getAllData.vendor_id,
+        "remarks":payload.remarks,
         "lines":payload.updatedCartItem
     }
     try{

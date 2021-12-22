@@ -97,7 +97,7 @@ const DeliveryInfo = ({ navigation, route }) => {
                         multiline
                         numberOfLines={5}
                         textAlignVertical='top'
-                        style={{ paddingTop: 10, color: "#000" }}
+                        style={{ paddingTop: 10, color: "#000",  width:"100%" }}
                         placeholderTextColor="#a1a1a1"
                         value={formData.remarks}
                         onChangeText={(val) => setFormData(values => ({ ...values, remarks: val }))}

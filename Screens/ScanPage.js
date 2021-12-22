@@ -82,7 +82,8 @@ const ScanPage = ({navigation, route}) => {
                 deliveryNumber:route.params.deliveryNumber,
                 org_id:route.params.org_id,
                 vendor_id:route.params.vendor_id,
-                activity:route.params.activity
+                activity:route.params.activity,
+                additional_barcode:route.params.additional_barcode !== undefined ? route.params.additional_barcode : ""
             });
         }else{
             // Toast.show({
@@ -112,7 +113,8 @@ const ScanPage = ({navigation, route}) => {
                 deliveryNumber:route.params.deliveryNumber,
                 org_id:route.params.org_id,
                 vendor_id:route.params.vendor_id,
-                activity:route.params.activity
+                activity:route.params.activity,
+                additional_barcode:route.params.additional_barcode !== undefined ? route.params.additional_barcode : ""
             });
         }
     }  

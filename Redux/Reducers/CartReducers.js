@@ -9,7 +9,6 @@ const initialState = {
 }
 
 export const CartReducer = (state=initialState, action)=> {
-  //console.log('cartreducer', action.payload);
     switch(action.type) {
         case ADD_TO_CART: 
         let existed_item = state.cartItems.find(item=> action.payload.productData.product_id === item.product_id);
@@ -24,7 +23,8 @@ export const CartReducer = (state=initialState, action)=> {
                 ...state,
                 isAddedCartItem:true,
                 cartItems: [...state.cartItems, action.payload.productData],
-                getAllData:action.payload.getAllData
+                getAllData:action.payload.getAllData,
+                remarks:action.payload.remarks
               }
             }
             
@@ -35,7 +35,8 @@ export const CartReducer = (state=initialState, action)=> {
             ...state,
             isAddedCartItem:true,
             cartItems: [...state.cartItems, action.payload.productData],
-            getAllData:action.payload.getAllData
+            getAllData:action.payload.getAllData,
+            remarks:action.payload.remarks
           };          
         }
 
