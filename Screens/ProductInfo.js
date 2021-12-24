@@ -14,7 +14,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { getProductInfo } from '../Redux/Actions/AllActions';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '../Redux/Actions/cartAction';
+import { addToCart, addToCartUnknown } from '../Redux/Actions/cartAction';
 import { doCheckout } from '../Redux/Actions/CheckoutAction';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -36,7 +36,7 @@ const ProductInfo = ({ navigation, route }) => {
     const product_id = route.params.productId;
     const product_uom = route.params.product_uom;
     const activity = route.params.activity;
-    const additional_barcode = route.params.additional_barcode;
+    const additional_barcode = route.params.additional_barcode !== undefined ? route.params.additional_barcode : "";
     const getAllData = route.params;
 
     console.log('param', route.params.additional_barcode);
@@ -113,6 +113,22 @@ const ProductInfo = ({ navigation, route }) => {
         }))
     }
 
+    const handleAddToCart2 = () => {
+        dispatch(addToCartUnknown({
+            productData: {
+                productName,
+                product_qty,
+                product_id,
+                product_uom,
+                activity,
+                additional_barcode,
+                remarks
+            },
+            getAllData,
+            remarks
+        }))
+    }
+
     const doCheckOut = () => {
         const updatedCartItem = statecart.cartItems.map(({ productName, activity, ...rest }) => ({ ...rest }));
         //console.log('result', getAllData);
@@ -156,6 +172,20 @@ const ProductInfo = ({ navigation, route }) => {
                     style: "cancel"
                 },
                 { text: "Yes", onPress: () => handleAddToCart() }
+            ]
+        );
+
+        const showAlert2 = () =>
+        Alert.alert(
+            "Do you really want to submit?",
+            "",
+            [
+                {
+                    text: "No",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "Yes", onPress: () => handleAddToCart2() }
             ]
         );
 
@@ -292,14 +322,15 @@ const ProductInfo = ({ navigation, route }) => {
                                         barcode: '',
                                         additional_barcode: ''
                                     })
-                                    dispatch(addToCart({
+                                    dispatch(addToCartUnknown({
                                         productData: {
                                             productName,
                                             product_qty,
                                             product_id,
                                             product_uom,
                                             activity,
-                                            additional_barcode
+                                            additional_barcode,
+                                            remarks
                                         },
                                         getAllData,
                                         remarks
@@ -308,7 +339,7 @@ const ProductInfo = ({ navigation, route }) => {
                                 }}>
                                     <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
                                 </TouchableOpacity>
-                                <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, {backgroundColor:btnDisabled ? "#9d9d9d" : "#1788F0"}]} onPress={showAlert}>
+                                <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, {backgroundColor:btnDisabled ? "#9d9d9d" : "#1788F0"}]} onPress={showAlert2}>
                                     <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
                                 </TouchableOpacity>
                             </>

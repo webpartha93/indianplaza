@@ -15,7 +15,7 @@ export const doCheckout = (payload)=> async (dispatch, getState)=> {
         "delivery_date" : payload.getAllData.deliverDate,
         "org_id": payload.getAllData.org_id,
         "vendor_id" : payload.getAllData.vendor_id,
-        "remarks":payload.remarks,
+        "remarks":payload.remarks !== undefined ? payload.remarks : "",
         "lines":payload.updatedCartItem
     }
     try{

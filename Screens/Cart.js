@@ -31,7 +31,7 @@ const Cart = ({ navigation, route }) => {
     const [getAllData, setGetAllData] = useState('');
     const [remarks, setRemarks] = useState('');
     const [getCartItems, setGetCartItems] = useState([]);
-
+    console.log('fffff', state.cartItems);
     // useEffect(()=>{
     //     if( route.params!==undefined){
     //         setGetAllData(route.params.getAllData);
@@ -155,6 +155,7 @@ const Cart = ({ navigation, route }) => {
                                 <View style={{ paddingHorizontal: 10, width:"45%" }}>
                                     <Text style={{ color: "#626F7F", fontSize: 12, fontWeight: "700" }}>{item.productName}{item.index}</Text>
                                     <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>{item.product_uom == 1 ? "Piece" : "Carton"}</Text>
+                                    <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>{item.remarks}</Text>
                                 </View>
                                 <View style={{ alignItems: "center", marginLeft: "auto"}}>
                                     <Text style={styles.QtyHeading}>Quantity</Text>

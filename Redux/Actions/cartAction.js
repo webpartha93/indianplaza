@@ -1,10 +1,17 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, INCREMENT, DECREMENT } from '../constants';
+import { ADD_TO_CART, REMOVE_FROM_CART, INCREMENT, DECREMENT, ADD_TO_CART_UNKNOWNITEM } from '../constants';
 
 
 export const addToCart = (payload)=> {
-    //console.log('cartproduct', payload);
+    console.log('cartproduct', payload);
     return{
         type:ADD_TO_CART,
+        payload
+    }
+}
+export const addToCartUnknown = (payload)=> {
+    //console.log('cartproduct', payload);
+    return{
+        type:ADD_TO_CART_UNKNOWNITEM,
         payload
     }
 }
