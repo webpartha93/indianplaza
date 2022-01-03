@@ -1,6 +1,6 @@
 import { ALL_BRANCHES_REQUEST, ALL_BRANCHES_SUCCESS, ALL_BRANCHES_FAILURE, ALL_SUPPLIER_REQUEST, ALL_SUPPLIER_SUCCESS, ALL_SUPPLIER_FAILURE, SCAN_PRODUCT_REQUEST, SCAN_PRODUCT_SUCCESS, SCAN_PRODUCT_FAILURE, PRODUCT_INFO_REQUEST, PRODUCT_INFO_SUCCESS, PRODUCT_INFO_FAILURE, SEARCH_SUPPLIER_REQUEST, SEARCH_SUPPLIER_SUCCESS, SEARCH_SUPPLIER_FAILURE } from '../constants';
 import axios from "axios";
-import { API_URL } from '../../config/constant';
+import { API_URL, API_KEY, BEARER_KEY } from '../../config/constant';
 
 
 export const allBranch = (payload)=> async (dispatch, getState)=> {
@@ -9,14 +9,14 @@ export const allBranch = (payload)=> async (dispatch, getState)=> {
     dispatch({type:ALL_BRANCHES_REQUEST});
     
     let data = {
-        "apiKey": "866250ac55306374e9499faa21ce5956",
+        "apiKey": API_KEY,
         "emp_id" : payload.emp_id
     }
     try{
         const response = await axios.post(API_URL+'/branches', data,{
             headers:{
                 'content-type': 'application/json',                                    
-                'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbWV0cmljc2VycC5uZXRcL21ldHJpY3NhcGlcL3B1YmxpY1wvYXBpXC9sb2dpbi11c2VyIiwiaWF0IjoxNjE5OTgwMTU1LCJuYmYiOjE2MTk5ODAxNTUsImp0aSI6IlliZnFoajdrRFZwY1AwbloiLCJzdWIiOjU0LCJhY2Nlc3NfdG9rZW4iOm51bGx9.Lh0_WsV8ohTnRIBfy1KM0r1Qvr2xhtypyAXXEb7xjWQ'
+                'Authorization': BEARER_KEY
             }
         })
 
@@ -35,13 +35,13 @@ export const allSupplier = (payload)=> async (dispatch, getState)=> {
     dispatch({type:ALL_SUPPLIER_REQUEST});
     
     let data = {
-        "apiKey": "866250ac55306374e9499faa21ce5956"
+        "apiKey": API_KEY
     }
     try{
         const response = await axios.post(API_URL+'/suppliers', data,{
             headers:{
                 'content-type': 'application/json',                                    
-                'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbWV0cmljc2VycC5uZXRcL21ldHJpY3NhcGlcL3B1YmxpY1wvYXBpXC9sb2dpbi11c2VyIiwiaWF0IjoxNjE5OTgwMTU1LCJuYmYiOjE2MTk5ODAxNTUsImp0aSI6IlliZnFoajdrRFZwY1AwbloiLCJzdWIiOjU0LCJhY2Nlc3NfdG9rZW4iOm51bGx9.Lh0_WsV8ohTnRIBfy1KM0r1Qvr2xhtypyAXXEb7xjWQ'
+                'Authorization': BEARER_KEY
             }
         })
 
@@ -60,14 +60,14 @@ export const searchSupplier = (payload)=> async (dispatch, getState)=> {
     dispatch({type:SEARCH_SUPPLIER_REQUEST});
     
     let data = {
-        "apiKey": "866250ac55306374e9499faa21ce5956",
+        "apiKey": API_KEY,
         "key_word" : payload
     }
     try{
         const response = await axios.post(API_URL+'/search-suppliers', data,{
             headers:{
                 'content-type': 'application/json',                                    
-                'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbWV0cmljc2VycC5uZXRcL21ldHJpY3NhcGlcL3B1YmxpY1wvYXBpXC9sb2dpbi11c2VyIiwiaWF0IjoxNjE5OTgwMTU1LCJuYmYiOjE2MTk5ODAxNTUsImp0aSI6IlliZnFoajdrRFZwY1AwbloiLCJzdWIiOjU0LCJhY2Nlc3NfdG9rZW4iOm51bGx9.Lh0_WsV8ohTnRIBfy1KM0r1Qvr2xhtypyAXXEb7xjWQ'
+                'Authorization': BEARER_KEY
             }
         })
 
@@ -86,14 +86,14 @@ export const afterScanProduct = (payload)=> async (dispatch, getState)=> {
     dispatch({type:SCAN_PRODUCT_REQUEST});
     
     let data = {
-        "apiKey": "866250ac55306374e9499faa21ce5956",
+        "apiKey": API_KEY,
         "barcode":payload
     }
     try{
         const response = await axios.post(API_URL+'/scan-barcode', data,{
             headers:{
                 'content-type': 'application/json',                                    
-                'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbWV0cmljc2VycC5uZXRcL21ldHJpY3NhcGlcL3B1YmxpY1wvYXBpXC9sb2dpbi11c2VyIiwiaWF0IjoxNjE5OTgwMTU1LCJuYmYiOjE2MTk5ODAxNTUsImp0aSI6IlliZnFoajdrRFZwY1AwbloiLCJzdWIiOjU0LCJhY2Nlc3NfdG9rZW4iOm51bGx9.Lh0_WsV8ohTnRIBfy1KM0r1Qvr2xhtypyAXXEb7xjWQ'
+                'Authorization': BEARER_KEY
             }
         })
 
@@ -112,14 +112,14 @@ export const getProductInfo = (payload)=> async (dispatch, getState)=> {
     dispatch({type:PRODUCT_INFO_REQUEST});
     
     let data = {
-        "apiKey": "866250ac55306374e9499faa21ce5956",
+        "apiKey": API_KEY,
         "product_id" : payload
     }
     try{
         const response = await axios.post(API_URL+'/product', data,{
             headers:{
                 'content-type': 'application/json',                                    
-                'Authorization':'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvbWV0cmljc2VycC5uZXRcL21ldHJpY3NhcGlcL3B1YmxpY1wvYXBpXC9sb2dpbi11c2VyIiwiaWF0IjoxNjE5OTgwMTU1LCJuYmYiOjE2MTk5ODAxNTUsImp0aSI6IlliZnFoajdrRFZwY1AwbloiLCJzdWIiOjU0LCJhY2Nlc3NfdG9rZW4iOm51bGx9.Lh0_WsV8ohTnRIBfy1KM0r1Qvr2xhtypyAXXEb7xjWQ'
+                'Authorization': BEARER_KEY
             }
         })
 
