@@ -177,7 +177,7 @@ const ScanPage = ({ navigation, route }) => {
       /> */}
       {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
 
-      <TextInput editable={false} returnKeyType="next"
+      <TextInput returnKeyType="next"
         autoFocus={true}
         ref={barcodeNameRef}
         keyboardType="number-pad"
