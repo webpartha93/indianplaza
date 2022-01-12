@@ -22,6 +22,7 @@ const RootStack = createNativeStackNavigator();
 
 
 const RootStackScreen = () => {  
+  
   const [isLoggedIn, setIsLoggedIn] = useState('');
   const verifyState = useSelector(state=> state.Verify); //Added just for initialize this state
 

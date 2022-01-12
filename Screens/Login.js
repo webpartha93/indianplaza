@@ -87,7 +87,7 @@ const Login = ({ navigation }) => {
                             <ActivityIndicator size="large" color="#7b0b0d" />
                         </View>
                     </View>
-                )
+                ) 
             }
             <View style={{ paddingHorizontal: 30, paddingVertical: 40 }}>
                 <Text style={styles.Heading}>Sign In</Text>
