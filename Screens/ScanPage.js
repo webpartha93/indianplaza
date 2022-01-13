@@ -67,9 +67,9 @@ const ScanPage = ({ navigation, route }) => {
   const torchMode = 'off';
   const cameraType = 'back';
 
-  const barcodeReceived = (e) => {
-    setBarcode(e.data);
-  }
+  // const barcodeReceived = (e) => {
+  //   setBarcode(e.data);
+  // }
 
   useEffect(()=> {
     if(barcode!==undefined){
