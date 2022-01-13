@@ -129,9 +129,9 @@ const ScanPage = ({ navigation, route }) => {
   }, [state]);
 
   // for camera permission
-  useEffect(() => {
-    requestCameraPermission();
-  }, []);
+  // useEffect(() => {
+  //   requestCameraPermission();
+  // }, []);
 
 
   return (
@@ -163,7 +163,7 @@ const ScanPage = ({ navigation, route }) => {
           </View>
         )
       }
-      <BarcodeScanner
+      {/* <BarcodeScanner
         onBarCodeRead={barcodeReceived}
         style={{ flex: 1 }}
         torchMode={torchMode}
@@ -174,11 +174,11 @@ const ScanPage = ({ navigation, route }) => {
         viewFinderHeight={140}
         viewFinderBorderLength={80}
       // viewFinderShowLoadingIndicator={state.isLoading}
-      />
+      /> */}
       {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
 
       {/*for live */}
-      {/* <View style={{width:"100%", paddingHorizontal:25}}>
+      <View style={{width:"100%", paddingHorizontal:25}}>
       <TextInput returnKeyType="next"
         autoFocus={true}
         ref={barcodeNameRef}
@@ -188,7 +188,7 @@ const ScanPage = ({ navigation, route }) => {
         }}
         onChangeText={(e)=> setBarcode(e)}
         blurOnSubmit={false} value={barcode} placeholderTextColor="#000" style={{width:"100%", backgroundColor: "#FFF", color: "#000", paddingHorizontal:12}} />
-        </View> */}
+        </View>
     </View>
   )
 }
