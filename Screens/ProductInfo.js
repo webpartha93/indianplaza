@@ -244,6 +244,7 @@ const ProductInfo = ({ navigation, route }) => {
                                             numberOfLines={5}
                                             textAlignVertical='top'
                                             style={{ paddingTop: 10, color: "#000", width: "100%" }}
+                                            autoCapitalize="characters"
                                             placeholderTextColor="#a1a1a1"
                                             value={remarks}
                                             onChangeText={handleRemarks}

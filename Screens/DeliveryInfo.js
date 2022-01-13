@@ -66,6 +66,7 @@ const DeliveryInfo = ({ navigation, route }) => {
                         placeholderTextColor="#a1a1a1"
                         placeholder="123 456 789 963"
                         style={{ width: "100%", color: "#000" }}
+                        autoCapitalize="characters"
                         onChangeText={(val) => setFormData(values => ({ ...values, deliveryNumber: val }))}
                     />
                 </View>
