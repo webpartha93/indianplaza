@@ -11,13 +11,13 @@ import {
     ActivityIndicator
 } from 'react-native';
 
-import { getProductInfo } from '../Redux/Actions/AllActions';
+import { assignBarCode, getProductInfo } from '../Redux/Actions/AllActions';
 import { useDispatch, useSelector } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 
 const UnitMeasure = ({ navigation, route }) => {
-    console.log("unitmeasure", route.params.dataLength);
+    console.log("unitmeasure", route.params);
 
     const state = useSelector(state => state.AllReducers);
     const dispatch = useDispatch();
@@ -64,11 +64,14 @@ const UnitMeasure = ({ navigation, route }) => {
             org_id: route.params.org_id,
             vendor_id: route.params.vendor_id,
             activity: route.params.activity,
-            additional_barcode:route.params.additional_barcode,
             product_uom: e,
             isUnknownItem:route.params.isUnknownItem
         });
         dispatch({ type:"RESET_SCAN_DATA"});
+        dispatch(assignBarCode({
+            barcode: route.params.additional_barcode,
+            product_id: route.params.productId
+        }));
     }
 
     return (

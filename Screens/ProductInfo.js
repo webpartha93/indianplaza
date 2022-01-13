@@ -36,10 +36,10 @@ const ProductInfo = ({ navigation, route }) => {
     const product_id = route.params.productId;
     const product_uom = route.params.product_uom;
     const activity = route.params.activity;
-    const additional_barcode = route.params.additional_barcode !== undefined ? route.params.additional_barcode : "";
+    // const additional_barcode = route.params.additional_barcode !== undefined ? route.params.additional_barcode : "";
     const getAllData = route.params;
 
-    console.log('param', route.params.additional_barcode);
+    console.log('additional_barcode', route.params);
 
     const readItemFromStorage = async () => {
         try {
@@ -54,7 +54,6 @@ const ProductInfo = ({ navigation, route }) => {
     }
 
     const handleIncrement = () => {
-
         setProduct_qty(prevVal => prevVal + 1);
     }
     const handleDecrement = () => {
@@ -71,15 +70,15 @@ const ProductInfo = ({ navigation, route }) => {
         }
     }
 
-    const handleRemarks = (val)=> {
+    const handleRemarks = (val) => {
         setRemarks(val);
-        if(val.length >= 1){            
+        if (val.length >= 1) {
             setBtnDisabled(false);
-        }else{
+        } else {
             setBtnDisabled(true);
         }
         // console.log(val.length);
-        
+
     }
 
     const dispatch = useDispatch();
@@ -105,8 +104,8 @@ const ProductInfo = ({ navigation, route }) => {
                 product_qty,
                 product_id,
                 product_uom,
-                activity,
-                additional_barcode
+                activity
+                // additional_barcode
             },
             getAllData,
             remarks
@@ -121,7 +120,7 @@ const ProductInfo = ({ navigation, route }) => {
                 product_id,
                 product_uom,
                 activity,
-                additional_barcode,
+                // additional_barcode,
                 remarks
             },
             getAllData,
@@ -157,9 +156,7 @@ const ProductInfo = ({ navigation, route }) => {
         }
         //
     }, [statecheckout])
-    // navigation.navigate('activity', {
-    //     org_id:route.params.org_id,
-    // })
+
 
     const showAlert = () =>
         Alert.alert(
@@ -175,7 +172,7 @@ const ProductInfo = ({ navigation, route }) => {
             ]
         );
 
-        const showAlert2 = () =>
+    const showAlert2 = () =>
         Alert.alert(
             "Do you really want to submit?",
             "",
@@ -235,24 +232,24 @@ const ProductInfo = ({ navigation, route }) => {
                     {
                         route.params.isUnknownItem === "true" && (
                             <>
-                            <View style={styles.Label}>
-                            <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Remarks</Text>
-                            </View>
-                            <View style={styles.Desc}>
-                                <View style={styles.inputWrapper}>
-                                    <AntDesign size={16} color="#626F7F" name="edit" style={{ position: "absolute", left: 15, top: 16 }} />
-                                    <TextInput
-                                        editable
-                                        multiline
-                                        numberOfLines={5}
-                                        textAlignVertical='top'
-                                        style={{ paddingTop: 10, color: "#000", width:"100%"}}
-                                        placeholderTextColor="#a1a1a1"
-                                        value={remarks}
-                                        onChangeText={handleRemarks}
-                                    />
+                                <View style={styles.Label}>
+                                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Remarks</Text>
                                 </View>
-                            </View>
+                                <View style={styles.Desc}>
+                                    <View style={styles.inputWrapper}>
+                                        <AntDesign size={16} color="#626F7F" name="edit" style={{ position: "absolute", left: 15, top: 16 }} />
+                                        <TextInput
+                                            editable
+                                            multiline
+                                            numberOfLines={5}
+                                            textAlignVertical='top'
+                                            style={{ paddingTop: 10, color: "#000", width: "100%" }}
+                                            placeholderTextColor="#a1a1a1"
+                                            value={remarks}
+                                            onChangeText={handleRemarks}
+                                        />
+                                    </View>
+                                </View>
                             </>
                         )
                     }
@@ -312,7 +309,7 @@ const ProductInfo = ({ navigation, route }) => {
                     {
                         route.params.isUnknownItem === "true" ? (
                             <>
-                                <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, {backgroundColor:btnDisabled ? "#9d9d9d" : "#1788F0"}]} onPress={() => {
+                                <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, { backgroundColor: btnDisabled ? "#9d9d9d" : "#1788F0" }]} onPress={() => {
                                     navigation.navigate('Scanbarcode', {
                                         deliverDate: route.params.deliverDate,
                                         deliveryNumber: route.params.deliveryNumber,
@@ -329,7 +326,7 @@ const ProductInfo = ({ navigation, route }) => {
                                             product_id,
                                             product_uom,
                                             activity,
-                                            additional_barcode,
+                                            // additional_barcode,
                                             remarks
                                         },
                                         getAllData,
@@ -338,9 +335,6 @@ const ProductInfo = ({ navigation, route }) => {
                                     dispatch({ type: "RESET_ADDED_CART" })
                                 }}>
                                     <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
-                                </TouchableOpacity>
-                                <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, {backgroundColor:btnDisabled ? "#9d9d9d" : "#1788F0"}]} onPress={showAlert2}>
-                                    <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
                                 </TouchableOpacity>
                             </>
 
@@ -363,7 +357,7 @@ const ProductInfo = ({ navigation, route }) => {
                                             product_id,
                                             product_uom,
                                             activity,
-                                            additional_barcode
+                                            // additional_barcode
                                         },
                                         getAllData
                                     }))
@@ -371,14 +365,25 @@ const ProductInfo = ({ navigation, route }) => {
                                 }}>
                                     <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
-                                    <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
-                                </TouchableOpacity>
                             </>
                         )
 
                     }
 
+                </View>
+
+                <View style={{ marginTop:20, width: "100%", maxWidth: 150, marginHorizontal: "25%" }}>
+                    {
+                        route.params.isUnknownItem === "true" ? (
+                            <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, { backgroundColor: btnDisabled ? "#9d9d9d" : "#1788F0" }]} onPress={showAlert2}>
+                                <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
+                                <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
+                            </TouchableOpacity>
+                        )
+                    }
                 </View>
             </ScrollView>
         </View>
@@ -392,7 +397,7 @@ var styles = StyleSheet.create({
         flex: 1,
         paddingHorizontal: 30,
         paddingTop: 40,
-        paddingBottom:10,
+        paddingBottom: 10,
         backgroundColor: '#FFF'
     },
     Heading: {

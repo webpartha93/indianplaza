@@ -57,20 +57,19 @@ const ScanPage = ({ navigation, route }) => {
   const [barcode, setBarcode] = useState();
   const [unknownItemId, setUnknownItemId] = useState('');
   const isFocused = useIsFocused();
-  const onSuccess = e => {
-    dispatch(afterScanProduct(e.data));
-    setBarcode(e.data);
-  };
-
+  // const onSuccess = e => {
+  //   dispatch(afterScanProduct(e.data));
+  //   setBarcode(e.data);
+  // };
+  console.log('barcode_additional', route.params.additional_barcode);
   const barcodeNameRef = useRef();
 
   const torchMode = 'off';
   const cameraType = 'back';
 
-  // const barcodeReceived = (e) => {
-  //   //dispatch(afterScanProduct(e.data));
-  //   setBarcode(e.data);
-  // }
+  const barcodeReceived = (e) => {
+    setBarcode(e.data);
+  }
 
   useEffect(()=> {
     if(barcode!==undefined){
@@ -129,13 +128,14 @@ const ScanPage = ({ navigation, route }) => {
 
   }, [state]);
 
-  // useEffect(() => {
-  //   requestCameraPermission();
-  // }, []);
+  // for camera permission
+  useEffect(() => {
+    requestCameraPermission();
+  }, []);
 
 
   return (
-    <View style={{flex:1, flexDirection:"row", alignItems:"center", paddingHorizontal:25}}>
+    <View style={{flex:1, flexDirection:"row", alignItems:"center"}}>
       {/* <QRCodeScanner
             onRead={onSuccess}
             flashMode={RNCamera.Constants.FlashMode.auto}
@@ -146,7 +146,7 @@ const ScanPage = ({ navigation, route }) => {
         <MaterialIcons name='arrow-back' color="#000" size={20} />
       </TouchableOpacity>
 
-      {/* {
+      {
         state.isLoading && (
           <View style={{ flex: 1, position: "absolute", zIndex: 3, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "rgba(255,255,255,0.4)" }}>
             <View style={{
@@ -174,9 +174,11 @@ const ScanPage = ({ navigation, route }) => {
         viewFinderHeight={140}
         viewFinderBorderLength={80}
       // viewFinderShowLoadingIndicator={state.isLoading}
-      /> */}
+      />
       {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
 
+      {/*for live */}
+      {/* <View style={{paddingHorizontal:25}}>
       <TextInput returnKeyType="next"
         autoFocus={true}
         ref={barcodeNameRef}
@@ -186,6 +188,7 @@ const ScanPage = ({ navigation, route }) => {
         }}
         onChangeText={(e)=> setBarcode(e)}
         blurOnSubmit={false} value={barcode} placeholderTextColor="#000" style={{width:"100%", backgroundColor: "#FFF", color: "#000", paddingHorizontal:12}} />
+        </View> */}
     </View>
   )
 }

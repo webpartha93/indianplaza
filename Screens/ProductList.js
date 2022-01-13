@@ -21,7 +21,7 @@ const ProductList = ({navigation, route}) => {
         setValue(radio_props);
         setSelectedVal(radio_props[0].value);
     },[]);
-    console.log('productlist',selectedVal);
+    console.log('allparams',route.params);
     // var radio_props = route.params.allProducts
 
     return (
@@ -42,13 +42,15 @@ const ProductList = ({navigation, route}) => {
             />
             <View style={{alignItems:"center"}}>
                 <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('UnitMeasure', {
+                    barcode:route.params.barcode,
                     productId:selectedVal,
                     dataLength:route.params.dataLength,
                     deliverDate:route.params.deliverDate,
                     deliveryNumber:route.params.deliveryNumber,
                     org_id:route.params.org_id,
                     vendor_id:route.params.vendor_id,
-                    activity:route.params.activity
+                    activity:route.params.activity,
+                    additional_barcode:route.params.additional_barcode
 
                 })}>
                     <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>
