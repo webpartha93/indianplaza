@@ -31,6 +31,7 @@ const ProductInfo = ({ navigation, route }) => {
     const [isUnknownItem, setIsUnknownItem] = useState('');
     const [remarks, setRemarks] = useState('');
     const [btnDisabled, setBtnDisabled] = useState(true);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
     const [empId, setEmpId] = useState('');
     const product_id = route.params.productId;
@@ -63,11 +64,14 @@ const ProductInfo = ({ navigation, route }) => {
     const handleNumberChange = (e) => {
         var numberVal = Number(e);
         console.log(numberVal);
-        if (e <= 1) {
-            setProduct_qty(1);
+        if (e < 1) {
+            setProduct_qty('');
+            setIsButtonDisabled(true);
         } else {
             setProduct_qty(numberVal);
+            setIsButtonDisabled(false);
         }
+        
     }
 
     const handleRemarks = (val) => {
@@ -226,7 +230,7 @@ const ProductInfo = ({ navigation, route }) => {
                         <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Unit of Measure</Text>
                     </View>
                     <View style={styles.Desc}>
-                        <Text style={{ color: "#626F7F", fontSize: 13 }}>{product_uom > 1 ? "Carton" : "Piece"}</Text>
+                        <Text style={{ color: "#626F7F", fontSize: 13 }}>{product_uom > 3 ? "Carton" : "Piece"}</Text>
                     </View>
 
                     {
@@ -341,7 +345,7 @@ const ProductInfo = ({ navigation, route }) => {
 
                         ) : (
                             <>
-                                <TouchableOpacity style={styles.btnSubmit} onPress={() => {
+                                <TouchableOpacity disabled={isButtonDisabled} style={[styles.btnSubmit, { backgroundColor: isButtonDisabled ? "#9d9d9d" : "#1788F0" }]} onPress={() => {
                                     navigation.navigate('Scanbarcode', {
                                         deliverDate: route.params.deliverDate,
                                         deliveryNumber: route.params.deliveryNumber,
@@ -380,7 +384,7 @@ const ProductInfo = ({ navigation, route }) => {
                                 <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
                             </TouchableOpacity>
                         ) : (
-                            <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
+                            <TouchableOpacity disabled={isButtonDisabled} style={[styles.btnSubmit, { backgroundColor: isButtonDisabled ? "#9d9d9d" : "#1788F0" }]} onPress={showAlert}>
                                 <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
                             </TouchableOpacity>
                         )

@@ -16,7 +16,6 @@ import { doLogin } from '../Redux/Actions/AuthActions';
 import { useIsFocused } from '@react-navigation/native';
 
 
-
 const Login = ({ navigation }) => {
     const state = useSelector(state => state);
     const dispatch = useDispatch();

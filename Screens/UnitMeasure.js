@@ -29,7 +29,7 @@ const UnitMeasure = ({ navigation, route }) => {
     const unitsCategory = [
         {
             "catName": "Piece",
-            "id": "1"
+            "id": "3"
         },
         {
             "catName": "Carton",
