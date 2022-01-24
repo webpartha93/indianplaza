@@ -22,7 +22,7 @@ import Toast from 'react-native-toast-message';
 import BarcodeScanner from 'react-native-scan-barcode';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { unknownItems } from '../Redux/Actions/UnknownItemAction';
+import { handHeldScannerAction } from '../Redux/Actions/HandHeldScannerAction';
 
 
 const requestCameraPermission = async () => {
@@ -52,16 +52,18 @@ const requestCameraPermission = async () => {
 
 const ScanPage = ({ navigation, route }) => {
   const state = useSelector(state => state.AllReducers);
-  const unknownItemState = useSelector(state => state.UnknownItemReducers);
+  const handHeldScannerState = useSelector(state => state.HandHeldReducer);
   const dispatch = useDispatch();
   const [barcode, setBarcode] = useState();
-  const [unknownItemId, setUnknownItemId] = useState('');
+  const [scannerStatus, setScannerStatus] = useState('');
+
   const isFocused = useIsFocused();
   // const onSuccess = e => {
   //   dispatch(afterScanProduct(e.data));
   //   setBarcode(e.data);
   // };
-  console.log('barcode_additional', route.params.additional_barcode);
+  //console.log('barcode_additional', route.params.additional_barcode);
+
   const barcodeNameRef = useRef();
 
   const torchMode = 'off';
@@ -71,6 +73,7 @@ const ScanPage = ({ navigation, route }) => {
     setBarcode(e.data);
   }
 
+  
   useEffect(()=> {
     if(barcode!==undefined){
       dispatch(afterScanProduct(barcode));
@@ -130,8 +133,17 @@ const ScanPage = ({ navigation, route }) => {
 
   // for camera permission
   useEffect(() => {
-    requestCameraPermission();
+    dispatch(handHeldScannerAction());           
   }, []);
+
+  useEffect(() => {
+    console.log(handHeldScannerState)
+    if(handHeldScannerState.handHeldScannerStatus !== ""){
+      setScannerStatus(handHeldScannerState.handHeldScannerStatus);
+    }
+    
+
+  }, [handHeldScannerState]);
 
 
   return (
@@ -163,32 +175,57 @@ const ScanPage = ({ navigation, route }) => {
           </View>
         )
       }
-      <BarcodeScanner
-        onBarCodeRead={barcodeReceived}
-        style={{ flex: 1 }}
-        torchMode={torchMode}
-        cameraType={cameraType}
-        showViewFinder={true}
-        viewFinderBorderColor='#cbff01'
-        viewFinderWidth={300}
-        viewFinderHeight={140}
-        viewFinderBorderLength={80}
-      // viewFinderShowLoadingIndicator={state.isLoading}
-      />
+
+      {
+        handHeldScannerState.isLoading && (
+          <View style={{ flex: 1, position: "absolute", zIndex: 3, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "#FFF" }}>
+            <View style={{
+              backgroundColor: "#FFF", paddingHorizontal: 15, paddingVertical: 15, borderRadius: 5, shadowOffset: {
+                width: 0,
+                height: 3,
+              },
+              shadowOpacity: 0.12,
+              shadowRadius: 4.65,
+              elevation: 6,
+            }}>
+              <ActivityIndicator size="large" color="#7b0b0d" />
+            </View>
+          </View>
+        )
+      }
+
+      {
+        scannerStatus !== 0 ? (
+        <View style={{width:"100%", paddingHorizontal:25}}>
+        <TextInput returnKeyType="next"
+          autoFocus={true}
+          ref={barcodeNameRef}
+          keyboardType="number-pad"
+          onSubmitEditing={() => {
+            barcodeNameRef.current.focus();
+          }}
+          onChangeText={(e)=> setBarcode(e)}
+          blurOnSubmit={false} value={barcode} placeholderTextColor="#000" style={{width:"100%", backgroundColor: "#FFF", color: "#000", paddingHorizontal:12}} />
+          </View>
+        ) : (
+          <BarcodeScanner
+            onBarCodeRead={barcodeReceived}
+            style={{ flex: 1 }}
+            torchMode={torchMode}
+            cameraType={cameraType}
+            showViewFinder={true}
+            viewFinderBorderColor='#cbff01'
+            viewFinderWidth={300}
+            viewFinderHeight={140}
+            viewFinderBorderLength={80}
+            viewFinderShowLoadingIndicator={state.isLoading}
+         />
+        )
+      }
+      
       {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
 
-      {/*for live */}
-      {/* <View style={{width:"100%", paddingHorizontal:25}}>
-      <TextInput returnKeyType="next"
-        autoFocus={true}
-        ref={barcodeNameRef}
-        keyboardType="number-pad"
-        onSubmitEditing={() => {
-          barcodeNameRef.current.focus();
-        }}
-        onChangeText={(e)=> setBarcode(e)}
-        blurOnSubmit={false} value={barcode} placeholderTextColor="#000" style={{width:"100%", backgroundColor: "#FFF", color: "#000", paddingHorizontal:12}} />
-        </View> */}
+      
     </View>
   )
 }

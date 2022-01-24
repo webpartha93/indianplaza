@@ -7,6 +7,7 @@ import { CartReducer } from "./Reducers/CartReducers";
 import { CheckOutReducers } from "./Reducers/CheckOutReducers";
 import { HistoryReducers } from "./Reducers/HistoryReducers";
 import { UnknownItemReducers } from "./Reducers/UnknownItemReducers";
+import { HandHeldReducers } from "./Reducers/HandHeldScannerReducers";
 
 
 const reducers = combineReducers({
@@ -16,7 +17,8 @@ const reducers = combineReducers({
     CartReducer:CartReducer,
     CheckOutReducers:CheckOutReducers,
     HistoryReducers:HistoryReducers,
-    UnknownItemReducers:UnknownItemReducers
+    UnknownItemReducers:UnknownItemReducers,
+    HandHeldReducer:HandHeldReducers
 });
 
 const store = createStore(reducers, applyMiddleware(ThunkMiddleware));

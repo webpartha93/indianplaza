@@ -8,7 +8,8 @@ const initialState = {
     allSupplier:"",
     allScanProducts:"",
     productDetails:"",
-    fetchSupplier:[]
+    fetchSupplier:[],
+    handHeldScanner:""
 }
 
 export const AllReducers = (state=initialState, action)=> {
@@ -111,7 +112,7 @@ export const AllReducers = (state=initialState, action)=> {
                 isLoading:false,
                 errorMessage:"",
                 allScanProducts:""
-              }
+            }
         default:
           return state;
       }
