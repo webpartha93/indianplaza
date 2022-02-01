@@ -86,9 +86,24 @@ const Cart = ({ navigation, route }) => {
                 type: 'success',
                 text1:"Your order has been received",
             });
+
+            if (checkoutState.checkoutSuccessMessage.data !== undefined) {
+                shipmentNumberAlert(checkoutState.checkoutSuccessMessage.data);
+            }
+
+            console.log('cartpage checkout message', checkoutState);
             
         }
     }, [checkoutState]);
+
+    const shipmentNumberAlert = (number) =>
+        Alert.alert(
+            `Your Shipment Number is ${number}`,
+            "",
+            [
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+            ]
+        );
 
 
     const handleIncrement = (id)=> {
