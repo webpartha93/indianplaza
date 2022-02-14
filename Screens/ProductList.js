@@ -11,6 +11,9 @@ import {
   import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
   import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 
+  import { assignBarCode } from '../Redux/Actions/AllActions';
+  import { useDispatch } from 'react-redux';
+
 const ProductList = ({navigation, route}) => {    
     const [value, setValue] = useState([]);
     const [selectedVal, setSelectedVal] = useState();    
@@ -22,6 +25,9 @@ const ProductList = ({navigation, route}) => {
         setSelectedVal(radio_props[0].value);
     },[]);
     console.log('allparams',route.params);
+
+    const dispatch = useDispatch();
+
     // var radio_props = route.params.allProducts
 
     return (
@@ -41,7 +47,8 @@ const ProductList = ({navigation, route}) => {
                 style={{marginBottom:30, marginTop:30}}
             />
             <View style={{alignItems:"center"}}>
-                <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('UnitMeasure', {
+                <TouchableOpacity style={styles.btnSubmit} 
+                onPress={()=> {navigation.navigate('ProductInfo', {
                     barcode:route.params.barcode,
                     productId:selectedVal,
                     dataLength:route.params.dataLength,
@@ -50,9 +57,17 @@ const ProductList = ({navigation, route}) => {
                     org_id:route.params.org_id,
                     vendor_id:route.params.vendor_id,
                     activity:route.params.activity,
-                    additional_barcode:route.params.additional_barcode
-
-                })}>
+                    additional_barcode:route.params.additional_barcode,
+                    product_uom: 7
+                });
+                dispatch({ type:"RESET_SCAN_DATA"});
+                dispatch(assignBarCode({
+                    barcode: route.params.additional_barcode,
+                    product_id: route.params.productId
+                }));
+            }
+                
+            }>
                     <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>
                 </TouchableOpacity>
             </View>

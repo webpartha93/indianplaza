@@ -17,7 +17,7 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { afterScanProduct } from '../Redux/Actions/AllActions';
+import { afterScanProduct, assignBarCode } from '../Redux/Actions/AllActions';
 import Toast from 'react-native-toast-message';
 import BarcodeScanner from 'react-native-scan-barcode';
 
@@ -57,6 +57,8 @@ const ScanPage = ({ navigation, route }) => {
   const [barcode, setBarcode] = useState();
   const [scannerStatus, setScannerStatus] = useState('');
 
+  console.log('params', route.params);
+
   const isFocused = useIsFocused();
   // const onSuccess = e => {
   //   dispatch(afterScanProduct(e.data));
@@ -73,81 +75,86 @@ const ScanPage = ({ navigation, route }) => {
     setBarcode(e.data);
   }
 
-  
-  useEffect(()=> {
-    if(barcode!==undefined){
+
+  useEffect(() => {
+    if (barcode !== undefined) {
       dispatch(afterScanProduct(barcode));
     }
   }, [barcode]);
 
-     useEffect(() => {       
-      if (state.allScanProducts.data !== undefined) { 
-          //console.log('dddd',state.allScanProducts.data);
-          if(state.allScanProducts.data.length > 1 ){            
-              navigation.navigate('ProductList',{
-                  barcode:barcode,
-                  dataLength:state.allScanProducts.data.length,
-                  allProducts:state.allScanProducts.data,
-                  deliverDate:route.params.deliverDate,
-                  deliveryNumber:route.params.deliveryNumber,
-                  org_id:route.params.org_id,
-                  vendor_id:route.params.vendor_id,
-                  activity:route.params.activity,
-                  additional_barcode:route.params.additional_barcode !== undefined ? route.params.additional_barcode : ""
-              });
-          }else{
-              // Toast.show({
-              //     type: 'error',
-              //     text1: "No Products Found. Scan again please",
-              //     autoHide:true,
-              //     onHide: () => {state.allScanProducts=""}
-              // });
+  useEffect(() => {
+    if (state.allScanProducts.data !== undefined) {
+      //console.log('dddd',state.allScanProducts.data);
+      if (state.allScanProducts.data.length > 1) {
+        navigation.navigate('ProductList', {
+          barcode: barcode,
+          dataLength: state.allScanProducts.data.length,
+          allProducts: state.allScanProducts.data,
+          deliverDate: route.params.deliverDate,
+          deliveryNumber: route.params.deliveryNumber,
+          org_id: route.params.org_id,
+          vendor_id: route.params.vendor_id,
+          activity: route.params.activity,
+          additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : ""
+        });
+      } else {
+        // Toast.show({
+        //     type: 'error',
+        //     text1: "No Products Found. Scan again please",
+        //     autoHide:true,
+        //     onHide: () => {state.allScanProducts=""}
+        // });
 
-              navigation.navigate('UnknownItem', {
-                  barcode:barcode,
-                  dataLength:1,
-                  deliverDate:route.params.deliverDate,
-                  deliveryNumber:route.params.deliveryNumber,
-                  org_id:route.params.org_id,
-                  vendor_id:route.params.vendor_id,
-                  activity:route.params.activity
-              });
+        navigation.navigate('UnknownItem', {
+          barcode: barcode,
+          dataLength: 1,
+          deliverDate: route.params.deliverDate,
+          deliveryNumber: route.params.deliveryNumber,
+          org_id: route.params.org_id,
+          vendor_id: route.params.vendor_id,
+          activity: route.params.activity
+        });
 
-          }
-           if(state.allScanProducts.data.length === 1){
-              navigation.navigate('UnitMeasure', {
-                  barcode:barcode,
-                  dataLength:state.allScanProducts.data.length,
-                  productId:state.allScanProducts.data[0]?.item_id,
-                  deliverDate:route.params.deliverDate,
-                  deliveryNumber:route.params.deliveryNumber,
-                  org_id:route.params.org_id,
-                  vendor_id:route.params.vendor_id,
-                  activity:route.params.activity,
-                  additional_barcode:route.params.additional_barcode !== undefined ? route.params.additional_barcode : ""
-              });
-          }
-      }  
+      }
+      if (state.allScanProducts.data.length === 1) {
+        navigation.navigate('ProductInfo', {
+          barcode: barcode,
+          dataLength: state.allScanProducts.data.length,
+          productId: state.allScanProducts.data[0]?.item_id,
+          deliverDate: route.params.deliverDate,
+          deliveryNumber: route.params.deliveryNumber,
+          org_id: route.params.org_id,
+          vendor_id: route.params.vendor_id,
+          activity: route.params.activity,
+          additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : "",
+          product_uom: 7,
+          norlamFlow:"true"
+        });
+      }
+    }
 
   }, [state]);
 
   // for camera permission
   useEffect(() => {
-    dispatch(handHeldScannerAction());           
+    dispatch(handHeldScannerAction());
   }, []);
 
   useEffect(() => {
-    console.log(handHeldScannerState)
-    if(handHeldScannerState.handHeldScannerStatus !== ""){
+    if (handHeldScannerState.handHeldScannerStatus !== "") {
       setScannerStatus(handHeldScannerState.handHeldScannerStatus);
     }
-    
+
 
   }, [handHeldScannerState]);
 
+  console.log('kkkkkkkk', state);
+
+  console.log('ggggggggggg', handHeldScannerState);
+
 
   return (
-    <View style={{flex:1, flexDirection:"row", alignItems:"center"}}>
+    <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
       {/* <QRCodeScanner
             onRead={onSuccess}
             flashMode={RNCamera.Constants.FlashMode.auto}
@@ -194,7 +201,7 @@ const ScanPage = ({ navigation, route }) => {
         )
       }
 
-      {
+      {/* {
         scannerStatus !== 0 ? (
         <View style={{width:"100%", paddingHorizontal:25}}>
         <TextInput returnKeyType="next"
@@ -221,11 +228,24 @@ const ScanPage = ({ navigation, route }) => {
             viewFinderShowLoadingIndicator={state.isLoading}
          />
         )
-      }
-      
+      } */}
+
+      <BarcodeScanner
+        onBarCodeRead={barcodeReceived}
+        style={{ flex: 1 }}
+        torchMode={torchMode}
+        cameraType={cameraType}
+        showViewFinder={true}
+        viewFinderBorderColor='#cbff01'
+        viewFinderWidth={300}
+        viewFinderHeight={140}
+        viewFinderBorderLength={80}
+        viewFinderShowLoadingIndicator={state.isLoading}
+      />
+
       {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
 
-      
+
     </View>
   )
 }

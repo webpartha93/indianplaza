@@ -7,15 +7,18 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    Alert
+    Alert,
+    Image
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { getProductInfo } from '../Redux/Actions/AllActions';
+import { getProductInfo, assignBarCode } from '../Redux/Actions/AllActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, addToCartUnknown } from '../Redux/Actions/cartAction';
 import { doCheckout } from '../Redux/Actions/CheckoutAction';
+
+import ImagePicker from 'react-native-image-crop-picker';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -32,6 +35,7 @@ const ProductInfo = ({ navigation, route }) => {
     const [remarks, setRemarks] = useState('');
     const [btnDisabled, setBtnDisabled] = useState(true);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+    const [uploadedImage, setUploadedImage] = useState([]);
 
     const [empId, setEmpId] = useState('');
     const product_id = route.params.productId;
@@ -39,6 +43,7 @@ const ProductInfo = ({ navigation, route }) => {
     const activity = route.params.activity;
     // const additional_barcode = route.params.additional_barcode !== undefined ? route.params.additional_barcode : "";
     const getAllData = route.params;
+    console.log('productUom', route.params.product_uom);
 
     console.log('additional_barcode', route.params);
 
@@ -71,7 +76,7 @@ const ProductInfo = ({ navigation, route }) => {
             setProduct_qty(numberVal);
             setIsButtonDisabled(false);
         }
-        
+
     }
 
     const handleRemarks = (val) => {
@@ -91,6 +96,11 @@ const ProductInfo = ({ navigation, route }) => {
         dispatch(getProductInfo(route.params.productId));
         readItemFromStorage().then((value) => setEmpId(value));
         setIsUnknownItem(route.params.isUnknownItem);
+
+        dispatch(assignBarCode({
+            barcode: route.params.additional_barcode,
+            product_id: route.params.productId
+        }));
     }, [])
 
     useEffect(() => {
@@ -206,6 +216,20 @@ const ProductInfo = ({ navigation, route }) => {
             ]
         );
 
+    const handleTakePhoto = () => {
+        ImagePicker.openCamera({
+            compressImageMaxWidth: 300,
+            compressImageMaxHeight: 400,
+            cropping: true,
+            multiple: true,
+            compressImageQuality: 0.6,
+            includeBase64: true
+        }).then(image => {
+            console.log(image);
+            setUploadedImage([...uploadedImage, image.path]);
+        });
+    }
+
     return (
         <View style={styles.mainWrapper}>
             <View style={{ position: "relative" }}>
@@ -253,6 +277,26 @@ const ProductInfo = ({ navigation, route }) => {
                                             value={remarks}
                                             onChangeText={handleRemarks}
                                         />
+                                    </View>
+                                </View>
+
+                                <View style={styles.Label}>
+                                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Image</Text>
+                                </View>
+                                <View style={styles.Desc}>
+                                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                        {
+                                            uploadedImage.map((item, index) => {
+                                                return (
+                                                    <Image key={index} source={{ uri: item }} style={{ width: 100, height: 100, borderRadius: 10, marginHorizontal: 10, marginBottom: 25 }} resizeMode="cover" />
+                                                )
+                                            })
+                                        }
+                                    </View>
+                                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                        <TouchableOpacity onPress={handleTakePhoto} style={[styles.btnSubmit, { width: 150, marginTop: 0 }]}>
+                                            <Text style={{ color: "#FFF", fontSize: 16 }}>Take a photo</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                             </>
@@ -307,9 +351,27 @@ const ProductInfo = ({ navigation, route }) => {
                 </View>
 
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                    <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
-                        <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
-                    </TouchableOpacity>
+
+                    {
+                        route.params.norlamFlow === "true" ? (
+                            <TouchableOpacity style={styles.btnSubmit} onPress={() => {
+                                navigation.navigate('Scanbarcode', {
+                                    deliverDate: route.params.deliverDate,
+                                    deliveryNumber: route.params.deliveryNumber,
+                                    org_id: route.params.org_id,
+                                    vendor_id: route.params.vendor_id,
+                                    activity: route.params.activity,
+                                }), dispatch({ type: "RESET_SCAN_DATA" })
+                            }}>
+                                <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
+                                <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
+                            </TouchableOpacity>
+                        )
+
+                    }
 
                     {
                         route.params.isUnknownItem === "true" ? (
@@ -377,7 +439,7 @@ const ProductInfo = ({ navigation, route }) => {
 
                 </View>
 
-                <View style={{ marginTop:20, width: "100%", maxWidth: 150, marginHorizontal: "25%" }}>
+                <View style={{ marginTop: 20, width: "100%", maxWidth: 150, marginHorizontal: "25%" }}>
                     {
                         route.params.isUnknownItem === "true" ? (
                             <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, { backgroundColor: btnDisabled ? "#9d9d9d" : "#1788F0" }]} onPress={showAlert2}>
