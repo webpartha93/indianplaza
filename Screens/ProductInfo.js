@@ -211,6 +211,7 @@ const ProductInfo = ({ navigation, route }) => {
                             org_id: route.params.org_id,
                         })
                         dispatch({ type: "REMOVE_CHECKOUT_DATA" })
+                        dispatch({ type: "RESET_SCAN_DATA" })
                     }
                 }
             ]
@@ -229,6 +230,24 @@ const ProductInfo = ({ navigation, route }) => {
             setUploadedImage([...uploadedImage, image.path]);
         });
     }
+
+    const handleCross = (elem) => {
+        console.log('AD', elem);
+        let removeItem = uploadedImage.filter((item, index) => {
+            return index !== elem
+        });
+        setUploadedImage(removeItem);
+    }
+
+    useEffect(() => {
+
+        if (uploadedImage.length == 2) {
+            setBtnDisabled(false);
+        } else {
+            setBtnDisabled(true);
+        }
+
+    }, [uploadedImage])
 
     return (
         <View style={styles.mainWrapper}>
@@ -260,7 +279,7 @@ const ProductInfo = ({ navigation, route }) => {
                     {
                         route.params.isUnknownItem === "true" && (
                             <>
-                                <View style={styles.Label}>
+                                {/* <View style={styles.Label}>
                                     <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Remarks</Text>
                                 </View>
                                 <View style={styles.Desc}>
@@ -278,25 +297,33 @@ const ProductInfo = ({ navigation, route }) => {
                                             onChangeText={handleRemarks}
                                         />
                                     </View>
-                                </View>
+                                </View> */}
 
                                 <View style={styles.Label}>
-                                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Image</Text>
+                                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Image <Text style={{ fontSize: 12, fontWeight: "400" }}>(Please upload minimum 2 images)</Text></Text>
                                 </View>
                                 <View style={styles.Desc}>
                                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                                         {
                                             uploadedImage.map((item, index) => {
                                                 return (
-                                                    <Image key={index} source={{ uri: item }} style={{ width: 100, height: 100, borderRadius: 10, marginHorizontal: 10, marginBottom: 25 }} resizeMode="cover" />
+                                                    <View key={index} style={{ position: "relative" }}>
+                                                        <Image source={{ uri: item }} style={{ width: 100, height: 100, borderRadius: 10, marginHorizontal: 10, marginBottom: 25 }} resizeMode="cover" />
+                                                        <TouchableOpacity onPress={() => handleCross(index)} style={{ position: "absolute", right: 0, top: 0, zIndex: 99, backgroundColor: "#FFF", borderRadius: 40, overflow: "hidden" }}><MaterialCommunityIcons size={25} color="red" name="close-circle" /></TouchableOpacity>
+                                                    </View>
                                                 )
                                             })
                                         }
                                     </View>
                                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                                        <TouchableOpacity onPress={handleTakePhoto} style={[styles.btnSubmit, { width: 150, marginTop: 0 }]}>
-                                            <Text style={{ color: "#FFF", fontSize: 16 }}>Take a photo</Text>
-                                        </TouchableOpacity>
+                                        {
+                                            uploadedImage.length != 2 && (
+                                                <TouchableOpacity onPress={handleTakePhoto} style={[styles.btnSubmit, { width: 150, marginTop: 0 }]}>
+                                                    <Text style={{ color: "#FFF", fontSize: 16 }}>Take a photo</Text>
+                                                </TouchableOpacity>
+                                            )
+                                        }
+
                                     </View>
                                 </View>
                             </>
