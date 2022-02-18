@@ -241,7 +241,7 @@ const ProductInfo = ({ navigation, route }) => {
 
     useEffect(() => {
 
-        if (uploadedImage.length == 2) {
+        if (uploadedImage.length == 1) {
             setBtnDisabled(false);
         } else {
             setBtnDisabled(true);
@@ -300,7 +300,7 @@ const ProductInfo = ({ navigation, route }) => {
                                 </View> */}
 
                                 <View style={styles.Label}>
-                                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Image <Text style={{ fontSize: 12, fontWeight: "400" }}>(Please upload minimum 2 images)</Text></Text>
+                                    <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Image <Text style={{ fontSize: 12, fontWeight: "400" }}>Please upload images (max 2)</Text></Text>
                                 </View>
                                 <View style={styles.Desc}>
                                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
@@ -388,7 +388,8 @@ const ProductInfo = ({ navigation, route }) => {
                                     org_id: route.params.org_id,
                                     vendor_id: route.params.vendor_id,
                                     activity: route.params.activity,
-                                }), dispatch({ type: "RESET_SCAN_DATA" })
+                                })
+                                dispatch({ type: "RESET_SCAN_DATA" })
                             }}>
                                 <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
                             </TouchableOpacity>
@@ -427,6 +428,7 @@ const ProductInfo = ({ navigation, route }) => {
                                         remarks
                                     }))
                                     dispatch({ type: "RESET_ADDED_CART" })
+                                    dispatch({ type: "RESET_SCAN_DATA" })
                                 }}>
                                     <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
                                 </TouchableOpacity>
@@ -456,6 +458,7 @@ const ProductInfo = ({ navigation, route }) => {
                                         getAllData
                                     }))
                                     dispatch({ type: "RESET_ADDED_CART" })
+                                    dispatch({ type: "RESET_SCAN_DATA" })
                                 }}>
                                     <MaterialCommunityIcons size={30} color="#FFF" name="barcode-scan" />
                                 </TouchableOpacity>

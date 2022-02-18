@@ -57,7 +57,7 @@ const ScanPage = ({ navigation, route }) => {
   const [barcode, setBarcode] = useState();
   const [scannerStatus, setScannerStatus] = useState('');
 
-  console.log('params', route.params);
+  console.log('params', state.allScanProducts.data);
 
   const isFocused = useIsFocused();
   // const onSuccess = e => {
@@ -130,6 +130,7 @@ const ScanPage = ({ navigation, route }) => {
           product_uom: 7,
           norlamFlow:"true"
         });
+        console.log('length', state.allScanProducts.data.length);
       }
     }
 
