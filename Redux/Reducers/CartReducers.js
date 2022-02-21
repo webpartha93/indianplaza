@@ -8,7 +8,7 @@ const initialState = {
   totalItems: 0
 }
 
-export const CartReducer = (state = initialState, action) => {
+export const CartReducer = (state = initialState, action) => {  
   switch (action.type) {
     case ADD_TO_CART:
       let existed_item = state.cartItems.find(item => (action.payload.productData.product_id === item.product_id && action.payload.productData.product_uom === item.product_uom));
@@ -52,8 +52,8 @@ export const CartReducer = (state = initialState, action) => {
       }
 
     case INCREMENT:
-      let updatedCart = state.cartItems.map((item) => {
-        if (item.product_id == action.payload) {
+      let updatedCart = state.cartItems.map((item, index) => {
+        if (index == action.payload) {
           let qty = item.product_qty + 1;
           return {
             ...item,
@@ -70,8 +70,8 @@ export const CartReducer = (state = initialState, action) => {
       }
     case DECREMENT:
       //console.log(state.cartItems);
-      let afterDecrementCart = state.cartItems.map((item) => {
-        if (item.product_id == action.payload) {
+      let afterDecrementCart = state.cartItems.map((item, index) => {
+        if (index == action.payload) {
           let qty = item.product_qty - 1;
           console.log('itemval', qty);
           return {

@@ -66,7 +66,7 @@ const Branch = ({navigation}) => {
     useEffect(() => {
         if(state.allBranch.data!==undefined){
             setFetchBranch(state.allBranch.data);
-        }        
+        }
     }, [state]);
 
 

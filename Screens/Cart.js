@@ -169,15 +169,14 @@ const Cart = ({ navigation, route }) => {
                                 <Image source={require('../assets/product.png')} />
                                 <View style={{ paddingHorizontal: 10, width:"45%" }}>
                                     <Text style={{ color: "#626F7F", fontSize: 12, fontWeight: "700" }}>{item.productName}{item.index}</Text>
-                                    <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>{item.product_uom == 1 ? "Piece" : "Carton"}</Text>
-                                    <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>{item.remarks}</Text>
+                                    <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>{item.product_uom == 3 ? "Piece" : "Carton"}</Text>
                                 </View>
                                 <View style={{ alignItems: "center", marginLeft: "auto"}}>
                                     <Text style={styles.QtyHeading}>Quantity</Text>
                                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                                         {
                                             item.product_qty > 1 ? (
-                                                <TouchableOpacity onPress={()=>handleDecrement(item.product_id)} style={{
+                                                <TouchableOpacity onPress={()=>handleDecrement(index)} style={{
                                                     width: 28,
                                                     height: 28,
                                                     flexDirection: "column",
@@ -196,7 +195,7 @@ const Cart = ({ navigation, route }) => {
                                                     <MaterialCommunityIcons size={16} color="#000" name="minus" />
                                                 </TouchableOpacity>
                                             ) : (
-                                                <TouchableOpacity onPress={()=> checkItemZero(item.product_id)} style={{
+                                                <TouchableOpacity onPress={()=> checkItemZero(index)} style={{
                                                     width: 28,
                                                     height: 28,
                                                     flexDirection: "column",
@@ -218,7 +217,7 @@ const Cart = ({ navigation, route }) => {
                                         }
                                         
                                         <Text style={{ paddingHorizontal:10, fontSize: 16, color: "#000" }}>{Number(item.product_qty)}</Text>
-                                        <TouchableOpacity onPress={()=>handleIncrement(item.product_id)} style={{
+                                        <TouchableOpacity onPress={()=>handleIncrement(index)} style={{
                                             width: 28,
                                             height: 28,
                                             flexDirection: "column",

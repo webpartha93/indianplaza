@@ -138,9 +138,15 @@ const TabScreen = ({ navigation, route }) => {
         })}
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
-            //e.preventDefault();
+            e.preventDefault();
+            Alert.alert(
+              "Do you really want to go to the home?",
+              "",
+              [{ text: "No", onPress: () => console.log('hi') },
+              { text: "Yes", onPress: () => navigation.navigate('Home') }
+              ]
+            )
             dispatch({ type: "RESET_SCAN_DATA" })
-            navigation.navigate('Branch');
           },
         })}
       />
@@ -159,6 +165,14 @@ const TabScreen = ({ navigation, route }) => {
         })}
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
+            e.preventDefault();
+            Alert.alert(
+              "Do you really want to go to the cart?",
+              "",
+              [{ text: "No", onPress: () => console.log('hi') },
+              { text: "Yes", onPress: () => navigation.navigate('Cart') }
+              ]
+            )
             dispatch({ type: "RESET_SCAN_DATA" })
           },
         })}
@@ -205,6 +219,14 @@ const TabScreen = ({ navigation, route }) => {
         })}
         listeners={({ navigation, route }) => ({
           tabPress: (e) => {
+            e.preventDefault();
+            Alert.alert(
+              "Do you really want to go to the history?",
+              "",
+              [{ text: "No", onPress: () => console.log('hi') },
+              { text: "Yes", onPress: () => navigation.navigate('AllHistory') }
+              ]
+            )
             dispatch({ type: "RESET_SCAN_DATA" })
           }
         })}        

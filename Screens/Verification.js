@@ -138,9 +138,9 @@ const Verification = ({navigation, route}) => {
                         <Text style={{color:"#1788F0", fontSize:15, fontWeight:"700"}}>RESEND OTP</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={{marginTop:20,alignItems:"center"}}>
+                {/* <View style={{marginTop:20,alignItems:"center"}}>
                     <Text style={{color:'#060395', fontSize:15, marginRight:6}}>Code expires in 04:59 minutes</Text>
-                </View>
+                </View> */}
             </View>
             </View>
             <Toast position='top' style={{backgroundColor:"#000"}} />

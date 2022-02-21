@@ -96,7 +96,7 @@ const DeliveryInfo = ({ navigation, route }) => {
                     <TextInput
                         editable
                         multiline
-                        numberOfLines={5}
+                        numberOfLines={3}
                         textAlignVertical='top'
                         style={{ paddingTop: 10, color: "#000",  width:"100%" }}
                         placeholderTextColor="#a1a1a1"

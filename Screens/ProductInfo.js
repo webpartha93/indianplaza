@@ -36,6 +36,7 @@ const ProductInfo = ({ navigation, route }) => {
     const [btnDisabled, setBtnDisabled] = useState(true);
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [uploadedImage, setUploadedImage] = useState([]);
+    const [images, setImages] = useState([]);
 
     const [empId, setEmpId] = useState('');
     const product_id = route.params.productId;
@@ -118,7 +119,8 @@ const ProductInfo = ({ navigation, route }) => {
                 product_qty,
                 product_id,
                 product_uom,
-                activity
+                activity,
+                images
                 // additional_barcode
             },
             getAllData,
@@ -134,8 +136,8 @@ const ProductInfo = ({ navigation, route }) => {
                 product_id,
                 product_uom,
                 activity,
+                images
                 // additional_barcode,
-                remarks
             },
             getAllData,
             remarks
@@ -164,7 +166,7 @@ const ProductInfo = ({ navigation, route }) => {
 
 
     useEffect(() => {
-        console.log('checkoutreducer', statecheckout.checkoutSuccessMessage.data);
+        console.log('checkoutreducer', statecheckout);
         if (statecheckout.checkoutSuccessMessage.data !== undefined) {
             shipmentNumberAlert(statecheckout.checkoutSuccessMessage.data);
         }
@@ -228,6 +230,7 @@ const ProductInfo = ({ navigation, route }) => {
         }).then(image => {
             console.log(image);
             setUploadedImage([...uploadedImage, image.path]);
+            setImages([...images, image.data]);
         });
     }
 
@@ -241,7 +244,7 @@ const ProductInfo = ({ navigation, route }) => {
 
     useEffect(() => {
 
-        if (uploadedImage.length == 1) {
+        if (uploadedImage.length >= 1) {
             setBtnDisabled(false);
         } else {
             setBtnDisabled(true);
@@ -422,7 +425,7 @@ const ProductInfo = ({ navigation, route }) => {
                                             product_uom,
                                             activity,
                                             // additional_barcode,
-                                            remarks
+                                            images
                                         },
                                         getAllData,
                                         remarks
@@ -453,6 +456,7 @@ const ProductInfo = ({ navigation, route }) => {
                                             product_id,
                                             product_uom,
                                             activity,
+                                            images
                                             // additional_barcode
                                         },
                                         getAllData
