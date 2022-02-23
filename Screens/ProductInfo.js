@@ -44,10 +44,10 @@ const ProductInfo = ({ navigation, route }) => {
     const product_id = route.params.productId;
     const product_uom = route.params.product_uom;
     const activity = route.params.activity;
-    const barcode_info = route.params.primaryBarcode != "" ? `Primary-barcode: ${route.params.primaryBarcode} Secondary-barcode: ${route.params.secondaryBarcode}` : ""
+    const barcode_info = route.params.singlebarcode != "" ? `Barcode ${route.params.singlebarcode}` : `Primary-barcode: ${route.params.primaryBarcode} Secondary-barcode: ${route.params.secondaryBarcode}`
     // const additional_barcode = route.params.additional_barcode !== undefined ? route.params.additional_barcode : "";
     const getAllData = route.params;
-    console.log('productUom', route.params.product_uom);
+    // console.log('productUom', route.params.product_uom);
 
     console.log('additional_barcode', route.params);
     console.log('barcode_info', barcode_info);
@@ -236,7 +236,7 @@ const ProductInfo = ({ navigation, route }) => {
         }).then(image => {
             setUploadedImage([...uploadedImage, image.path]);
             var dataPath = `data:${image.mime};base64,${image.data}`;
-            console.log('path', dataPath);
+            //console.log('path', dataPath);
             setImages([...images, dataPath]);
         });
     }

@@ -66,7 +66,10 @@ const UnitMeasure = ({ navigation, route }) => {
             vendor_id: route.params.vendor_id,
             activity: route.params.activity,
             product_uom: e,
-            isUnknownItem:route.params.isUnknownItem
+            isUnknownItem:route.params.isUnknownItem,
+            singlebarcode:route.params.barcode,
+            primaryBarcode:"",
+            secondaryBarcode:""
         });
         dispatch({ type:"RESET_SCAN_DATA"});
     }
@@ -83,8 +86,9 @@ const UnitMeasure = ({ navigation, route }) => {
             activity: route.params.activity,
             product_uom: e,
             isUnknownItem:route.params.isUnknownItem,
-            primaryBarcode:route.params.additional_barcode,
-            secondaryBarcode:route.params.barcode
+            singlebarcode:"",
+            primaryBarcode:route.params.barcode,
+            secondaryBarcode:route.params.additional_barcode
         });
         dispatch({ type:"RESET_SCAN_DATA"});
     }

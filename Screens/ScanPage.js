@@ -73,7 +73,7 @@ const ScanPage = ({ navigation, route }) => {
   const cameraType = 'back';
 
   const barcodeReceived = (e) => {
-    var brcode = e.data.replace('\n', '');
+    var brcode = e.data.replace(/(\r\n|\n|\r)/gm, '');
     setBarcode(brcode);
   }
 
@@ -118,6 +118,7 @@ const ScanPage = ({ navigation, route }) => {
       if (state.allScanProducts.data.length === 1) {
         navigation.navigate('ProductInfo', {
           barcode: barcode,
+          singlebarcode:barcode,
           dataLength: state.allScanProducts.data.length,
           productId: state.allScanProducts.data[0]?.item_id,
           deliverDate: route.params.deliverDate,
@@ -196,7 +197,7 @@ const ScanPage = ({ navigation, route }) => {
         )
       }
 
-      {
+      {/* {
         scannerStatus !== 0 ? (
         <View style={{width:"100%", paddingHorizontal:25}}>
         <TextInput returnKeyType="next"
@@ -223,9 +224,9 @@ const ScanPage = ({ navigation, route }) => {
             viewFinderShowLoadingIndicator={state.isLoading}
          />
         )
-      }
+      } */}
 
-      {/* <BarcodeScanner
+      <BarcodeScanner
         onBarCodeRead={barcodeReceived}
         style={{ flex: 1 }}
         torchMode={torchMode}
@@ -236,7 +237,7 @@ const ScanPage = ({ navigation, route }) => {
         viewFinderHeight={140}
         viewFinderBorderLength={80}
         viewFinderShowLoadingIndicator={state.isLoading}
-      /> */}
+      />
 
       {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
 
