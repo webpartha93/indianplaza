@@ -197,7 +197,7 @@ const ScanPage = ({ navigation, route }) => {
         )
       }
 
-      {/* {
+      {
         scannerStatus !== 0 ? (
         <View style={{width:"100%", paddingHorizontal:25}}>
         <TextInput returnKeyType="next"
@@ -224,9 +224,9 @@ const ScanPage = ({ navigation, route }) => {
             viewFinderShowLoadingIndicator={state.isLoading}
          />
         )
-      } */}
+      }
 
-      <BarcodeScanner
+      {/* <BarcodeScanner
         onBarCodeRead={barcodeReceived}
         style={{ flex: 1 }}
         torchMode={torchMode}
@@ -237,7 +237,7 @@ const ScanPage = ({ navigation, route }) => {
         viewFinderHeight={140}
         viewFinderBorderLength={80}
         viewFinderShowLoadingIndicator={state.isLoading}
-      />
+      /> */}
 
       {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
 
