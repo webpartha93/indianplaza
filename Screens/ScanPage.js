@@ -10,7 +10,8 @@ import {
   View,
   ActivityIndicator,
   PermissionsAndroid,
-  Alert
+  Alert,
+  Keyboard
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -57,14 +58,14 @@ const ScanPage = ({ navigation, route }) => {
   const [barcode, setBarcode] = useState();
   const [scannerStatus, setScannerStatus] = useState('');
 
-  console.log('params', state.allScanProducts);
+  console.log('scan product', state.allScanProducts);
 
   const isFocused = useIsFocused();
   // const onSuccess = e => {
   //   dispatch(afterScanProduct(e.data));
   //   setBarcode(e.data);
   // };
-console.log('barcode_additional', route.params.additional_barcode);
+//console.log('barcode_additional', route.params.additional_barcode);
 
   const barcodeNameRef = useRef();
 
@@ -72,7 +73,7 @@ console.log('barcode_additional', route.params.additional_barcode);
   const cameraType = 'back';
 
   const barcodeReceived = (e) => {
-    var brcode = e.data.trim();
+    var brcode = e.data.replace('\n', '');
     setBarcode(brcode);
   }
 
@@ -82,6 +83,8 @@ console.log('barcode_additional', route.params.additional_barcode);
       dispatch(afterScanProduct(barcode));
     }
   }, [barcode]);
+
+
 
   useEffect(() => {
     if (state.allScanProducts.data !== undefined) {
@@ -96,7 +99,8 @@ console.log('barcode_additional', route.params.additional_barcode);
           org_id: route.params.org_id,
           vendor_id: route.params.vendor_id,
           activity: route.params.activity,
-          additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : ""
+          additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : "",
+          product_uom:route.params.product_uom 
         });
       } else {
         navigation.navigate('UnknownItem', {
@@ -122,7 +126,7 @@ console.log('barcode_additional', route.params.additional_barcode);
           vendor_id: route.params.vendor_id,
           activity: route.params.activity,
           additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : "",
-          product_uom:state.allScanProducts.data[0]?.item_uom,
+          product_uom:route.params.product_uom != undefined ? route.params.product_uom : state.allScanProducts.data[0]?.item_uom,
           norlamFlow:"true"
         });
       }
@@ -133,14 +137,13 @@ console.log('barcode_additional', route.params.additional_barcode);
   // for camera permission
   useEffect(() => {
     dispatch(handHeldScannerAction());
+    Keyboard.dismiss;
   }, []);
 
   useEffect(() => {
     if (handHeldScannerState.handHeldScannerStatus !== "") {
       setScannerStatus(handHeldScannerState.handHeldScannerStatus);
     }
-
-
   }, [handHeldScannerState]);
 
 
@@ -193,7 +196,7 @@ console.log('barcode_additional', route.params.additional_barcode);
         )
       }
 
-      {
+      {/* {
         scannerStatus !== 0 ? (
         <View style={{width:"100%", paddingHorizontal:25}}>
         <TextInput returnKeyType="next"
@@ -220,9 +223,9 @@ console.log('barcode_additional', route.params.additional_barcode);
             viewFinderShowLoadingIndicator={state.isLoading}
          />
         )
-      }
+      } */}
 
-      {/* <BarcodeScanner
+      <BarcodeScanner
         onBarCodeRead={barcodeReceived}
         style={{ flex: 1 }}
         torchMode={torchMode}
@@ -233,7 +236,7 @@ console.log('barcode_additional', route.params.additional_barcode);
         viewFinderHeight={140}
         viewFinderBorderLength={80}
         viewFinderShowLoadingIndicator={state.isLoading}
-      /> */}
+      />
 
       {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
 

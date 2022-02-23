@@ -50,6 +50,7 @@ const DeliveryInfo = ({ navigation, route }) => {
         }
       }, [formData, selectedDate]);
 
+
     return (
         <ScrollView style={styles.mainWrapper}>
             <View style={{position:"relative"}}>

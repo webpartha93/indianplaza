@@ -77,6 +77,7 @@ const UnknownItemPage = ({ navigation, route }) => {
       vendor_id: route.params.vendor_id,
       activity: route.params.activity,
       additional_barcode:route.params.barcode,
+      product_uom:7
     });
     dispatch({ type: "RESET_SCAN_DATA" });
   }

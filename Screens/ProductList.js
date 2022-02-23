@@ -67,7 +67,7 @@ const ProductList = ({navigation, route}) => {
                     vendor_id:route.params.vendor_id,
                     activity:route.params.activity,
                     additional_barcode:route.params.additional_barcode,
-                    product_uom: selectedUom
+                    product_uom:route.params.product_uom != undefined ? route.params.product_uom : selectedUom
                 });
                 dispatch({ type:"RESET_SCAN_DATA"});
                 dispatch(assignBarCode({
