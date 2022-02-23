@@ -143,7 +143,7 @@ const TabScreen = ({ navigation, route }) => {
               "Do you really want to go to the home?",
               "",
               [{ text: "No", onPress: () => console.log('hi') },
-              { text: "Yes", onPress: () => navigation.navigate('Home') }
+              { text: "Yes", onPress: () => navigation.navigate('Branch') }
               ]
             )
             dispatch({ type: "RESET_SCAN_DATA" })

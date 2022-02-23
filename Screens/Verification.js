@@ -48,7 +48,7 @@ const Verification = ({navigation, route}) => {
           // saving error
         }
     }
-
+    
     useEffect(()=> {
         if(state.Verify.verifyData.status==="Success"){
             setOtp('');

@@ -29,7 +29,7 @@ const UnknownItemPage = ({ navigation, route }) => {
   const [isShow, setIsShow] = useState(true);
   const isFocused = useIsFocused();
   console.log("barcodeNew", route.params.barcode);
-  console.log('firstBarcode', firstBarcode);
+  console.log('firstBarcode', route.params.additional_barcode);
 
 
   const setAdditionalBarcode = async (value) => {
@@ -55,7 +55,7 @@ const UnknownItemPage = ({ navigation, route }) => {
     setIsShow(true);
     navigation.navigate('UnitMeasure', {
       barcode: route.params.barcode,
-      additional_barcode:"",
+      additional_barcode:route.params.additional_barcode,
       isUnknownItem:"true",  
       dataLength: route.params.dataLength,
       productId: unknownItemId,

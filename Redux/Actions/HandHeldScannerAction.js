@@ -3,7 +3,7 @@ import axios from "axios";
 import { API_URL, API_KEY, BEARER_KEY } from '../../config/constant';
 
 export const handHeldScannerAction = (payload)=> async (dispatch, getState)=> {
-    console.log('checkoutAction', payload);
+    
     dispatch({type:HAND_HELD_SCANNER_REQUEST});
     
     let data = {

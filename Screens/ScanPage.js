@@ -57,14 +57,14 @@ const ScanPage = ({ navigation, route }) => {
   const [barcode, setBarcode] = useState();
   const [scannerStatus, setScannerStatus] = useState('');
 
-  console.log('params', state.allScanProducts.data);
+  console.log('params', state.allScanProducts);
 
   const isFocused = useIsFocused();
   // const onSuccess = e => {
   //   dispatch(afterScanProduct(e.data));
   //   setBarcode(e.data);
   // };
-  //console.log('barcode_additional', route.params.additional_barcode);
+console.log('barcode_additional', route.params.additional_barcode);
 
   const barcodeNameRef = useRef();
 
@@ -72,7 +72,8 @@ const ScanPage = ({ navigation, route }) => {
   const cameraType = 'back';
 
   const barcodeReceived = (e) => {
-    setBarcode(e.data);
+    var brcode = e.data.trim();
+    setBarcode(brcode);
   }
 
 
@@ -98,13 +99,6 @@ const ScanPage = ({ navigation, route }) => {
           additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : ""
         });
       } else {
-        // Toast.show({
-        //     type: 'error',
-        //     text1: "No Products Found. Scan again please",
-        //     autoHide:true,
-        //     onHide: () => {state.allScanProducts=""}
-        // });
-
         navigation.navigate('UnknownItem', {
           barcode: barcode,
           dataLength: 1,
@@ -112,7 +106,8 @@ const ScanPage = ({ navigation, route }) => {
           deliveryNumber: route.params.deliveryNumber,
           org_id: route.params.org_id,
           vendor_id: route.params.vendor_id,
-          activity: route.params.activity
+          activity: route.params.activity,
+          additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : ""
         });
 
       }
@@ -127,10 +122,9 @@ const ScanPage = ({ navigation, route }) => {
           vendor_id: route.params.vendor_id,
           activity: route.params.activity,
           additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : "",
-          product_uom: 7,
+          product_uom:state.allScanProducts.data[0]?.item_uom,
           norlamFlow:"true"
         });
-        console.log('length', state.allScanProducts.data.length);
       }
     }
 
@@ -149,9 +143,6 @@ const ScanPage = ({ navigation, route }) => {
 
   }, [handHeldScannerState]);
 
-  console.log('kkkkkkkk', state);
-
-  console.log('ggggggggggg', handHeldScannerState);
 
 
   return (
@@ -202,7 +193,7 @@ const ScanPage = ({ navigation, route }) => {
         )
       }
 
-      {/* {
+      {
         scannerStatus !== 0 ? (
         <View style={{width:"100%", paddingHorizontal:25}}>
         <TextInput returnKeyType="next"
@@ -229,9 +220,9 @@ const ScanPage = ({ navigation, route }) => {
             viewFinderShowLoadingIndicator={state.isLoading}
          />
         )
-      } */}
+      }
 
-      <BarcodeScanner
+      {/* <BarcodeScanner
         onBarCodeRead={barcodeReceived}
         style={{ flex: 1 }}
         torchMode={torchMode}
@@ -242,7 +233,7 @@ const ScanPage = ({ navigation, route }) => {
         viewFinderHeight={140}
         viewFinderBorderLength={80}
         viewFinderShowLoadingIndicator={state.isLoading}
-      />
+      /> */}
 
       {/* <Toast position='top' style={{ backgroundColor: "#000" }} /> */}
 

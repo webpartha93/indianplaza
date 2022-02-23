@@ -16,17 +16,26 @@ import {
 
 const ProductList = ({navigation, route}) => {    
     const [value, setValue] = useState([]);
-    const [selectedVal, setSelectedVal] = useState();    
+    const [selectedVal, setSelectedVal] = useState(); 
+    const [selectedUom, setSelectedUom] = useState();
+    const dispatch = useDispatch();
     useEffect(()=> {
         const radio_props = route.params?.allProducts.map(item => {
-            return { label: item.item_description, value: item.item_id };
+            return { label: item.item_description, value: item.item_id, item_uom: item.item_uom};
         });
+        console.log('fffffffff',radio_props);
         setValue(radio_props);
         setSelectedVal(radio_props[0].value);
+        setSelectedUom(radio_props[0].item_uom);
     },[]);
-    console.log('allparams',route.params);
 
-    const dispatch = useDispatch();
+
+    const handleRadio = (val)=> {
+        //console.log(val);
+        let existed_item = value.find((item) => val === item.value);
+        //console.log('saasd', existed_item)
+        setSelectedUom(existed_item.item_uom);
+    }
 
     // var radio_props = route.params.allProducts
 
@@ -43,7 +52,7 @@ const ProductList = ({navigation, route}) => {
                 labelColor={'#626F7F'}
                 buttonSize={15}
                 labelStyle={{fontSize:16, color: '#626F7F', marginBottom:12}}
-                onPress={(value) => {setSelectedVal(value)}}
+                onPress={(value) => {setSelectedVal(value), handleRadio(value)}}
                 style={{marginBottom:30, marginTop:30}}
             />
             <View style={{alignItems:"center"}}>
@@ -58,7 +67,7 @@ const ProductList = ({navigation, route}) => {
                     vendor_id:route.params.vendor_id,
                     activity:route.params.activity,
                     additional_barcode:route.params.additional_barcode,
-                    product_uom: 7
+                    product_uom: selectedUom
                 });
                 dispatch({ type:"RESET_SCAN_DATA"});
                 dispatch(assignBarCode({

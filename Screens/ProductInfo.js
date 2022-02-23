@@ -19,6 +19,7 @@ import { addToCart, addToCartUnknown } from '../Redux/Actions/cartAction';
 import { doCheckout } from '../Redux/Actions/CheckoutAction';
 
 import ImagePicker from 'react-native-image-crop-picker';
+import ImageModal from 'react-native-image-modal';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -37,16 +38,19 @@ const ProductInfo = ({ navigation, route }) => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [uploadedImage, setUploadedImage] = useState([]);
     const [images, setImages] = useState([]);
+    //const [barcode_info, setBarcode_info] = useState("");
 
     const [empId, setEmpId] = useState('');
     const product_id = route.params.productId;
     const product_uom = route.params.product_uom;
     const activity = route.params.activity;
+    const barcode_info = route.params.primaryBarcode != "" ? `Primary-barcode: ${route.params.primaryBarcode} Secondary-barcode: ${route.params.secondaryBarcode}` : ""
     // const additional_barcode = route.params.additional_barcode !== undefined ? route.params.additional_barcode : "";
     const getAllData = route.params;
     console.log('productUom', route.params.product_uom);
 
     console.log('additional_barcode', route.params);
+    console.log('barcode_info', barcode_info);
 
     const readItemFromStorage = async () => {
         try {
@@ -120,7 +124,8 @@ const ProductInfo = ({ navigation, route }) => {
                 product_id,
                 product_uom,
                 activity,
-                images
+                images,
+                barcode_info
                 // additional_barcode
             },
             getAllData,
@@ -136,7 +141,8 @@ const ProductInfo = ({ navigation, route }) => {
                 product_id,
                 product_uom,
                 activity,
-                images
+                images,
+                barcode_info
                 // additional_barcode,
             },
             getAllData,
@@ -221,16 +227,17 @@ const ProductInfo = ({ navigation, route }) => {
 
     const handleTakePhoto = () => {
         ImagePicker.openCamera({
-            compressImageMaxWidth: 300,
-            compressImageMaxHeight: 400,
+            width: 300,
+            height: 400,
             cropping: true,
             multiple: true,
-            compressImageQuality: 0.6,
+            compressImageQuality: 0.8,
             includeBase64: true
         }).then(image => {
-            console.log(image);
             setUploadedImage([...uploadedImage, image.path]);
-            setImages([...images, image.data]);
+            var dataPath = `data:${image.mime};base64,${image.data}`;
+            console.log('path', dataPath);
+            setImages([...images, dataPath]);
         });
     }
 
@@ -260,23 +267,17 @@ const ProductInfo = ({ navigation, route }) => {
             </View>
             <ScrollView>
                 <View style={{ borderRadius: 10, overflow: "hidden", marginTop: 30, backgroundColor: "#F9F9F9" }}>
-                    <View style={styles.Label}>
-                        <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Product Code</Text>
+                    <View style={[styles.Label, { flexDirection: "row", alignItems: "center", justifyContent: "space-between" }]}>
+                        <Text style={{ color: "#626F7F", fontSize: 14, fontWeight: "700", width: "40%" }}>Code:</Text>
+                        <Text style={{ color: "#626F7F", fontSize: 13, width: "60%", textAlign: "right" }}>{productName}</Text>
                     </View>
-                    <View style={styles.Desc}>
-                        <Text style={{ color: "#626F7F", fontSize: 13 }}>{productName}</Text>
+                    <View style={[styles.Label, { flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: "#F9F9F9" }]}>
+                        <Text style={{ color: "#626F7F", fontSize: 14, fontWeight: "700", width: "40%" }}>Desc:</Text>
+                        <Text style={{ color: "#626F7F", fontSize: 13, width: "60%", textAlign: "right" }}>{productDesc}</Text>
                     </View>
-                    <View style={styles.Label}>
-                        <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Description</Text>
-                    </View>
-                    <View style={styles.Desc}>
-                        <Text style={{ color: "#626F7F", fontSize: 13 }}>{productDesc}</Text>
-                    </View>
-                    <View style={styles.Label}>
-                        <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Unit of Measure</Text>
-                    </View>
-                    <View style={styles.Desc}>
-                        <Text style={{ color: "#626F7F", fontSize: 13 }}>{product_uom > 3 ? "Carton" : "Piece"}</Text>
+                    <View style={[styles.Label, { flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderTopWidth: 1, borderTopColor: "#F9F9F9" }]}>
+                        <Text style={{ color: "#626F7F", fontSize: 14, fontWeight: "700", width: "40%" }}>Unit of Measure</Text>
+                        <Text style={{ color: "#626F7F", fontSize: 13, width: "60%", textAlign: "right" }}>{product_uom > 3 ? "Carton" : "Piece"}</Text>
                     </View>
 
                     {
@@ -302,31 +303,43 @@ const ProductInfo = ({ navigation, route }) => {
                                     </View>
                                 </View> */}
 
-                                <View style={styles.Label}>
+                                {/* <View style={styles.Label}>
                                     <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Image <Text style={{ fontSize: 12, fontWeight: "400" }}>Please upload images (max 2)</Text></Text>
-                                </View>
+                                </View> */}
                                 <View style={styles.Desc}>
-                                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
                                         {
                                             uploadedImage.map((item, index) => {
                                                 return (
                                                     <View key={index} style={{ position: "relative" }}>
-                                                        <Image source={{ uri: item }} style={{ width: 100, height: 100, borderRadius: 10, marginHorizontal: 10, marginBottom: 25 }} resizeMode="cover" />
+                                                        {/* <Image source={{ uri: item }} style={{ width: 100, height: 100, borderRadius: 10, marginHorizontal: 10, marginBottom: 25 }} resizeMode="cover" /> */}
+                                                        <ImageModal
+                                                            resizeMode='cover'
+                                                            style={{
+                                                                width: 100,
+                                                                height: 100,
+                                                                borderRadius: 10,
+                                                                marginHorizontal: 10,
+                                                                marginBottom: 25
+                                                            }}
+                                                            source={{
+                                                                uri: item
+                                                            }}
+                                                        />
                                                         <TouchableOpacity onPress={() => handleCross(index)} style={{ position: "absolute", right: 0, top: 0, zIndex: 99, backgroundColor: "#FFF", borderRadius: 40, overflow: "hidden" }}><MaterialCommunityIcons size={25} color="red" name="close-circle" /></TouchableOpacity>
                                                     </View>
                                                 )
                                             })
                                         }
                                     </View>
-                                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                    <View style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
                                         {
                                             uploadedImage.length != 2 && (
-                                                <TouchableOpacity onPress={handleTakePhoto} style={[styles.btnSubmit, { width: 150, marginTop: 0 }]}>
-                                                    <Text style={{ color: "#FFF", fontSize: 16 }}>Take a photo</Text>
+                                                <TouchableOpacity onPress={handleTakePhoto} style={[styles.btnSubmit, { width: 175, marginTop: 0 }]}>
+                                                    <Text style={{ color: "#FFF", fontSize: 14 }}>Upload photo <Text styles={{ fontSize: 10 }}>(max 2)</Text></Text>
                                                 </TouchableOpacity>
                                             )
                                         }
-
                                     </View>
                                 </View>
                             </>
@@ -336,8 +349,8 @@ const ProductInfo = ({ navigation, route }) => {
 
                 </View>
 
-                <View style={{ alignItems: "center", marginTop: 30 }}>
-                    <Text style={styles.QtyHeading}>Quantity</Text>
+                <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginTop: 15 }}>
+                    <Text style={styles.QtyHeading}>Quantity: </Text>
                     <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <TouchableOpacity disabled={product_qty > 1 ? false : true} onPress={handleDecrement} style={{
                             width: 35,
@@ -425,7 +438,8 @@ const ProductInfo = ({ navigation, route }) => {
                                             product_uom,
                                             activity,
                                             // additional_barcode,
-                                            images
+                                            images,
+                                            barcode_info
                                         },
                                         getAllData,
                                         remarks
@@ -456,7 +470,8 @@ const ProductInfo = ({ navigation, route }) => {
                                             product_id,
                                             product_uom,
                                             activity,
-                                            images
+                                            images,
+                                            barcode_info
                                             // additional_barcode
                                         },
                                         getAllData
@@ -473,7 +488,7 @@ const ProductInfo = ({ navigation, route }) => {
 
                 </View>
 
-                <View style={{ marginTop: 20, width: "100%", maxWidth: 150, marginHorizontal: "25%" }}>
+                <View style={{ width: "100%", maxWidth: 150, marginHorizontal: "26%" }}>
                     {
                         route.params.isUnknownItem === "true" ? (
                             <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, { backgroundColor: btnDisabled ? "#9d9d9d" : "#1788F0" }]} onPress={showAlert2}>
@@ -526,7 +541,7 @@ var styles = StyleSheet.create({
         color: "#626F7F",
         fontSize: 15,
         fontWeight: "600",
-        marginBottom: 15
+        marginRight: 15
     },
     inputWrapper: {
         width: "100%",
@@ -542,7 +557,7 @@ var styles = StyleSheet.create({
         borderRadius: 30,
         flexDirection: "row",
         justifyContent: "center",
-        marginTop: 30,
+        marginTop: 20,
         paddingHorizontal: 18,
         paddingVertical: 8
     },

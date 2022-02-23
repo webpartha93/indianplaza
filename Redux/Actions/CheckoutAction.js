@@ -26,7 +26,7 @@ export const doCheckout = (payload)=> async (dispatch, getState)=> {
             }
         })
 
-        console.log('checkoutActionresponse', response.data);
+        console.log('checkoutActionresponsehhhhh', response.data);
 
         dispatch({
             type:CHECKOUT_SUCCESS,
