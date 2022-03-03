@@ -77,6 +77,7 @@ const ScanPage = ({ navigation, route }) => {
     setBarcode(brcode);
   }
 
+  console.log('bar', barcode);
 
   // useEffect(() => {
   //   if (barcode !== undefined) {
@@ -84,7 +85,7 @@ const ScanPage = ({ navigation, route }) => {
   //   }
   // }, [barcode]);
 
-  const handleScan = ()=> {
+  const handleScan = () => {
     dispatch(afterScanProduct(barcode));
   }
 
@@ -202,7 +203,7 @@ const ScanPage = ({ navigation, route }) => {
 
       {
         scannerStatus !== 0 ? (
-          <View style={{ width: "100%", paddingHorizontal: 25, flexDirection:"row", flexWrap:"wrap", justifyContent:"center" }}>
+          <View style={{ width: "100%", paddingHorizontal: 25, flexDirection: "row", flexWrap: "wrap", justifyContent: "center" }}>
             <TextInput returnKeyType="next"
               autoFocus={true}
               ref={barcodeNameRef}
@@ -212,9 +213,14 @@ const ScanPage = ({ navigation, route }) => {
               }}
               onChangeText={(e) => setBarcode(e)}
               blurOnSubmit={false} value={barcode} placeholderTextColor="#000" style={{ width: "100%", backgroundColor: "#FFF", color: "#000", paddingHorizontal: 12 }} />
+            {
+              barcode != undefined && barcode != "" &&(
                 <TouchableOpacity style={styles.btnSubmit} onPress={handleScan}>
                   <Text style={{ color: "#FFF", fontSize: 18 }}>SCAN</Text>
                 </TouchableOpacity>
+              )
+            }
+
           </View>
         ) : (
           <BarcodeScanner
@@ -275,7 +281,7 @@ const styles = StyleSheet.create({
     margin: 20,
   },
   btnSubmit: {
-    width:120,
+    width: 120,
     backgroundColor: "#1788F0",
     borderRadius: 30,
     flexDirection: "row",
