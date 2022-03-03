@@ -65,7 +65,7 @@ const ScanPage = ({ navigation, route }) => {
   //   dispatch(afterScanProduct(e.data));
   //   setBarcode(e.data);
   // };
-//console.log('barcode_additional', route.params.additional_barcode);
+  //console.log('barcode_additional', route.params.additional_barcode);
 
   const barcodeNameRef = useRef();
 
@@ -78,12 +78,15 @@ const ScanPage = ({ navigation, route }) => {
   }
 
 
-  useEffect(() => {
-    if (barcode !== undefined) {
-      dispatch(afterScanProduct(barcode));
-    }
-  }, [barcode]);
+  // useEffect(() => {
+  //   if (barcode !== undefined) {
+  //     dispatch(afterScanProduct(barcode));
+  //   }
+  // }, [barcode]);
 
+  const handleScan = ()=> {
+    dispatch(afterScanProduct(barcode));
+  }
 
 
   useEffect(() => {
@@ -100,7 +103,7 @@ const ScanPage = ({ navigation, route }) => {
           vendor_id: route.params.vendor_id,
           activity: route.params.activity,
           additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : "",
-          product_uom:route.params.product_uom 
+          product_uom: route.params.product_uom
         });
       } else {
         navigation.navigate('UnknownItem', {
@@ -118,7 +121,7 @@ const ScanPage = ({ navigation, route }) => {
       if (state.allScanProducts.data.length === 1) {
         navigation.navigate('ProductInfo', {
           barcode: barcode,
-          singlebarcode:barcode,
+          singlebarcode: barcode,
           dataLength: state.allScanProducts.data.length,
           productId: state.allScanProducts.data[0]?.item_id,
           deliverDate: route.params.deliverDate,
@@ -127,8 +130,8 @@ const ScanPage = ({ navigation, route }) => {
           vendor_id: route.params.vendor_id,
           activity: route.params.activity,
           additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : "",
-          product_uom:route.params.product_uom != undefined ? route.params.product_uom : state.allScanProducts.data[0]?.item_uom,
-          norlamFlow:"true"
+          product_uom: route.params.product_uom != undefined ? route.params.product_uom : state.allScanProducts.data[0]?.item_uom,
+          norlamFlow: "true"
         });
       }
     }
@@ -199,16 +202,19 @@ const ScanPage = ({ navigation, route }) => {
 
       {
         scannerStatus !== 0 ? (
-        <View style={{width:"100%", paddingHorizontal:25}}>
-        <TextInput returnKeyType="next"
-          autoFocus={true}
-          ref={barcodeNameRef}
-          keyboardType="number-pad"
-          onSubmitEditing={() => {
-            barcodeNameRef.current.focus();
-          }}
-          onChangeText={(e)=> setBarcode(e)}
-          blurOnSubmit={false} value={barcode} placeholderTextColor="#000" style={{width:"100%", backgroundColor: "#FFF", color: "#000", paddingHorizontal:12}} />
+          <View style={{ width: "100%", paddingHorizontal: 25, flexDirection:"row", flexWrap:"wrap", justifyContent:"center" }}>
+            <TextInput returnKeyType="next"
+              autoFocus={true}
+              ref={barcodeNameRef}
+              keyboardType="number-pad"
+              onSubmitEditing={() => {
+                barcodeNameRef.current.focus();
+              }}
+              onChangeText={(e) => setBarcode(e)}
+              blurOnSubmit={false} value={barcode} placeholderTextColor="#000" style={{ width: "100%", backgroundColor: "#FFF", color: "#000", paddingHorizontal: 12 }} />
+                <TouchableOpacity style={styles.btnSubmit} onPress={handleScan}>
+                  <Text style={{ color: "#FFF", fontSize: 18 }}>SCAN</Text>
+                </TouchableOpacity>
           </View>
         ) : (
           <BarcodeScanner
@@ -222,7 +228,7 @@ const ScanPage = ({ navigation, route }) => {
             viewFinderHeight={140}
             viewFinderBorderLength={80}
             viewFinderShowLoadingIndicator={state.isLoading}
-         />
+          />
         )
       }
 
@@ -268,4 +274,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     margin: 20,
   },
+  btnSubmit: {
+    width:120,
+    backgroundColor: "#1788F0",
+    borderRadius: 30,
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 30,
+    paddingHorizontal: 18,
+    paddingVertical: 8
+  },
+  btnSubmitText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: "500",
+    textTransform: "uppercase"
+  }
 });
