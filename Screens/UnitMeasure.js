@@ -37,7 +37,6 @@ const UnitMeasure = ({ navigation, route }) => {
         }
     ]
 
-
     const [id, setId] = useState();
 
     useEffect(() => {
@@ -66,12 +65,12 @@ const UnitMeasure = ({ navigation, route }) => {
             vendor_id: route.params.vendor_id,
             activity: route.params.activity,
             product_uom: e,
-            isUnknownItem:route.params.isUnknownItem,
-            singlebarcode:route.params.barcode,
-            primaryBarcode:"",
-            secondaryBarcode:""
+            isUnknownItem: route.params.isUnknownItem,
+            singlebarcode: route.params.barcode,
+            primaryBarcode: "",
+            secondaryBarcode: ""
         });
-        dispatch({ type:"RESET_SCAN_DATA"});
+        dispatch({ type: "RESET_SCAN_DATA" });
     }
 
     const handleClick2 = (e) => {
@@ -85,12 +84,12 @@ const UnitMeasure = ({ navigation, route }) => {
             vendor_id: route.params.vendor_id,
             activity: route.params.activity,
             product_uom: e,
-            isUnknownItem:route.params.isUnknownItem,
-            singlebarcode:"",
-            primaryBarcode:route.params.barcode,
-            secondaryBarcode:route.params.additional_barcode
+            isUnknownItem: route.params.isUnknownItem,
+            singlebarcode: "",
+            primaryBarcode: route.params.barcode,
+            secondaryBarcode: route.params.additional_barcode
         });
-        dispatch({ type:"RESET_SCAN_DATA"});
+        dispatch({ type: "RESET_SCAN_DATA" });
     }
 
     return (
@@ -116,12 +115,13 @@ const UnitMeasure = ({ navigation, route }) => {
                         </View>
                     </View>
                     <View style={{ marginTop: 40 }}>
-                        <View style={{ flexDirection: "row", marginHorizontal: -10 }}>
+                        <View style={{ flexDirection: "row", justifyContent: "center", marginHorizontal: -10 }}>
+
                             {
                                 unitsCategory.map((item, index) => {
                                     return (
                                         <View style={styles.btnBox} key={index}>
-                                            <TouchableOpacity onPress={() => route.params.additional_barcode != "" && route.params.barcode != "" ?  handleClick2(item.id) : handleClick(item.id)} style={{
+                                            <TouchableOpacity onPress={() => route.params.additional_barcode != "" && route.params.barcode != "" ? handleClick2(item.id) : handleClick(item.id)} style={{
                                                 borderRadius: 10,
                                                 backgroundColor: item.id == id ? "#3623B7" : "#FFF",
                                                 flexDirection: "column",
@@ -152,7 +152,6 @@ const UnitMeasure = ({ navigation, route }) => {
                                         </View>
                                     )
                                 })
-
                             }
 
                         </View>

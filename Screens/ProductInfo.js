@@ -29,6 +29,8 @@ const ProductInfo = ({ navigation, route }) => {
     const statecart = useSelector(state => state.CartReducer);
     const statecheckout = useSelector(state => state.CheckOutReducers);
 
+    const dispatch = useDispatch();
+
     const [product_qty, setProduct_qty] = useState(1);
     const [productName, setProductName] = useState('');
     const [productDesc, setProductDesc] = useState('');
@@ -95,13 +97,13 @@ const ProductInfo = ({ navigation, route }) => {
 
     }
 
-    const dispatch = useDispatch();
+    
 
     useEffect(() => {
         dispatch(getProductInfo(route.params.productId));
         readItemFromStorage().then((value) => setEmpId(value));
         setIsUnknownItem(route.params.isUnknownItem);
-
+        console.log('addditional barcccccccccccccccccccccccccccccccccccccccccccccccccc', route.params.additional_barcode);
         dispatch(assignBarCode({
             barcode: route.params.additional_barcode,
             product_id: route.params.productId

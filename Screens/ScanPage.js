@@ -65,7 +65,8 @@ const ScanPage = ({ navigation, route }) => {
   //   dispatch(afterScanProduct(e.data));
   //   setBarcode(e.data);
   // };
-  //console.log('barcode_additional', route.params.additional_barcode);
+
+  console.log('uom', route.params.product_uom);
 
   const barcodeNameRef = useRef();
 
@@ -115,7 +116,8 @@ const ScanPage = ({ navigation, route }) => {
           org_id: route.params.org_id,
           vendor_id: route.params.vendor_id,
           activity: route.params.activity,
-          additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : ""
+          additional_barcode: route.params.additional_barcode !== undefined ? route.params.additional_barcode : "",
+          uom:route.params.product_uom
         });
 
       }

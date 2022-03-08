@@ -51,7 +51,7 @@ const ProductList = ({navigation, route}) => {
                 buttonColor={'#060395'}
                 labelColor={'#626F7F'}
                 buttonSize={15}
-                labelStyle={{fontSize:16, color: '#626F7F', marginBottom:12}}
+                labelStyle={{fontSize:14, color: '#626F7F', marginBottom:12}}
                 onPress={(value) => {setSelectedVal(value), handleRadio(value)}}
                 style={{marginBottom:30, marginTop:30}}
             />
