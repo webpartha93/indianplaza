@@ -53,7 +53,7 @@ const OrderHistory = ({ navigation }) => {
         setIsloading(state.isLoading);
     }, [state]);
 
-    //console.log('length',state.allHistory);
+    console.log('length',state.allHistory);
     
     if(isloading){
         return(
@@ -90,6 +90,7 @@ const OrderHistory = ({ navigation }) => {
                                     })}>
                                         <View style={{ width: "100%" }}>
                                             <Text style={{ color: "#1f1f1f", fontWeight: "700", fontSize: 16, marginBottom: 5 }}>#{item.shipment_number}</Text>
+                                            <Text style={{ color: "#626F7F", fontSize: 13, marginBottom: 4 }}>Del# {item.delivery_note_num}</Text>
                                             <Text style={{ color: "#626F7F", fontSize: 13, marginBottom: 4 }}>{item.org_name}</Text>
                                             <Text style={{ color: "#626F7F", fontSize: 13, marginBottom: 4}}>{item.vendor_name}</Text>
                                             <Text style={{ color: "#626F7F", fontSize: 13, marginBottom: 4 }}>{item.delivery_date}</Text>

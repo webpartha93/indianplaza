@@ -218,7 +218,7 @@ const ScanPage = ({ navigation, route }) => {
             {
               barcode != undefined && barcode != "" &&(
                 <TouchableOpacity style={styles.btnSubmit} onPress={handleScan}>
-                  <Text style={{ color: "#FFF", fontSize: 18 }}>SCAN</Text>
+                  <Text style={{ color: "#FFF", fontSize: 18 }}>SUBMIT</Text>
                 </TouchableOpacity>
               )
             }
