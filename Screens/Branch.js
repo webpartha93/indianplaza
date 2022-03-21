@@ -7,7 +7,8 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    Alert
+    Alert,
+    Dimensions
   } from 'react-native';
 
 import {Picker} from '@react-native-picker/picker';
@@ -34,6 +35,8 @@ const Branch = ({navigation}) => {
     const [selectedVal, setSelectedVal] = useState('');
 
     const [fetchBranch, setFetchBranch] = useState([]);
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
 
     const readItemFromStorage = async () => {
         try {
@@ -111,45 +114,52 @@ const Branch = ({navigation}) => {
         
     }
 
+    const layoutChange = ()=> {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
+
 
     return (
-        <View style={styles.mainWrapper}>
+        <SafeAreaView style={[styles.mainWrapper, {paddingHorizontal:screenHeight > screenWidth ? 30 : 20, paddingVertical:screenHeight > screenWidth ? 40 : 10}]} onLayout={layoutChange}>
             <Text style={styles.Heading}>Branch</Text>
             <View style={styles.line}></View>
-            <View style={styles.formWrapper}>
-                <Text style={styles.formLabel}>Select Branch</Text>
-                <View style={styles.inputWrapper}>
-                    <Icon size={16} color="#626F7F" name="box" style={{position:"absolute", left:15, top:16}} />                   
-                        <Picker
-                            selectedValue={selectedVal}
-                            style={{color:"#000"}}
-                            dropdownIconColor="#000"
-                            onValueChange={(itemValue, itemIndex) =>
-                                setSelectedVal(itemValue)
-                                
-                            }
-                            >
-                                <Picker.Item label="Select Branch" value="0" />
-                            {
-                                branchItems()
-                            }
-                        </Picker>
+            <ScrollView>
+                <View style={[styles.formWrapper, {paddingVertical:screenHeight > screenWidth ? 30 : 20}]}>
+                    <Text style={styles.formLabel}>Select Branch</Text>
+                    <View style={styles.inputWrapper}>
+                        <Icon size={16} color="#626F7F" name="box" style={{position:"absolute", left:15, top:16}} />                   
+                            <Picker
+                                selectedValue={selectedVal}
+                                style={{color:"#000"}}
+                                dropdownIconColor="#000"
+                                onValueChange={(itemValue, itemIndex) =>
+                                    setSelectedVal(itemValue)
+                                    
+                                }
+                                >
+                                    <Picker.Item label="Select Branch" value="0" />
+                                {
+                                    branchItems()
+                                }
+                            </Picker>
+                    </View>
+
+                    <View style={{alignItems:"center"}}>
+
+                        <TouchableOpacity disabled={selectedVal == 0 ? true : false} 
+                            style={[styles.btnSubmit, {backgroundColor:selectedVal == 0 ? "#9d9d9d" : "#1788F0"}]} 
+                            onPress={handleNext}>
+                            <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>               
+                        </TouchableOpacity>
+
+                        {/* <TouchableOpacity style={styles.btnSubmit} onPress={signout}>
+                            <Text style={{color:"#FFF", fontSize:18}}>LOGOUT</Text>               
+                        </TouchableOpacity> */}
+                    </View>
                 </View>
-
-                <View style={{alignItems:"center"}}>
-
-                    <TouchableOpacity disabled={selectedVal == 0 ? true : false} 
-                        style={[styles.btnSubmit, {backgroundColor:selectedVal == 0 ? "#9d9d9d" : "#1788F0"}]} 
-                        onPress={handleNext}>
-                        <Text style={{color:"#FFF", fontSize:18}}>NEXT</Text>               
-                    </TouchableOpacity>
-
-                    {/* <TouchableOpacity style={styles.btnSubmit} onPress={signout}>
-                        <Text style={{color:"#FFF", fontSize:18}}>LOGOUT</Text>               
-                    </TouchableOpacity> */}
-                </View>
-            </View>
-        </View>
+            </ScrollView>
+        </SafeAreaView>
     )
 }
 
@@ -157,9 +167,7 @@ export default Branch;
 
 var styles = StyleSheet.create({
     mainWrapper:{
-        flex:1,
-        paddingHorizontal:30,
-        paddingVertical:40,
+        flex:1,        
         backgroundColor:'#FFF'
     },
     Heading:{

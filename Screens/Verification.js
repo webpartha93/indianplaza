@@ -7,7 +7,8 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    ActivityIndicator
+    ActivityIndicator,
+    Dimensions
   } from 'react-native';
 
   import Icon from 'react-native-vector-icons/SimpleLineIcons';
@@ -29,6 +30,8 @@ const Verification = ({navigation, route}) => {
     const [empno, setEmpno] = useState('');
     const [message, setMessage] = useState('');
     const [loading, setIsloading] = useState(false);
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
 
     useEffect(()=> {
         setEmpid(route.params.emp_id);
@@ -81,8 +84,13 @@ const Verification = ({navigation, route}) => {
         setMessage('');
     }, [isFocused]);
 
+    const layoutChange = () => {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
+
     return (
-        <View style={styles.mainWrapper}> 
+        <SafeAreaView style={[styles.mainWrapper, { paddingHorizontal: screenHeight > screenWidth ? 30 : 20, paddingVertical: screenHeight > screenWidth ? 40 : 10 }]} onLayout={layoutChange}> 
         {
                 loading && (
                     <View style={{ flex: 1, position: "absolute", zIndex: 2, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "rgba(255,255,255,0.4)" }}>
@@ -99,11 +107,10 @@ const Verification = ({navigation, route}) => {
                         </View>
                     </View>
                 )
-            }
-            <View style={{ paddingHorizontal: 30, paddingVertical: 40 }}>           
+            }         
             <Text style={styles.Heading}>Verification</Text>
             <View style={styles.line}></View>
-            <View style={styles.formWrapper}>
+            <View style={[styles.formWrapper, {paddingVertical:screenHeight > screenWidth ? 30 : 20}]}>
                 <Text style={styles.formLabel}>Verify account by entering the 6-digit code sent to: XXXXXXX{empno.slice(empno.length - 3)}</Text>
                 <View style={{flexDirection:"row",marginHorizontal:"-1%"}}>
                     <OTPInputView
@@ -132,7 +139,7 @@ const Verification = ({navigation, route}) => {
                             <Text style={{color:"red", textAlign:"center"}}>{message}</Text>
                         )
                     }
-                <View style={{marginTop:20, justifyContent:"center", flexDirection:"row", alignItems:"center"}}>
+                <View style={{marginTop:screenHeight > screenWidth ? 20 : 10, justifyContent:"center", flexDirection:"row", alignItems:"center"}}>
                     <Text style={{color:'#626F7F', fontSize:15, marginRight:6}}>Didn't receive the OTP?</Text>
                     <TouchableOpacity>
                         <Text style={{color:"#1788F0", fontSize:15, fontWeight:"700"}}>RESEND OTP</Text>
@@ -142,9 +149,8 @@ const Verification = ({navigation, route}) => {
                     <Text style={{color:'#060395', fontSize:15, marginRight:6}}>Code expires in 04:59 minutes</Text>
                 </View> */}
             </View>
-            </View>
             <Toast position='top' style={{backgroundColor:"#000"}} />
-        </View>
+        </SafeAreaView>
     )
 }
 

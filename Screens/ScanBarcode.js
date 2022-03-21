@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     Image,
     View,
-    ActivityIndicator
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useIsFocused } from '@react-navigation/native';
@@ -20,25 +21,32 @@ import Toast from 'react-native-toast-message';
 const ScanBarcode = ({ navigation, route }) => {
 
     console.log('scanbarcode', route.params);
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
+
+    const layoutChange = () => {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
 
     return (
-        <View style={styles.mainWrapper}>
-            <View style={{ paddingHorizontal: 30, paddingVertical: 40 }}>
-                <View style={{position:"relative"}}>
-                    <Text style={styles.Heading}>Scan Barcode</Text>
-                    <View style={styles.line}></View>
-                </View>
-                <Toast position='top' style={{ backgroundColor: "#000" }} />
+        <SafeAreaView style={[styles.mainWrapper, { paddingHorizontal: screenHeight > screenWidth ? 30 : 20, paddingVertical: screenHeight > screenWidth ? 40 : 10 }]} onLayout={layoutChange}>
+            <View style={{ position: "relative" }}>
+                <Text style={styles.Heading}>Scan Barcode</Text>
+                <View style={styles.line}></View>
+            </View>
+            <Toast position='top' style={{ backgroundColor: "#000" }} />
+            <ScrollView>
                 <TouchableOpacity style={{
                     backgroundColor: "#F2F1F8",
                     borderWidth: 1,
                     borderColor: "#E9E9E9",
                     borderRadius: 18,
                     alignItems: "center",
-                    marginTop: 30,
+                    marginTop: screenHeight > screenWidth ? 30 : 15,
                     position: "relative",
                     overflow: "hidden",
-                    padding:10
+                    padding:screenHeight > screenWidth ? 10 : 0
                 }}
                     onPress={() => navigation.navigate('barcodecamera', {
                         deliverDate: route.params.deliverDate,
@@ -80,8 +88,8 @@ const ScanBarcode = ({ navigation, route }) => {
                     </TouchableOpacity>
 
                 </View>
-            </View>
-        </View>
+            </ScrollView>
+        </SafeAreaView>
     )
 }
 

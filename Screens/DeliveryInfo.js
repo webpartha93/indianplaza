@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     View,
     LogBox,
-    Button
+    Button,
+    Dimensions
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -26,6 +27,8 @@ const DeliveryInfo = ({ navigation, route }) => {
     const [date, setDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState("");
     const [btnDisabled, setBtnDisabled] = useState(true);
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -50,15 +53,19 @@ const DeliveryInfo = ({ navigation, route }) => {
         }
       }, [formData, selectedDate]);
 
+      const layoutChange = ()=> {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+     }
 
     return (
-        <ScrollView style={styles.mainWrapper}>
+        <SafeAreaView style={[styles.mainWrapper, {paddingHorizontal:screenHeight > screenWidth ? 30 : 20, paddingVertical:screenHeight > screenWidth ? 40 : 10}]} onLayout={layoutChange}>
             <View style={{position:"relative"}}>
-            <Text style={styles.Heading}>Delivery Info</Text>
-            <View style={styles.line}></View>
+                <Text style={styles.Heading}>Delivery Info</Text>
+                <View style={styles.line}></View>
             </View>
-
-            <View style={styles.formWrapper}>
+            <ScrollView>
+            <View style={[styles.formWrapper, {paddingVertical:screenHeight > screenWidth ? 30 : 20}]}>
                 <Text style={styles.formLabel}>Delivery Note Number</Text>
                 <View style={styles.inputWrapper}>
                     <Icon size={16} color="#626F7F" name="file-text" style={{ position: "absolute", left: 15, top: 16 }} />
@@ -120,7 +127,8 @@ const DeliveryInfo = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </ScrollView>
+            </ScrollView>
+        </SafeAreaView>
     )
 }
 

@@ -9,7 +9,8 @@ import {
     View,
     Image,
     ActivityIndicator,
-    Alert
+    Alert,
+    Dimensions
 } from 'react-native';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -31,6 +32,8 @@ const Cart = ({ navigation, route }) => {
     const [getAllData, setGetAllData] = useState('');
     const [remarks, setRemarks] = useState('');
     const [getCartItems, setGetCartItems] = useState([]);
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
     console.log('fffff', state.cartItems);
     // useEffect(()=>{
     //     if( route.params!==undefined){
@@ -40,29 +43,29 @@ const Cart = ({ navigation, route }) => {
 
     const readItemFromStorage = async () => {
         try {
-          const loggedInUser = await AsyncStorage.getItem("uuid");
-          const parseVal = JSON.parse(loggedInUser);
-          if (loggedInUser !== null) {        
-            return parseVal.emp_id;
-          }
+            const loggedInUser = await AsyncStorage.getItem("uuid");
+            const parseVal = JSON.parse(loggedInUser);
+            if (loggedInUser !== null) {
+                return parseVal.emp_id;
+            }
         } catch (e) {
-          alert('Failed to fetch the data from storage')
+            alert('Failed to fetch the data from storage')
         }
-      }
+    }
 
-    useEffect(()=> {
+    useEffect(() => {
         readItemFromStorage().then((value) => setEmpId(value));
-    },[]);
+    }, []);
 
 
-    useEffect(()=>{
+    useEffect(() => {
         setGetAllData(state.getAllData);
         setRemarks(state.remarks);
     }, [state]);
 
-    
-    const doCheckOut = ()=> {
-        const updatedCartItem = state.cartItems.map(({productName,activity,...rest}) => ({...rest}));
+
+    const doCheckOut = () => {
+        const updatedCartItem = state.cartItems.map(({ productName, activity, ...rest }) => ({ ...rest }));
         console.log('result', updatedCartItem);
         dispatch(doCheckout({
             getAllData,
@@ -70,21 +73,21 @@ const Cart = ({ navigation, route }) => {
             empId,
             remarks
         }));
-        dispatch({type:"RESET_ADDED_CART"});
-        
+        dispatch({ type: "RESET_ADDED_CART" });
+
     }
 
 
-    useEffect(()=>{
-        if(checkoutState.checkoutSuccessMessage.status==="Success"){
+    useEffect(() => {
+        if (checkoutState.checkoutSuccessMessage.status === "Success") {
             //navigation.navigate('navigation');
             console.log('cart-remove');
-            checkoutState.checkoutSuccessMessage.status="";
-            dispatch({type:"RESET_CART_DATA"});
-            dispatch({type:"REMOVE_CHECKOUT_DATA"})
+            checkoutState.checkoutSuccessMessage.status = "";
+            dispatch({ type: "RESET_CART_DATA" });
+            dispatch({ type: "REMOVE_CHECKOUT_DATA" })
             Toast.show({
                 type: 'success',
-                text1:"Your order has been received",
+                text1: "Your order has been received",
             });
 
             if (checkoutState.checkoutSuccessMessage.data !== undefined) {
@@ -92,7 +95,7 @@ const Cart = ({ navigation, route }) => {
             }
 
             console.log('cartpage checkout message', checkoutState);
-            
+
         }
     }, [checkoutState]);
 
@@ -106,25 +109,25 @@ const Cart = ({ navigation, route }) => {
         );
 
 
-    const handleIncrement = (id)=> {
+    const handleIncrement = (id) => {
         dispatch(itemIncrement(id));
     }
-    const handleDecrement = (id)=> {
+    const handleDecrement = (id) => {
         dispatch(itemDecrement(id));
     }
 
-    const handleClearCart = ()=> {
-        return dispatch({type:"RESET_CART_DATA"});
+    const handleClearCart = () => {
+        return dispatch({ type: "RESET_CART_DATA" });
     }
 
-    const checkItemZero = (id)=> Alert.alert(
+    const checkItemZero = (id) => Alert.alert(
         "Do you really want to delete?",
         "",
         [
             {
-            text: "No",
-            onPress: () => console.log("Cancel Pressed"),
-            style: "cancel"
+                text: "No",
+                onPress: () => console.log("Cancel Pressed"),
+                style: "cancel"
             },
             { text: "Yes", onPress: () => handleDecrement(id) }
         ]
@@ -136,125 +139,132 @@ const Cart = ({ navigation, route }) => {
             "",
             [
                 {
-                text: "No",
-                onPress: () => console.log("Cancel Pressed"),
-                style: "cancel"
+                    text: "No",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
                 },
                 { text: "Yes", onPress: () => doCheckOut() }
             ]
         );
 
+    const layoutChange = () => {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
+
+
     return (
         <>
-        <ScrollView style={styles.mainWrapper}>
-            <View style={{ marginBottom: 20 }}>
-                <Text style={styles.Heading}>Cart</Text>
-                {/* {
+            <SafeAreaView style={[styles.mainWrapper, { paddingHorizontal: screenHeight > screenWidth ? 30 : 20, paddingVertical: screenHeight > screenWidth ? 40 : 10 }]} onLayout={layoutChange}>
+                <ScrollView>
+                    <View style={{ marginBottom: 20 }}>
+                        <Text style={styles.Heading}>Cart</Text>
+                        {/* {
                     state.cartItems.length > 0 && (
                     <TouchableOpacity onPress={handleClearCart} style={{ position: "absolute", right: 0 }}>
                         <MaterialIcons size={32} color="#1788F0" name="delete-outline" />
                     </TouchableOpacity>
                     )
                 } */}
-                
-            </View>             
-            {
-                state.cartItems.length > 0 ? (
-                    state.cartItems.map((item,index) => {
-                        return (
-                            <View style={styles.singleCartProduct} key={index}>
-                                <TouchableOpacity onPress={() => dispatch(removeToCart(index)) } style={{ marginRight: 15, width: 17 }}>
-                                    <MaterialIcons size={20} color="#626F7F" name="delete-outline" />
-                                </TouchableOpacity>
-                                <Image source={require('../assets/product.png')} />
-                                <View style={{ paddingHorizontal: 10, width:"45%" }}>
-                                    <Text style={{ color: "#626F7F", fontSize: 12, fontWeight: "700" }}>{item.productName}{item.index}</Text>
-                                    <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>{item.product_uom == 3 ? "Piece" : "Carton"}</Text>
-                                </View>
-                                <View style={{ alignItems: "center", marginLeft: "auto"}}>
-                                    <Text style={styles.QtyHeading}>Quantity</Text>
-                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                        {
-                                            item.product_qty > 1 ? (
-                                                <TouchableOpacity onPress={()=>handleDecrement(index)} style={{
-                                                    width: 28,
-                                                    height: 28,
-                                                    flexDirection: "column",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    backgroundColor: "#FFF",
-                                                    borderRadius: 35,
-                                                    shadowOffset: {
-                                                        width: 0,
-                                                        height: 3,
-                                                    },
-                                                    shadowOpacity: 0.12,
-                                                    shadowRadius: 4.65,
-                                                    elevation: 6,
-                                                }}>
-                                                    <MaterialCommunityIcons size={16} color="#000" name="minus" />
-                                                </TouchableOpacity>
-                                            ) : (
-                                                <TouchableOpacity onPress={()=> checkItemZero(index)} style={{
-                                                    width: 28,
-                                                    height: 28,
-                                                    flexDirection: "column",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    backgroundColor: "#FFF",
-                                                    borderRadius: 35,
-                                                    shadowOffset: {
-                                                        width: 0,
-                                                        height: 3,
-                                                    },
-                                                    shadowOpacity: 0.12,
-                                                    shadowRadius: 4.65,
-                                                    elevation: 6,
-                                                }}>
-                                                    <MaterialCommunityIcons size={16} color="#000" name="minus" />
-                                                </TouchableOpacity>
-                                            )
-                                        }
-                                        
-                                        <Text style={{ paddingHorizontal:10, fontSize: 16, color: "#000" }}>{Number(item.product_qty)}</Text>
-                                        <TouchableOpacity onPress={()=>handleIncrement(index)} style={{
-                                            width: 28,
-                                            height: 28,
-                                            flexDirection: "column",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            backgroundColor: "#FFF",
-                                            borderRadius: 35,
-                                            shadowOffset: {
-                                                width: 0,
-                                                height: 3,
-                                            },
-                                            shadowOpacity: 0.12,
-                                            shadowRadius: 4.65,
-                                            elevation: 6,
-                                        }}>
-                                            <MaterialCommunityIcons size={16} color="#000" name="plus" />
+
+                    </View>
+                    {
+                        state.cartItems.length > 0 ? (
+                            state.cartItems.map((item, index) => {
+                                return (
+                                    <View style={styles.singleCartProduct} key={index}>
+                                        <TouchableOpacity onPress={() => dispatch(removeToCart(index))} style={{ marginRight: 15, width: 17 }}>
+                                            <MaterialIcons size={20} color="#626F7F" name="delete-outline" />
                                         </TouchableOpacity>
+                                        <Image source={require('../assets/product.png')} />
+                                        <View style={{ paddingHorizontal: 10, width: "45%" }}>
+                                            <Text style={{ color: "#626F7F", fontSize: 12, fontWeight: "700" }}>{item.productName}{item.index}</Text>
+                                            <Text style={{ color: "#626F7F", fontSize: 13, fontWeight: "600" }}>{item.product_uom == 3 ? "Piece" : "Carton"}</Text>
+                                        </View>
+                                        <View style={{ alignItems: "center", marginLeft: "auto" }}>
+                                            <Text style={styles.QtyHeading}>Quantity</Text>
+                                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                {
+                                                    item.product_qty > 1 ? (
+                                                        <TouchableOpacity onPress={() => handleDecrement(index)} style={{
+                                                            width: 28,
+                                                            height: 28,
+                                                            flexDirection: "column",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            backgroundColor: "#FFF",
+                                                            borderRadius: 35,
+                                                            shadowOffset: {
+                                                                width: 0,
+                                                                height: 3,
+                                                            },
+                                                            shadowOpacity: 0.12,
+                                                            shadowRadius: 4.65,
+                                                            elevation: 6,
+                                                        }}>
+                                                            <MaterialCommunityIcons size={16} color="#000" name="minus" />
+                                                        </TouchableOpacity>
+                                                    ) : (
+                                                        <TouchableOpacity onPress={() => checkItemZero(index)} style={{
+                                                            width: 28,
+                                                            height: 28,
+                                                            flexDirection: "column",
+                                                            alignItems: "center",
+                                                            justifyContent: "center",
+                                                            backgroundColor: "#FFF",
+                                                            borderRadius: 35,
+                                                            shadowOffset: {
+                                                                width: 0,
+                                                                height: 3,
+                                                            },
+                                                            shadowOpacity: 0.12,
+                                                            shadowRadius: 4.65,
+                                                            elevation: 6,
+                                                        }}>
+                                                            <MaterialCommunityIcons size={16} color="#000" name="minus" />
+                                                        </TouchableOpacity>
+                                                    )
+                                                }
+
+                                                <Text style={{ paddingHorizontal: 10, fontSize: 16, color: "#000" }}>{Number(item.product_qty)}</Text>
+                                                <TouchableOpacity onPress={() => handleIncrement(index)} style={{
+                                                    width: 28,
+                                                    height: 28,
+                                                    flexDirection: "column",
+                                                    alignItems: "center",
+                                                    justifyContent: "center",
+                                                    backgroundColor: "#FFF",
+                                                    borderRadius: 35,
+                                                    shadowOffset: {
+                                                        width: 0,
+                                                        height: 3,
+                                                    },
+                                                    shadowOpacity: 0.12,
+                                                    shadowRadius: 4.65,
+                                                    elevation: 6,
+                                                }}>
+                                                    <MaterialCommunityIcons size={16} color="#000" name="plus" />
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
                                     </View>
-                                </View>
+                                )
+                            })
+                        ) : (
+                            <View style={{ alignItems: "center", marginTop: 60 }}>
+                                <Text style={{ color: "#000", fontSize: 22, marginBottom: 10 }}>Your Cart is empty!</Text>
+                                {/* <Text style={{fontSize:16, color:"#7a7d81"}}>Add items to it now.</Text> */}
+                                <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.navigate('Branch')}>
+                                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Home</Text>
+                                </TouchableOpacity>
                             </View>
                         )
-                    })                    
-                ):(
-                    <View style={{alignItems:"center", marginTop:60}}>
-                        <Text style={{color:"#000", fontSize:22, marginBottom:10}}>Your Cart is empty!</Text>
-                        {/* <Text style={{fontSize:16, color:"#7a7d81"}}>Add items to it now.</Text> */}
-                        <TouchableOpacity style={styles.btnSubmit} onPress={()=> navigation.navigate('Branch')}>
-                            <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Home</Text>
-                        </TouchableOpacity>
-                    </View>
-                )
-                
-            }
 
-            
+                    }
 
-            {/* <View style={{ paddingHorizontal: 15, paddingVertical: 8, marginTop: 25, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+
+
+                    {/* <View style={{ paddingHorizontal: 15, paddingVertical: 8, marginTop: 25, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 <Text style={{ color: "#626F7F", fontWeight: "600", fontSize: 16 }}>Subtotal</Text>
                 <Text style={{ color: "#98A4B2", fontSize: 14 }}>$0.00</Text>
             </View>
@@ -262,34 +272,36 @@ const Cart = ({ navigation, route }) => {
                 <Text style={{ color: "#626F7F", fontWeight: "600", fontSize: 16 }}>Total</Text>
                 <Text style={{ color: "#98A4B2", fontSize: 14 }}>$0.00</Text>
             </View> */}
-            {
-                state.cartItems.length > 0 && (  
-                <View style={{flexDirection:"row", alignItems: "center", marginBottom: 60 }}>                
-                <TouchableOpacity style={[styles.btnSubmit, {backgroundColor:"#4fabff"}]} onPress={()=> {navigation.navigate('Scanbarcode', {
-                        deliverDate: getAllData.deliverDate,
-                        deliveryNumber: getAllData.deliveryNumber,
-                        org_id: getAllData.org_id,
-                        vendor_id:getAllData.vendor_id,
-                        activity:getAllData.activity,
-                        barcode:""
-                    })
-                    dispatch({type:"RESET_ADDED_CART"})
-                    dispatch({type:"RESET_SCAN_DATA"})
-                }
-                    }>
-                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Continue</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
-                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Submit</Text>
-                </TouchableOpacity>
-                </View> 
-                )
-            }   
-        </ScrollView>
-        <Toast position='top' style={{backgroundColor:"#000"}} />
+                    {
+                        state.cartItems.length > 0 && (
+                            <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 60 }}>
+                                <TouchableOpacity style={[styles.btnSubmit, { backgroundColor: "#4fabff" }]} onPress={() => {
+                                    navigation.navigate('Scanbarcode', {
+                                        deliverDate: getAllData.deliverDate,
+                                        deliveryNumber: getAllData.deliveryNumber,
+                                        org_id: getAllData.org_id,
+                                        vendor_id: getAllData.vendor_id,
+                                        activity: getAllData.activity,
+                                        barcode: ""
+                                    })
+                                    dispatch({ type: "RESET_ADDED_CART" })
+                                    dispatch({ type: "RESET_SCAN_DATA" })
+                                }
+                                }>
+                                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Continue</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.btnSubmit} onPress={showAlert}>
+                                    <Text style={{ color: "#FFF", fontSize: 18, fontWeight: "600", textTransform: "uppercase" }}>Submit</Text>
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    }
+                </ScrollView>
+            </SafeAreaView>
+            <Toast position='top' style={{ backgroundColor: "#000" }} />
             {
                 checkoutState.isLoading && (
-                    <View style={{ flex: 1, position: "absolute", zIndex:3, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "rgba(255,255,255,0.4)" }}>
+                    <View style={{ flex: 1, position: "absolute", zIndex: 3, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "rgba(255,255,255,0.4)" }}>
                         <View style={{
                             backgroundColor: "#FFF", paddingHorizontal: 15, paddingVertical: 15, borderRadius: 5, shadowOffset: {
                                 width: 0,
@@ -312,8 +324,7 @@ export default Cart;
 
 var styles = StyleSheet.create({
     mainWrapper: {
-        paddingHorizontal: 30,
-        paddingVertical: 40,
+        flex:1,
         backgroundColor: '#FFF',
     },
     Heading: {
@@ -347,7 +358,7 @@ var styles = StyleSheet.create({
         justifyContent: "center",
         marginTop: 30,
         padding: 5,
-        marginHorizontal:"2%"
+        marginHorizontal: "2%"
     },
     btnSubmitText: {
         color: '#FFF',

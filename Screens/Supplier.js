@@ -7,6 +7,7 @@ import {
     TextInput,
     TouchableOpacity,
     View,
+    Dimensions
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -21,6 +22,8 @@ const Supplier = ({ navigation, route }) => {
     const [inputVal, setInputVal] = useState('');
     //const [dataSupplier, setDataSupplier] = useState([]);
     const [isVisible, setIsvisible] = useState(false);
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
     const dispatch = useDispatch();
     console.log('supplier', route.params)
 
@@ -49,39 +52,41 @@ const Supplier = ({ navigation, route }) => {
     //     )
     // }
 
+    const layoutChange = () => {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
+
     return (
-        <View style={styles.mainWrapper}>
+        <SafeAreaView style={[styles.mainWrapper, { paddingHorizontal: screenHeight > screenWidth ? 30 : 20, paddingVertical: screenHeight > screenWidth ? 40 : 10 }]} onLayout={layoutChange}>
             <View style={{ position: "relative" }}>
                 <Text style={styles.Heading}>Supplier</Text>
                 <View style={styles.line}></View>
             </View>
-
-            <View style={styles.formWrapper}>
+            <View style={[styles.formWrapper, { paddingVertical: screenHeight > screenWidth ? 30 : 20 }]}>
                 <Text style={styles.formLabel}>Select Supplier</Text>
                 <View style={styles.inputWrapper}>
                     <Icon size={16} color="#626F7F" name="user" style={{ position: "absolute", left: 15, top: 16 }} />
                     {/* <Picker
-                        selectedValue={selectedVal}
-                        style={{color:"#000"}}
-                        dropdownIconColor="#000"
-                        onValueChange={(itemValue, itemIndex) =>
-                            setSelectedVal(itemValue)
-                        }>
-                        <Picker.Item label="Select Supplier" value="0" />
-                        {
-                            supplierItems()
-                        }
-                    </Picker> */}
-                    <TextInput value={inputVal} onChangeText={(e) => {setInputVal(e), setIsvisible(true)}} placeholder="Type Supplier" placeholderTextColor="#626F7F" style={{ paddingLeft: 35, color: "#000" }} />
-
+                            selectedValue={selectedVal}
+                            style={{color:"#000"}}
+                            dropdownIconColor="#000"
+                            onValueChange={(itemValue, itemIndex) =>
+                                setSelectedVal(itemValue)
+                            }>
+                            <Picker.Item label="Select Supplier" value="0" />
+                            {
+                                supplierItems()
+                            }
+                        </Picker> */}
+                    <TextInput value={inputVal} onChangeText={(e) => { setInputVal(e), setIsvisible(true) }} placeholder="Type Supplier" placeholderTextColor="#626F7F" style={{ paddingLeft: 35, color: "#000" }} />
                 </View>
-
                 {
                     state.fetchSupplier.data !== undefined && (
                         state.fetchSupplier.data.length > 0 && (
 
                             isVisible && (
-                                <View style={{ width: "100%", height: 300, position: "absolute", overflow: "hidden", top: "73%", zIndex: 99, left: 0, right: 0, backgroundColor: "#ededed", borderRadius: 30, paddingHorizontal: 10, paddingTop: 5, paddingBottom: 8 }}>
+                                <View style={{ width: "100%", height:screenHeight > screenWidth ? 200 : 110, position: "absolute", overflow: "hidden", top: screenHeight > screenWidth ? "73%" : "65%", zIndex: 99, left: 0, right: 0, backgroundColor: "#ededed", borderRadius: 30, paddingHorizontal: 10, paddingTop: 5, paddingBottom: 8 }}>
                                     <ScrollView>
                                         {
                                             state.fetchSupplier.data?.map((item, index, arr) => {
@@ -111,6 +116,7 @@ const Supplier = ({ navigation, route }) => {
                     )
                 }
 
+
                 <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                     <TouchableOpacity style={styles.btnSubmit} onPress={() => navigation.goBack()}>
                         <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
@@ -124,7 +130,7 @@ const Supplier = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 

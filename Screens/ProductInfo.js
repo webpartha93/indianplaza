@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     View,
     Alert,
-    Image
+    Image,
+    Dimensions
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -40,6 +41,8 @@ const ProductInfo = ({ navigation, route }) => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [uploadedImage, setUploadedImage] = useState([]);
     const [images, setImages] = useState([]);
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
     //const [barcode_info, setBarcode_info] = useState("");
 
     const [empId, setEmpId] = useState('');
@@ -261,8 +264,13 @@ const ProductInfo = ({ navigation, route }) => {
 
     }, [uploadedImage])
 
+    const layoutChange = () => {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
+
     return (
-        <View style={styles.mainWrapper}>
+        <SafeAreaView style={[styles.mainWrapper, { paddingHorizontal: screenHeight > screenWidth ? 30 : 20, paddingVertical: screenHeight > screenWidth ? 40 : 10 }]} onLayout={layoutChange}>
             <View style={{ position: "relative" }}>
                 <Text style={styles.Heading}>Product Info</Text>
                 <View style={styles.line}></View>
@@ -490,21 +498,21 @@ const ProductInfo = ({ navigation, route }) => {
 
                 </View>
 
-                <View style={{ width: "100%", maxWidth: 150, marginHorizontal: "26%" }}>
+                <View style={{ flexDirection:"row", justifyContent:"center" }}>
                     {
                         route.params.isUnknownItem === "true" ? (
-                            <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, { backgroundColor: btnDisabled ? "#9d9d9d" : "#1788F0" }]} onPress={showAlert2}>
+                            <TouchableOpacity disabled={btnDisabled} style={[styles.btnSubmit, { backgroundColor: btnDisabled ? "#9d9d9d" : "#1788F0", paddingHorizontal:30 }]} onPress={showAlert2}>
                                 <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
                             </TouchableOpacity>
                         ) : (
-                            <TouchableOpacity disabled={isButtonDisabled} style={[styles.btnSubmit, { backgroundColor: isButtonDisabled ? "#9d9d9d" : "#1788F0" }]} onPress={showAlert}>
+                            <TouchableOpacity disabled={isButtonDisabled} style={[styles.btnSubmit, { backgroundColor: isButtonDisabled ? "#9d9d9d" : "#1788F0", paddingHorizontal:30 }]} onPress={showAlert}>
                                 <Text style={{ color: "#FFF", fontSize: 18 }}>DONE</Text>
                             </TouchableOpacity>
                         )
                     }
                 </View>
             </ScrollView>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -513,9 +521,6 @@ export default ProductInfo;
 var styles = StyleSheet.create({
     mainWrapper: {
         flex: 1,
-        paddingHorizontal: 30,
-        paddingTop: 40,
-        paddingBottom: 10,
         backgroundColor: '#FFF'
     },
     Heading: {

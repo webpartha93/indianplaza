@@ -10,7 +10,8 @@ import {
   View,
   ActivityIndicator,
   PermissionsAndroid,
-  Alert
+  Alert,
+  Dimensions
 } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 
@@ -27,6 +28,8 @@ const UnknownItemPage = ({ navigation, route }) => {
   const [unknownItemId, setUnknownItemId] = useState('');
   const [firstBarcode, setFirstBarcode] = useState();
   const [isShow, setIsShow] = useState(true);
+  const [screenWidth, setScreenWidth] = useState(null);
+  const [screenHeight, setScreenHeight] = useState(null);
   const isFocused = useIsFocused();
   console.log("barcodeNew", route.params.barcode);
   console.log('firstBarcode', route.params.additional_barcode);
@@ -104,28 +107,33 @@ const UnknownItemPage = ({ navigation, route }) => {
     dispatch({ type: "RESET_SCAN_DATA" });
   }
 
+  const layoutChange = () => {
+    setScreenWidth(Dimensions.get('window').width);
+    setScreenHeight(Dimensions.get('window').height);
+}
 
   return (
-    <View style={styles.mainWrapper}>
+    <SafeAreaView style={[styles.mainWrapper, { paddingHorizontal: screenHeight > screenWidth ? 30 : 20, paddingVertical: screenHeight > screenWidth ? 40 : 20 }]} onLayout={layoutChange}>
+      <ScrollView>
       <View style={{ position: "relative", flex: 1 }}>
         <Text style={styles.Heading}>Product not found</Text>
         <View style={styles.line}></View>
-      </View>
-      <View style={{ flex: 6, flexDirection: "column", justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
-        <View style={{ width: "100%", alignItems: "center" }}>
+      </View>      
+      <View style={{ flexDirection:screenHeight > screenWidth ? "column":"row", justifyContent: "center", alignItems: "center", flexWrap: "wrap", marginTop:screenHeight > screenWidth ? 100 : 40, paddingHorizontal:screenHeight > screenWidth ? 40 : 0 }}>
+        <View style={{ width: screenHeight > screenWidth ? "100%": "24%", alignItems: "center", marginHorizontal:"0.5%" }}>
           <TouchableOpacity style={styles.btnSubmit} onPress={() => { navigation.goBack(); setFirstBarcode(); dispatch({ type: "RESET_SCAN_DATA" }) }}>
             <Text style={{ color: "#FFF", fontSize: 16 }}>BACK</Text>
           </TouchableOpacity>
         </View>
         {
           route.params.uom == "7" ? (
-            <View style={{ width: "100%", alignItems: "center" }}>
+            <View style={{ width: screenHeight > screenWidth ? "100%": "24%", alignItems: "center", marginHorizontal:"0.5%"}}>
               <TouchableOpacity style={styles.btnSubmit} onPress={handleUnknownItemsToProductInfo}>
                 <Text style={{ color: "#FFF", fontSize: 16 }}>UNKNOWN ITEM</Text>
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={{ width: "100%", alignItems: "center" }}>
+            <View style={{ width: screenHeight > screenWidth ? "100%": "24%", alignItems: "center", marginHorizontal:"0.5%" }}>
               <TouchableOpacity style={styles.btnSubmit} onPress={handleUnknownItems}>
                 <Text style={{ color: "#FFF", fontSize: 16 }}>UNKNOWN ITEM</Text>
               </TouchableOpacity>
@@ -133,7 +141,7 @@ const UnknownItemPage = ({ navigation, route }) => {
           )
         }
 
-        <View style={{ width: "100%", alignItems: "center" }}>
+        <View style={{ width: screenHeight > screenWidth ? "100%": "24%", alignItems: "center", marginHorizontal:"0.5%" }}>
           <TouchableOpacity style={styles.btnSubmit} onPress={() => {
             setIsShow(true);
             setFirstBarcode();
@@ -148,18 +156,21 @@ const UnknownItemPage = ({ navigation, route }) => {
           }}>
             <Text style={{ color: "#FFF", fontSize: 16 }}>SCAN AGAIN</Text>
           </TouchableOpacity>
-          {
+        </View>
+
+        <View style={{ width: screenHeight > screenWidth ? "100%": "24%", alignItems: "center", marginHorizontal:"0.5%" }}>
+        {
             isShow && (
               <TouchableOpacity style={styles.btnSubmit} onPress={handleUnpack}>
                 <Text style={{ color: "#FFF", fontSize: 16 }}>UNPACK &amp; SCAN</Text>
               </TouchableOpacity>
             )
           }
-
         </View>
 
       </View>
-    </View >
+      </ScrollView>
+    </SafeAreaView>
   )
 }
 
@@ -201,7 +212,7 @@ const styles = StyleSheet.create({
     marginBottom: 15
   },
   btnSubmit: {
-    width: "55%",
+    width: "100%",
     backgroundColor: "#1788F0",
     borderRadius: 30,
     flexDirection: "row",

@@ -8,7 +8,8 @@ import {
     TouchableOpacity,
     View,
     Image,
-    ActivityIndicator
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
 
 import { assignBarCode, getProductInfo } from '../Redux/Actions/AllActions';
@@ -25,6 +26,8 @@ const UnitMeasure = ({ navigation, route }) => {
     const [productDesc, setProductDesc] = useState('');
 
     const [loading, setIsloading] = useState(false);
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
 
     const unitsCategory = [
         {
@@ -92,14 +95,19 @@ const UnitMeasure = ({ navigation, route }) => {
         dispatch({ type: "RESET_SCAN_DATA" });
     }
 
+    const layoutChange = () => {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
+
     return (
         <>
-            <View style={styles.mainWrapper}>
-                <View style={{ paddingHorizontal: 30, paddingTop: 40 }}>
-                    <View style={{ position: "relative" }}>
-                        <Text style={styles.Heading}>Unit of Measure</Text>
-                    </View>
-                    <View style={styles.line}></View>
+            <SafeAreaView style={[styles.mainWrapper, { paddingHorizontal: screenHeight > screenWidth ? 30 : 20, paddingVertical: screenHeight > screenWidth ? 40 : 10 }]} onLayout={layoutChange}>
+                <View style={{ position: "relative" }}>
+                    <Text style={styles.Heading}>Unit of Measure</Text>
+                </View>
+                <View style={styles.line}></View>
+                <ScrollView>
                     <View style={{ borderRadius: 10, overflow: "hidden", marginTop: 30, backgroundColor: "#F9F9F9" }}>
                         <View style={styles.Label}>
                             <Text style={{ color: "#626F7F", fontSize: 15, fontWeight: "700" }}>Product Code</Text>
@@ -114,7 +122,7 @@ const UnitMeasure = ({ navigation, route }) => {
                             <Text style={{ color: "#626F7F", fontSize: 13 }}>{productDesc}</Text>
                         </View>
                     </View>
-                    <View style={{ marginTop: 40 }}>
+                    <View style={{ marginTop: 40, paddingHorizontal:10 }}>
                         <View style={{ flexDirection: "row", justifyContent: "center", marginHorizontal: -10 }}>
 
                             {
@@ -169,8 +177,8 @@ const UnitMeasure = ({ navigation, route }) => {
                             <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
-            </View>
+                </ScrollView>
+            </SafeAreaView>
             {
                 loading && (
                     <View style={{ flex: 1, position: "absolute", zIndex: 3, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "rgba(255,255,255,0.4)" }}>

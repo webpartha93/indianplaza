@@ -7,7 +7,8 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    Image
+    Image,
+    Dimensions
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
@@ -15,6 +16,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const Activity = ({ navigation, route }) => {
     console.log('activitypage', route.params);
+
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
+
     const allActivityCategory = [
         {
             "catName": "Receive",
@@ -40,15 +45,19 @@ const Activity = ({ navigation, route }) => {
         });
     }
 
+    const layoutChange = ()=> {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
 
     return (
-        <View style={styles.mainWrapper}>
+        <SafeAreaView style={[styles.mainWrapper, {paddingHorizontal:screenHeight > screenWidth ? 30 : 20, paddingVertical:screenHeight > screenWidth ? 40 : 10}]} onLayout={layoutChange}>
             <View style={{position:"relative"}}>
                 <Text style={styles.Heading}>Activity</Text>
                 <View style={styles.line}></View>
             </View>
-
-            <View style={{ marginTop: 40 }}>
+            <ScrollView>
+            <View style={{ marginTop: 40, paddingHorizontal:10 }}>
                 <View style={{ flexDirection: "row", flexWrap: "wrap", marginHorizontal: -10 }}>
                     {
                         allActivityCategory.map((item, index) => {
@@ -151,7 +160,8 @@ const Activity = ({ navigation, route }) => {
                     <Text style={{ color: "#FFF", fontSize: 18 }}>PREV</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+            </ScrollView>
+        </SafeAreaView>
     )
 }
 

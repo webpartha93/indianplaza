@@ -8,7 +8,8 @@ import {
     BackHandler,
     Alert,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -19,10 +20,14 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 const OrderHistoryDetails = ({ navigation, route }) => {
     const state = useSelector(state => state.HistoryReducers);
     const [isLoading, setIsloading] = useState(true);
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(getHistoryDetails(route.params.shipment_header_id));
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
     }, []);
 
     useEffect(() => {
@@ -47,10 +52,16 @@ const OrderHistoryDetails = ({ navigation, route }) => {
         )
     };
 
+
+    const layoutChange = () => {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
+
     //console.log('historydata', state.historyDetails.data.lines);
     return (
         <>
-            <View style={styles.mainWrapper}>
+            <SafeAreaView style={[styles.mainWrapper, { paddingHorizontal: screenHeight > screenWidth ? 30 : 20, paddingVertical: screenHeight > screenWidth ? 40 : 10 }]} onLayout={layoutChange}> 
                 <View style={{ paddingTop: 25, paddingBottom: 20 }}>
                     <TouchableOpacity onPress={() => { navigation.goBack(), dispatch({ type: "RESET_HISTORY_DETAILS" }) }} style={{ flexDirection: "row", alignItems: "center" }}><Icon size={26} color="#000" name="angle-left" /><Text style={{ color: "#000", fontSize: 18, marginLeft: 8 }}> Back</Text></TouchableOpacity>
                 </View>
@@ -100,7 +111,7 @@ const OrderHistoryDetails = ({ navigation, route }) => {
                         )
                     }
                 </ScrollView>
-            </View>
+            </SafeAreaView>
         </>
     )
 }
@@ -110,8 +121,6 @@ export default OrderHistoryDetails;
 var styles = StyleSheet.create({
     mainWrapper: {
         flex: 1,
-        paddingHorizontal: 30,
-        paddingTop: 0,
         backgroundColor: '#FFF'
     },
     Heading: {

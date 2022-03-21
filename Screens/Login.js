@@ -7,7 +7,8 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    ActivityIndicator
+    ActivityIndicator,
+    Dimensions
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
@@ -25,6 +26,9 @@ const Login = ({ navigation }) => {
     const [loading, setIsloading] = useState(false);
     const [message, setMessage] = useState('');
 
+    const [screenWidth, setScreenWidth] = useState(null);
+    const [screenHeight, setScreenHeight] = useState(null);
+
     const handleChange = (e) => {
         setInputVal(e.nativeEvent.text);
         if (e.nativeEvent.text.length > 5) {
@@ -36,7 +40,7 @@ const Login = ({ navigation }) => {
 
 
     const handleSubmit = () => {
-        dispatch(doLogin(inputval));        
+        dispatch(doLogin(inputval));
     }
 
 
@@ -50,7 +54,7 @@ const Login = ({ navigation }) => {
             });
             setInputVal('');
             // state.Login.loginData.status = "";
-            dispatch({type:"RESET_LOGIN_DATA"});
+            dispatch({ type: "RESET_LOGIN_DATA" });
             setMessage('');
         }
 
@@ -58,7 +62,7 @@ const Login = ({ navigation }) => {
             setMessage("Invalid access code");
         }
 
-        setIsloading(state.Login.isLoggedIn);       
+        setIsloading(state.Login.isLoggedIn);
     }, [state]);
 
 
@@ -67,10 +71,13 @@ const Login = ({ navigation }) => {
         setIsbuttonactive(true);
     }, [isFocused]);
 
-
+    const layoutChange = () => {
+        setScreenWidth(Dimensions.get('window').width);
+        setScreenHeight(Dimensions.get('window').height);
+    }
 
     return (
-        <View style={styles.mainWrapper}>
+        <SafeAreaView style={[styles.mainWrapper, { paddingHorizontal: screenHeight > screenWidth ? 30 : 20, paddingVertical: screenHeight > screenWidth ? 40 : 10 }]} onLayout={layoutChange}>
             {
                 loading && (
                     <View style={{ flex: 1, position: "absolute", zIndex: 2, left: 0, width: "100%", justifyContent: "center", height: "100%", justifyContent: 'center', alignItems: "center", backgroundColor: "rgba(255,255,255,0.4)" }}>
@@ -86,33 +93,31 @@ const Login = ({ navigation }) => {
                             <ActivityIndicator size="large" color="#7b0b0d" />
                         </View>
                     </View>
-                ) 
+                )
             }
-            <View style={{ paddingHorizontal: 30, paddingVertical: 40 }}>
-                <Text style={styles.Heading}>Sign In</Text>
-                <View style={styles.line}></View>
-                <View style={styles.formWrapper}>
-                    <Text style={styles.formLabel}>Your Access code</Text>
-                    <View style={styles.inputWrapper}>
-                        <Icon size={16} color="#626F7F" name="key" style={{ position: "absolute", left: 15, top: 16 }} />
-                        <TextInput
-                            keyboardType="number-pad"
-                            maxLength={12}
-                            value={inputval}
-                            onChange={handleChange}
-                            style={{ width: "100%", color: "#000" }} />
-                    </View>
-                    {
-                        message !== '' && (
-                            <Text style={{ color: "red" }}>{message}</Text>
-                        )
-                    }
-                    <TouchableOpacity disabled={isbuttonactive} onPress={handleSubmit} style={[styles.btnSubmit, { backgroundColor: isbuttonactive ? "#9d9d9d" : "#1788F0" }]}>
-                        <Text style={styles.btnSubmitText}>Sign In</Text>
-                    </TouchableOpacity>
+            <Text style={styles.Heading}>Sign In</Text>
+            <View style={styles.line}></View>
+            <View style={styles.formWrapper}>
+                <Text style={styles.formLabel}>Your Access code</Text>
+                <View style={styles.inputWrapper}>
+                    <Icon size={16} color="#626F7F" name="key" style={{ position: "absolute", left: 15, top: 16 }} />
+                    <TextInput
+                        keyboardType="number-pad"
+                        maxLength={12}
+                        value={inputval}
+                        onChange={handleChange}
+                        style={{ width: "100%", color: "#000" }} />
                 </View>
+                {
+                    message !== '' && (
+                        <Text style={{ color: "red" }}>{message}</Text>
+                    )
+                }
+                <TouchableOpacity disabled={isbuttonactive} onPress={handleSubmit} style={[styles.btnSubmit, { backgroundColor: isbuttonactive ? "#9d9d9d" : "#1788F0" }]}>
+                    <Text style={styles.btnSubmitText}>Sign In</Text>
+                </TouchableOpacity>
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 
