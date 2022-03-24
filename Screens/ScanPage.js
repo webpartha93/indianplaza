@@ -209,12 +209,11 @@ const ScanPage = ({ navigation, route }) => {
             <TextInput returnKeyType="next"
               autoFocus={true}
               ref={barcodeNameRef}
-              keyboardType="number-pad"
+              keyboardType="phone-pad"
               onSubmitEditing={() => {
                 barcodeNameRef.current.focus();
               }}
-              onChangeText={(e) => setBarcode(e)}
-              blurOnSubmit={false} value={barcode} placeholderTextColor="#000" style={{ width: "100%", backgroundColor: "#FFF", color: "#000", paddingHorizontal: 12 }} />
+              onChangeText={(e) => setBarcode(e)} value={barcode} placeholderTextColor="#000" style={{ width: "100%", backgroundColor: "#FFF", color: "#000", paddingHorizontal: 12 }} />
             {
               barcode != undefined && barcode != "" &&(
                 <TouchableOpacity style={styles.btnSubmit} onPress={handleScan}>
